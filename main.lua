@@ -1,4 +1,11 @@
 SMODS.Atlas{key = "modicon", path = "modicon.png", px = 32, py = 32}
+BFSK = {
+    ["packs"] = {{},{}}
+}
+
+assert(SMODS.load_file('/src/overrides.lua'))()
+assert(SMODS.load_file('/src/UI.lua'))()
+
 SOUNDS = {
     "ambientFire1",
     "ambientFire2",
