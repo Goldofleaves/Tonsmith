@@ -3,7 +3,7 @@ BSFX.packs = {}
 ---@param desc table The Description of the sound pack.
 ---@param thumb string The thumbnail of the sound pack (Excluding the png suffix).
 ---@param sound_table table The table of sounds to load.
-BSFX.pack = function(name, desc, thumb, sound_table)
+BSFX.Pack = function(name, desc, thumb, sound_table)
     name = name or ""
     sound_table = sound_table or {}
     local returntable = {}
@@ -29,6 +29,7 @@ function BSFX.truncate_string(str, length)
     end
     return returnstring
 end
+
 ---@param name table The sound pack to load.
 BSFX.load_mod = function(name)
     local pack = BSFX.packs[name]

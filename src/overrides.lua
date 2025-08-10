@@ -8,6 +8,6 @@ end
 local ref = CardArea.update
 
 function CardArea:update(dt)
-    if self.config.type == "bsfx_list" then self.config.card_limit = #BFSK["packs"] end
+    if self.config.type == "bsfx_list" then self.config.card_limit = #BSFX["packs"] end
     ref(self,dt)
 end
