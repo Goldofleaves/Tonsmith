@@ -1,4 +1,5 @@
 SMODS.current_mod.config_tab = function ()
+
     return {n = G.UIT.ROOT, config = {minw = 10, minh = 6 ,r = 0.1, colour = G.C.BLACK, align = "cm"}, nodes = {
         {n = G.UIT.R, config = {align = "tm"}, nodes = {{n = G.UIT.T, config = {text = "Select soundpack", scale = 0.6, colour = G.C.WHITE}}}},
         {n = G.UIT.R, config = {minh = 0.1}},
@@ -9,7 +10,7 @@ SMODS.current_mod.config_tab = function ()
         {n = G.UIT.R, config = {minh = 0.15}},
 
         {n = G.UIT.R, config = {align = "tm", colour = G.C.BLACK}, nodes = {{
-            n = G.UIT.O, config = {object = CardArea(
+            n = G.UIT.O, config = {id = "selected", object = CardArea(
             20, 20,
             G.CARD_W*6,G.CARD_H,
             {card_limit = 255, type = 'bsfx_list', highlight_limit = 1})}
@@ -31,6 +32,7 @@ SMODS.current_mod.config_tab = function ()
             {n = G.UIT.C, config = {padding = 0.2}, nodes = {
                 {n = G.UIT.R, nodes = {UIBox_button{
                     label = {"Reload"},
+                    button = "BSFX_reload_lists",
                     minw = 1.5, minh = 0.6
                 }}},
 
@@ -46,7 +48,7 @@ SMODS.current_mod.config_tab = function ()
         {n = G.UIT.R, config = {minh = 0.15}},
 
         {n = G.UIT.R, config = {align = "tm", colour = G.C.BLACK}, nodes = {{
-            n = G.UIT.O, config = {object = CardArea(
+            n = G.UIT.O, config = {id = "available", object = CardArea(
             20, 20,
             G.CARD_W*6,G.CARD_H,
             {card_limit = 255, type = 'bsfx_list', highlight_limit = 1})}

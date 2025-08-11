@@ -1,10 +1,12 @@
 BSFX.packs = {}
+---Defines and creates a soundpack for BetterSFX to load.
 ---@param name string The Name of the sound pack.
 ---@param desc table The Description of the sound pack.
 ---@param thumb string The thumbnail of the sound pack (Excluding the png suffix).
----@param sound_table table The table of sounds to load.
+---@param sound_table table The table of sounds to load, excluding the file extension. Must be `.ogg` files.
 BSFX.Pack = function(name, desc, thumb, sound_table)
     name = name or ""
+    desc = desc or {}
     sound_table = sound_table or {}
     local returntable = {}
     returntable.sounds = {}
@@ -19,6 +21,7 @@ BSFX.Pack = function(name, desc, thumb, sound_table)
     returntable.selected = false
     BSFX.packs[name] = returntable
 end
+
 function BSFX.truncate_string(str, length)
     if length > string.len(str) then
         length = string.len(str)
