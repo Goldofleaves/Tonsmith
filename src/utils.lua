@@ -33,7 +33,7 @@ BSFX.Pack_Vanilla = function(args)
 end
 
 ---Defines and creates a modded soundpack for BetterSFX to load.<br>
----@param args {name:string,modprefix:string,description:string[],authors:string[],sound_table:table[],thumbnail:string,extension?:".ogg"|string}
+---@param args {name:string,modprefix:string,mod:string,description:string[],authors:string[],sound_table:table[],thumbnail:string,extension?:".ogg"|string}
 ---`name` - The Name of the sound pack.<br>
 ---`modprefix` - The mod prefix the sound pack replaces. Includes the "_" (Underscore).<br>
 ---`mod` - The mod whos sound you replace..<br>
@@ -50,6 +50,7 @@ BSFX.Pack_Modded = function(args)
     local sound_table = args.sound_table or {}
     local thumb = args.thumbnail
     local f_extension = args.extension or ".ogg"
+    local mod = args.mod or "None"
 
     local returntable = {}
     returntable.sounds = {}
@@ -64,6 +65,7 @@ BSFX.Pack_Modded = function(args)
     returntable.authors = authors
     returntable.thumb = SMODS.Atlas { key = thumb , path = thumb..".png", px = 71, py = 95}
     returntable.selected = false
+    returntable.mod = mod
     returntable.modded = true
     BSFX.packs[name] = returntable
 end
