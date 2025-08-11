@@ -8,7 +8,9 @@ end
 local ref = CardArea.update
 
 function CardArea:update(dt)
-    if self.config.type == "bsfx_list" then self.config.card_limit = table.size(BSFX.packs) end
+    local c = 0
+    for _,_ in pairs(BSFX.packs) do c = c + 1 end
+    if self.config.type == "bsfx_list" then self.config.card_limit = c end
     ref(self,dt)
 end
 
