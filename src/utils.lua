@@ -16,6 +16,7 @@ BSFX.Pack = function(name, desc, thumb, sound_table)
             path = sound..".ogg"
         }
     end
+    returntable.name = name
     returntable.desc = desc
     returntable.thumb = SMODS.Atlas { key = thumb , path = thumb..".png", px = 71, py = 95}
     returntable.selected = false
