@@ -1,23 +1,30 @@
 BSFX.packs = {}
----Defines and creates a soundpack for BetterSFX to load.
----@param name string The Name of the sound pack.
----@param desc table The Description of the sound pack.
----@param thumb string The thumbnail of the sound pack (Excluding the png suffix).
----@param sound_table table The table of sounds to load, excluding the file extension. Must be `.ogg` files.
-BSFX.Pack = function(name, desc, thumb, sound_table)
-    name = name or ""
-    desc = desc or {}
-    sound_table = sound_table or {}
+---Defines and creates a soundpack for BetterSFX to load.<br>
+---@param args {name:string,description:string[],authors:string[],sound_table:string[],thumbnail:string,extension?:".ogg"|string}
+---`name` - The Name of the sound pack.<br>
+---`description` - The Description of the sound pack.<br>
+---`authors` - The authors of the soundpack.
+---`thumbnail` - string The thumbnail of the sound pack (Excluding the png suffix).<br>
+---`sound_table` - The table of sounds to load, excluding the file extension.<br>
+BSFX.Pack = function(args)
+    local name = args.name or ""
+    local desc = args.description or {}
+    local authors = args.authors or {}
+    local sound_table = args.sound_table or {}
+    local thumb = args.thumbnail
+    local f_extension = args.extension or ".ogg"
+
     local returntable = {}
     returntable.sounds = {}
     for i,sound in ipairs(sound_table) do
         returntable.sounds[i] = SMODS.Sound {
             key = sound,
-            path = sound..".ogg"
+            path = sound..f_extension
         }
     end
     returntable.name = name
     returntable.desc = desc
+    returntable.authors = authors
     returntable.thumb = SMODS.Atlas { key = thumb , path = thumb..".png", px = 71, py = 95}
     returntable.selected = false
     BSFX.packs[name] = returntable
@@ -34,7 +41,7 @@ function BSFX.truncate_string(str, length)
     return returnstring
 end
 
----@param name string The sound pack to load.
+---@param name table The sound pack to load.
 BSFX.load_pack = function(name)
     local pack = BSFX.packs[name]
     if pack.selected then
