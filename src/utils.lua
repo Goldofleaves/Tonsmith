@@ -35,7 +35,8 @@ end
 ---Defines and creates a modded soundpack for BetterSFX to load.<br>
 ---@param args {name:string,modprefix:string,description:string[],authors:string[],sound_table:table[],thumbnail:string,extension?:".ogg"|string}
 ---`name` - The Name of the sound pack.<br>
----`modprefix` - The mod prefix the sound pack rplaces. Includes the "_" (Underscore).<br>
+---`modprefix` - The mod prefix the sound pack replaces. Includes the "_" (Underscore).<br>
+---`mod` - The mod whos sound you replace..<br>
 ---`description` - The Description of the sound pack.<br>
 ---`authors` - The authors of the soundpack.<br>
 ---`thumbnail` - string The thumbnail of the sound pack (Excluding the png suffix).<br>
