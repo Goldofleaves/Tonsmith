@@ -34,8 +34,8 @@ function BSFX.truncate_string(str, length)
     return returnstring
 end
 
----@param name table The sound pack to load.
-BSFX.load_mod = function(name)
+---@param name string The sound pack to load.
+BSFX.load_pack = function(name)
     local pack = BSFX.packs[name]
     if pack.selected then
         pack.selected = false
