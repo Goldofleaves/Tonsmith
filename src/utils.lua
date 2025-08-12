@@ -44,7 +44,7 @@ BSFX.Pack = function(args)
             mods_desc[k + 1] = "{C:attention}"..mods[k]
         end
     end
-    SMODS.Atlas { key = thumb , path = thumb..".png", px = 71, py = 95}
+    if thumb then SMODS.Atlas { key = thumb , path = thumb..".png", px = 71, py = 95} end
     returntable.joker = SMODS.Joker {
         no_collection = true,
         unlocked = true,
@@ -56,7 +56,7 @@ BSFX.Pack = function(args)
         set_card_type_badge = function (self, card, badges)
             badges[1] = nil
         end,
-        atlas = thumb,
+        atlas = thumb or nil,
         pos = { x = 0, y = 0 },
         config = {extra = {BSFX = true}},
         loc_txt = {
@@ -114,6 +114,7 @@ function BSFX.save_soundpack_order ()
             if v.config.center.mod.prefix.."_"..v.config.center.original_key == vv.mod_prefix.."_"..vv.name then
                 -- Set the pack priority.
                 vv.priority = i
+                vv.selected = true
             end
         end
     end
@@ -122,25 +123,6 @@ end
 G.FUNCS.BSFX_save_soundpack = BSFX.save_soundpack_order
 
 function BSFX.load_soundpack_order ()
-    for i,v in ipairs(BSFX.CARDAREAS.selected.cards) do
-        v:start_dissolve(nil,true,0)
-    end
-
-    -- For newly added packs
-    for i,v in ipairs(BSFX.packs) do
-        if v.priority == 0 and v.selected then
-            local card = BSFX.create_fake_card("j_"..v.mod_prefix.."_"..v.name,BSFX.CARDAREAS.selected)
-            card.ability.bsfx_card = true
-            card:resize(0.7)
-        end
-    end
-
-    -- For already existing packs
-    for i,v in ipairs(BSFX.mod_config.soundpack_priority) do
-        local card = BSFX.create_fake_card("j_"..v,BSFX.CARDAREAS.selected)
-        card.ability.bsfx_card = true
-        card:resize(0.7)
-    end
 
     -- Load modded sounds, in order of priority
     for i,v in ipairs(BSFX.CARDAREAS.selected.cards) do

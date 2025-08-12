@@ -108,6 +108,25 @@ function BSFX.load_cards()
     for _,_ in pairs(BSFX.packs) do n_packs = n_packs + 1 end
     if n_packs < 1 then return end
     
+    for i,v in ipairs(BSFX.CARDAREAS.selected.cards) do
+        v:start_dissolve(nil,true,0)
+    end
+
+    -- For newly added packs
+    for i,v in ipairs(BSFX.packs) do
+        if v.priority == 0 and v.selected then
+            local card = BSFX.create_fake_card("j_"..v.mod_prefix.."_"..v.name,BSFX.CARDAREAS.selected)
+            card.ability.bsfx_card = true
+            card:resize(0.7)
+        end
+    end
+
+    -- For already existing packs
+    for i,v in ipairs(BSFX.mod_config.soundpack_priority) do
+        local card = BSFX.create_fake_card("j_"..v,BSFX.CARDAREAS.selected)
+        card.ability.bsfx_card = true
+        card:resize(0.7)
+    end
     
     BSFX.load_soundpack_order()
 
@@ -116,7 +135,7 @@ function BSFX.load_cards()
     while #temp_fill < BSFX.row*BSFX.card_per_row do
         if c > #BSFX.packs then break end
         if not BSFX.packs[c] then return end
-        if not BSFX.packs[c].selected then
+        if not BSFX.packs[c].selected and BSFX.packs[c].priority == 0 then
             table.insert(temp_fill,BSFX.packs[c])
         end
         c = c + 1
@@ -191,6 +210,9 @@ BSFX.config_tab = function ()
         }}
     end
 
+    local page_count = 1
+    if #BSFX.packs ~= 0 then page_count = math.ceil((BSFX.row*BSFX.card_per_row)/#BSFX.packs) end
+
     select_nodes[1].nodes[2].nodes[1].nodes[#select_nodes[1].nodes[2].nodes[1].nodes+1] = {n = G.UIT.R, config = {align = "cm", padding = 0.02}, nodes = {
         {n = G.UIT.C, config = {align = "cm", minw = 0.5, minh = 0.5, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLACK, shadow = true, button = "bsfx_prev_page"}, nodes = {
             {n = G.UIT.R, config = {align = "cm", padding = 0.05}, nodes = {
@@ -199,7 +221,7 @@ BSFX.config_tab = function ()
         }},
         {n = G.UIT.C, config = {align = "cm", minw = 0.5, minh = 0.5, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLACK, shadow = true}, nodes = {
             {n = G.UIT.R, config = {align = "cm", padding = 0.05}, nodes = {
-                {n = G.UIT.T, config = {text = "Page 1/1", scale = 0.4, colour = G.C.UI.TEXT_LIGHT}}
+                {n = G.UIT.T, config = {text = "Page"..BSFX.page.."/"..page_count, scale = 0.4, colour = G.C.UI.TEXT_LIGHT}}
             }}
         }}, 
         {n = G.UIT.C, config = {align = "cm", minw = 0.5, minh = 0.5, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLACK, shadow = true, button = "bsfx_next_page"}, nodes = {
