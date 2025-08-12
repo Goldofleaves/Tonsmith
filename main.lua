@@ -1,5 +1,9 @@
 BSFX = {
-    CARDAREAS = {}
+    CARDAREAS = {},
+    row = 2,
+    card_per_row = 5,
+    prompt_text_input = "",
+    menu_mod = "base",
 }
 SMODS.Atlas{key = "modicon", path = "modicon.png", px = 32, py = 32}
 
