@@ -1,16 +1,5 @@
 BSFX.packs = {}
 
-function BSFX.truncate_string(str, length)
-    if length > string.len(str) then
-        length = string.len(str)
-    end
-    local returnstring = ""
-    for i = 1, length do
-        returnstring = returnstring..string.sub(str, i, i)
-    end
-    return returnstring
-end
-
 ---Defines and creates a vanilla soundpack for BetterSFX to load.<br>
 ---@param args {name:string,mods:string[],description:string[],authors:string[],sound_table:table[],thumbnail:string,extension?:".ogg"|string}
 ---`name` - The Name of the sound pack.<br>
@@ -24,7 +13,7 @@ BSFX.Pack = function(args)
     local desc = args.description or {}
     local authors = args.authors or {}
     local sound_table = args.sound_table or {}
-    local mods = args.mods or {"None"}
+    local mods = args.mods or {"Vanilla"}
     local thumb = args.thumbnail
     local returntable = {}
     returntable.sounds = {}
@@ -37,6 +26,41 @@ BSFX.Pack = function(args)
             path = sound.name..sound.extention },
             sound.prefix..sound.name }
     end
+    local loc_desc = desc
+    table.insert(loc_desc, 1, "{X:green,C:white}Description:")
+    local authors_desc = {"{X:chips,C:white}Authors:"}
+    for k, v in ipairs(authors) do
+        if authors[k + 1]then
+            authors_desc[k + 1] = "{C:attention}"..authors[k].."{},"
+        else
+            authors_desc[k + 1] = "{C:attention}"..authors[k]
+        end
+    end
+    local mods_desc = {"{X:legendary,C:white}Mods:"}
+    for k, v in ipairs(mods) do
+        if mods[k + 1]then
+            mods_desc[k + 1] = "{C:attention}"..mods[k].."{},"
+        else
+            mods_desc[k + 1] = "{C:attention}"..mods[k]
+        end
+    end
+    SMODS.Atlas { key = thumb , path = thumb..".png", px = 71, py = 95}
+    returntable.joker = SMODS.Joker {
+        no_collection = false,
+        prefix_config = {key = false},
+        key = name,
+        in_pool = function(self, args)
+            return false
+        end,
+        set_card_type_badge = function (self, card, badges)
+        end,
+        atlas = thumb,
+        pos = { x = 0, y = 0 },
+        loc_txt = {
+            name = name,
+            text = {loc_desc, authors_desc, mods_desc}
+        }
+    }
     returntable.name = name
     returntable.mods = mods
     returntable.desc = desc
