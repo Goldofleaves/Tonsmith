@@ -46,7 +46,7 @@ BSFX.Pack = function(args)
     end
     SMODS.Atlas { key = thumb , path = thumb..".png", px = 71, py = 95}
     returntable.joker = SMODS.Joker {
-        no_collection = false,
+        no_collection = true,
         prefix_config = {key = false},
         config = {extra = {BSFX = true}},
         key = name,
