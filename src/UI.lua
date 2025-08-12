@@ -107,30 +107,40 @@ function BSFX.load_cards()
     local n_packs = 0
     for _,_ in pairs(BSFX.packs) do n_packs = n_packs + 1 end
     if n_packs < 1 then return end
-    local row = 1
-    local card_n = 1
+    
     
     BSFX.load_soundpack_order()
 
-    for k,v in pairs(BSFX.packs) do
-        if not v.selected then
-            if card_n <= BSFX.row*BSFX.card_per_row then
-                local card = BSFX.create_fake_card("j_"..v.mod_prefix.."_"..v.name, BSFX.CARDAREAS["available"..row])
-                card.ability.bsfx_card = true
-                card:resize(0.7)
-                if #BSFX.CARDAREAS["available"..row].cards >= BSFX.card_per_row then row = row + 1 end
-            end
-            card_n = card_n + 1
+    local temp_fill = {}
+    local c = 1+(BSFX.row*BSFX.card_per_row*(BSFX.page-1))
+    while #temp_fill < BSFX.row*BSFX.card_per_row do
+        if c > #BSFX.packs then break end
+        if not BSFX.packs[c] then return end
+        if not BSFX.packs[c].selected then
+            table.insert(temp_fill,BSFX.packs[c])
         end
+        c = c + 1
     end
-end 
+
+    local row = 1
+    for i,v in ipairs(temp_fill) do
+        local card = BSFX.create_fake_card("j_"..v.mod_prefix.."_"..v.name, BSFX.CARDAREAS["available"..row])
+        card.ability.bsfx_card = true
+        card:resize(0.7)
+        if #BSFX.CARDAREAS["available"..row].cards >= BSFX.card_per_row then row = row + 1 end
+    end
+end
 
 function G.FUNCS.bsfx_next_page(e)
-
+    if BSFX.page >= #BSFX.packs/(BSFX.row*BSFX.card_per_row) then return end
+    BSFX.page = BSFX.page + 1
+    BSFX.load_cards()
 end
 
 function G.FUNCS.bsfx_prev_page(e)
-
+    if BSFX.page <= 1 then return end
+    BSFX.page = BSFX.page - 1
+    BSFX.load_cards()
 end
 
 BSFX.config_tab = function ()
