@@ -63,11 +63,6 @@ BSFX.Pack = function(args)
             text = {loc_desc, authors_desc, mods_desc}
         }
     }
-    returntable.name = name
-    returntable.mods = mods
-    returntable.desc = desc
-    returntable.authors = authors
-    returntable.thumb = SMODS.Atlas { key = thumb , path = thumb..".png", px = 71, py = 95}
     returntable.selected = false
     returntable.mod_prefix = SMODS.current_mod.prefix
     BSFX.packs[name] = returntable
