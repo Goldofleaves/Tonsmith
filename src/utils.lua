@@ -48,6 +48,7 @@ BSFX.Pack = function(args)
     returntable.joker = SMODS.Joker {
         no_collection = false,
         prefix_config = {key = false},
+        config = {extra = {BSFX = true}},
         key = name,
         in_pool = function(self, args)
             return false
