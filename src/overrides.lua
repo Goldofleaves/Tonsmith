@@ -1,48 +1,6 @@
-local ref = CardArea.can_highlight
-
-function CardArea:can_highlight(card)
-    if self.config.type == "bsfx_list" then return true end
-    ref(self,card)
-end
-
-local ref = CardArea.update
-
-function CardArea:update(dt)
-    local c = 0
-    for _,_ in pairs(BSFX.packs) do c = c + 1 end
-    if self.config.type == "bsfx_list" then self.config.card_limit = c end
-    ref(self,dt)
-end
-
-local ref = CardArea.draw
-
-function CardArea:draw()
-    self.ARGS.draw_layers = self.ARGS.draw_layers or self.config.draw_layers or {'shadow', 'card'}
-    for k, v in ipairs(self.ARGS.draw_layers) do
-        if self.config.type == 'bsfx_list' or self.config.type == 'consumeable' or self.config.type == 'shop' or self.config.type == 'title_2' then 
-            for i = 1, #self.cards do 
-                if self.cards[i] ~= G.CONTROLLER.focused.target then
-                    if not self.cards[i].highlighted then
-                        if G.CONTROLLER.dragging.target ~= self.cards[i] then self.cards[i]:draw(v) end
-                    end
-                end
-            end
-            for i = 1, #self.cards do  
-                if self.cards[i] ~= G.CONTROLLER.focused.target then
-                    if self.cards[i].highlighted then
-                        if G.CONTROLLER.dragging.target ~= self.cards[i] then self.cards[i]:draw(v) end
-                    end
-                end
-            end
-        end
-    end
-    ref(self)
-end
-
-local ref = CardArea.align_cards
-
-function CardArea:align_cards()
-    if self.config.type == 'bsfx_list' then
+local hookTo = CardArea.align_cards
+function CardArea:align_cards(...)
+    if self.config and self.config.horizontal_align then
         for k, card in ipairs(self.cards) do
             if not card.states.drag.is then 
                 card.T.r = 0.1*(-#self.cards/2 - 0.5 + k)/(#self.cards)+ (G.SETTINGS.reduced_motion and 0 or 1)*0.02*math.sin(2*G.TIMERS.REAL+card.T.x)
@@ -61,7 +19,27 @@ function CardArea:align_cards()
                 card.T.x = card.T.x + card.shadow_parrallax.x/30
             end
         end
-        table.sort(self.cards, function (a, b) return a.T.x + a.T.w/2 - 100*(a.pinned and a.sort_id or 0) < b.T.x + b.T.w/2 - 100*(b.pinned and b.sort_id or 0) end)
-    end   
-    ref(self)
+        table.sort(self.cards, function (a, b) return a.T.x + a.T.w/2 - 100*((a.pinned and not a.ignore_pinned) and a.sort_id or 0) < b.T.x + b.T.w/2 - 100*((b.pinned and not b.ignore_pinned) and b.sort_id or 0) end)
+    else
+        local ret = hookTo(self,...)
+        return ret
+    end
+end
+
+local hookTo = CardArea.can_highlight
+function CardArea:can_highlight(...)
+    if self.config and self.config.no_highlight then
+        return false
+    else
+        return hookTo(self,...)
+    end
+end
+
+local hookTo = Card.click
+function Card:click(...)
+    local ret = hookTo(self,...)
+    if self.ability and self.ability.bsfx_card then
+        --do shit here
+    end
+    return ret
 end
