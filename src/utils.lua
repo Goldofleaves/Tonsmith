@@ -63,30 +63,34 @@ BSFX.Pack = function(args)
             text = {loc_desc, authors_desc, mods_desc}
         }
     }
+    returntable.name = name
     returntable.selected = false
     returntable.mod_prefix = SMODS.current_mod.prefix
-    BSFX.packs[name] = returntable
+    table.insert(BSFX.packs,returntable)
 end
 
 
 ---@param name string The sound pack to load.
 BSFX.toggle_pack = function(name)
-    local pack = BSFX.packs[name]
-    if pack.selected then
-        pack.selected = false
-        for _, sound in ipairs(pack.sounds) do
-            sound[1].replace = nil
-            SMODS.Sound.replace_sounds[sound[2]] = nil
+    for _, pack in ipairs(BSFX.packs) do
+        if pack.name == name then
+            if pack.selected then
+                pack.selected = false
+                for _, sound in ipairs(pack.sounds) do
+                    sound[1].replace = nil
+                    SMODS.Sound.replace_sounds[sound[2]] = nil
+                end
+            else
+                pack.selected = true
+                for _, sound in ipairs(pack.sounds) do
+                    sound[1].replace = sound[2]
+                    SMODS.Sound.replace_sounds[sound[2]] = {times = -1, key = sound[1].key}
+                end
+                -- return "i did it"
+            end
+                if next(BSFX.CARDAREAS) then
+                BSFX.load_cards()
+            end
         end
-    else
-        pack.selected = true
-        for _, sound in ipairs(pack.sounds) do
-            sound[1].replace = sound[2]
-            SMODS.Sound.replace_sounds[sound[2]] = {times = -1, key = sound[1].key}
-        end
-        -- return "i did it"
-    end
-        if next(BSFX.CARDAREAS) then
-        BSFX.load_cards()
     end
 end

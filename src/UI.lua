@@ -94,8 +94,7 @@ function BSFX.refresh_cardareas()
 end
 
 function BSFX.load_cards()
-    local row = 1
-    local card_n = 1
+    
     for _,v in pairs(BSFX.CARDAREAS) do
         if v.cards then
             for _,vv in ipairs(v.cards) do
@@ -108,6 +107,8 @@ function BSFX.load_cards()
     local n_packs = 0
     for _,_ in pairs(BSFX.packs) do n_packs = n_packs + 1 end
     if n_packs < 1 then return end
+    local row = 1
+    local card_n = 1
     
     for k,v in pairs(BSFX.packs) do
         if v.selected then
