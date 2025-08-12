@@ -31,19 +31,12 @@ BSFX.Pack = function(args)
     for i,sound in ipairs(sound_table) do
         sound.name = sound.name or ""
         sound.extention = sound.extention or ".ogg"
-        sound.properties = sound.properties or {vanilla = true, modded = false}
-        if sound.properties.vanilla == nil then sound.properties.vanilla = true end
-        if sound.properties.modded == nil then sound.properties.modded = false end
+        sound.properties = sound.properties or {} 
             sound.properties.prefix = sound.properties.prefix or "_"
-        returntable.sounds[i][1] = SMODS.Sound {
+        returntable.sounds[i] = SMODS.Sound {
             key = sound.name,
-            path = sound.name..sound.extention }
-        if sound.properties.modded then
-            returntable.sounds[i][2] = sound.properties.prefix..sound.name
-        end
-        if sound.properties.vanilla then
-            returntable.sounds[i][2] = BSFX.truncate_string(sound[1].path, string.len(sound[1].path) - 4)
-        end
+            path = sound.name..sound.extention },
+            sound.properties.prefix..sound.name }
     end
     returntable.name = name
     returntable.mods = mods
