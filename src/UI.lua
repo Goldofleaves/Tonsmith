@@ -16,7 +16,7 @@ function Card:resize(mod)
     self:set_sprites(self.config.center, self.base.id and self.config.card)
 end
 
-function BetterSFX.create_fake_card(c_key, area) --Taken from Balatro Star Rail :3
+function BSFX.create_fake_card(c_key, area) --Taken from Balatro Star Rail :3
     local card = Card(area.T.x + area.T.w / 2, area.T.y,
     G.CARD_W, G.CARD_H, G.P_CARDS.empty,
     G.P_CENTERS[c_key])
@@ -86,22 +86,22 @@ function bsfx_create_text_input(args)
     return t
 end
 
-function BetterSFX.refresh_cardareas()
+function BSFX.refresh_cardareas()
     for i,v in pairs(BSFX.CARDAREAS) do
         v:remove()
         BSFX.CARDAREAS[i] = nil
     end
 end
 
-function BetterSFX.load_cards()
+function BSFX.load_cards()
     local test_placement = {"j_joker", "j_joker", "j_joker"}
     if test_placement then
         for _,v in ipairs(test_placement) do
-            local card = BetterSFX.create_fake_card(v, BSFX.CARDAREAS.selected)
+            local card = BSFX.create_fake_card(v, BSFX.CARDAREAS.selected)
             card.ability.bsfx_card = true
             card:resize(0.7)
             for i = 1, BSFX.row do
-                local card = BetterSFX.create_fake_card(v, BSFX.CARDAREAS["available"..i])
+                local card = BSFX.create_fake_card(v, BSFX.CARDAREAS["available"..i])
                 card.ability.bsfx_card = true
                 card:resize(0.7)
             end
@@ -117,8 +117,8 @@ function G.FUNCS.bsfx_prev_page(e)
 
 end
 
-BetterSFX.config_tab = function ()
-    BetterSFX.refresh_cardareas()
+BSFX.config_tab = function ()
+    BSFX.refresh_cardareas()
 
     BSFX.CARDAREAS.selected = CardArea(
         G.ROOM.T.x + 0.2 * G.ROOM.T.w / 2, G.ROOM.T.h,
@@ -183,7 +183,7 @@ BetterSFX.config_tab = function ()
         }},
     }}
 
-    BetterSFX.load_cards()
+    BSFX.load_cards()
 
     return {n = G.UIT.ROOT, config = {r = 0.1, minw = 5, align = "cm", padding = 0.15, colour = G.C.BLACK}, nodes = { 
         {n = G.UIT.C, config = {align = "cm", padding = 0.1}, nodes = {

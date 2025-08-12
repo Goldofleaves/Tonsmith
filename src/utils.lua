@@ -30,8 +30,8 @@ BSFX.Pack = function(args)
     returntable.sounds = {}
     for i,sound in ipairs(sound_table) do
         sound.name = sound.name or ""
-        sound.extention = sound.extention or ".ogg 
-        sound.prefix = sound.prefix or "_"
+        sound.extention = sound.extention or ".ogg"
+        sound.prefix = sound.prefix or ""
         returntable.sounds[i] = {SMODS.Sound {
             key = sound.name,
             path = sound.name..sound.extention },
