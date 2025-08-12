@@ -67,6 +67,11 @@ BSFX.Pack = function(args)
     returntable.name = name
     returntable.selected = false
     returntable.mod_prefix = SMODS.current_mod.prefix
+    returntable.priority = 0
+
+    for i,v in ipairs(BSFX.mod_config.soundpack_priority) do
+        if v == returntable.mod_prefix.."_"..returntable.name then returntable.priority = i end
+    end
     table.insert(BSFX.packs,returntable)
 end
 
@@ -75,17 +80,29 @@ end
 BSFX.toggle_pack = function(name)
     for _, pack in ipairs(BSFX.packs) do
         if pack.name == name then
-            if pack.selected then
+            if pack.selected then -- Disable pack
                 pack.selected = false
                 for _, sound in ipairs(pack.sounds) do
                     sound[1].replace = nil
                     SMODS.Sound.replace_sounds[sound[2]] = nil
                 end
-            else
+
+                for i,v in ipairs(BSFX.mod_config.soundpack_priority) do
+                    if v == pack.mod_prefix.."_"..pack.name then
+                        table.remove(BSFX.mod_config.soundpack_priority,i)
+                    end
+                end
+                pack.priority = 0
+            else -- Enable pack
                 pack.selected = true
                 for _, sound in ipairs(pack.sounds) do
                     sound[1].replace = sound[2]
                     SMODS.Sound.replace_sounds[sound[2]] = {times = -1, key = sound[1].key}
+                end
+                for i,v in ipairs(BSFX.CARDAREAS.selected.cards) do
+                    if v.config.center.mod.prefix.."_"..v.config.center.original_key == pack.mod_prefix.."_"..pack.name then
+                        pack.priority = i
+                    end
                 end
                 -- return "i did it"
             end
@@ -93,5 +110,38 @@ BSFX.toggle_pack = function(name)
                 BSFX.load_cards()
             end
         end
+    end
+end
+
+function BSFX.save_soundpack_order ()
+    for i,v in ipairs(BSFX.CARDAREAS.selected.cards) do
+        BSFX.mod_config.soundpack_priority[i] = v.config.center.mod.prefix.."_"..v.config.center.original_key
+        for ii, vv in ipairs(BSFX.packs) do
+            if v.config.center.mod.prefix.."_"..v.config.center.original_key == vv.mod_prefix.."_"..vv.name then
+                vv.priority = i
+            end
+        end
+    end
+end
+
+G.FUNCS.BSFX_save_soundpack = BSFX.save_soundpack_order
+
+function BSFX.load_soundpack_order ()
+    for i,v in ipairs(BSFX.CARDAREAS.selected.cards) do
+        v:start_dissolve(nil,true,0)
+    end
+
+    for i,v in ipairs(BSFX.packs) do
+        if v.priority == 0 and v.selected then
+            local card = BSFX.create_fake_card("j_"..v.mod_prefix.."_"..v.name,BSFX.CARDAREAS.selected)
+            card.ability.bsfx_card = true
+            card:resize(0.7)
+        end
+    end
+
+    for i,v in ipairs(BSFX.mod_config.soundpack_priority) do
+        local card = BSFX.create_fake_card("j_"..v,BSFX.CARDAREAS.selected)
+        card.ability.bsfx_card = true
+        card:resize(0.7)
     end
 end

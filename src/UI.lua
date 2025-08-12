@@ -110,12 +110,10 @@ function BSFX.load_cards()
     local row = 1
     local card_n = 1
     
+    BSFX.load_soundpack_order()
+
     for k,v in pairs(BSFX.packs) do
-        if v.selected then
-            local card = BSFX.create_fake_card("j_"..v.mod_prefix.."_"..v.name, BSFX.CARDAREAS.selected)
-            card.ability.bsfx_card = true
-            card:resize(0.7)
-        else
+        if not v.selected then
             if card_n <= BSFX.row*BSFX.card_per_row then
                 local card = BSFX.create_fake_card("j_"..v.mod_prefix.."_"..v.name, BSFX.CARDAREAS["available"..row])
                 card.ability.bsfx_card = true
@@ -213,7 +211,7 @@ BSFX.config_tab = function ()
             }},
             {n = G.UIT.R, config = {align = "cm", colour = {G.C.L_BLACK[1], G.C.L_BLACK[2], G.C.L_BLACK[3], 0.5}, r = 0.2, padding = 0.1}, nodes = {
                 {n = G.UIT.T, config = {text = "SELECTED", scale = 0.45, colour = lighten(G.C.GREY,0.2), vert = true}},
-                {n = G.UIT.O, config = {object = BSFX.CARDAREAS.selected}}
+                {n = G.UIT.O, config = {object = BSFX.CARDAREAS.selected, func = "BSFX_save_soundpack"}}
             }},
             {n = G.UIT.R, config = {align = "cr", padding = 0.1}, nodes = {
                 {n = G.UIT.C, config = {align = "cm", colour = {G.C.L_BLACK[1], G.C.L_BLACK[2], G.C.L_BLACK[3], 0.5}, r = 0.2, padding = 0.1}, nodes = {

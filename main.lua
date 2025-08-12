@@ -5,6 +5,7 @@ BSFX = {
     page = 1,
     prompt_text_input = "",
     menu_mod = "base",
+    mod_config = SMODS.current_mod.config
 }
 SMODS.Atlas{key = "modicon", path = "modicon.png", px = 32, py = 32}
 
