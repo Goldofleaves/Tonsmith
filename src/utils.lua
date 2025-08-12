@@ -1,74 +1,4 @@
 BSFX.packs = {}
----Defines and creates a vanilla soundpack for BetterSFX to load.<br>
----@param args {name:string,description:string[],authors:string[],sound_table:table[],thumbnail:string,extension?:".ogg"|string}
----`name` - The Name of the sound pack.<br>
----`description` - The Description of the sound pack.<br>
----`authors` - The authors of the soundpack.<br>
----`thumbnail` - string The thumbnail of the sound pack (Excluding the png suffix).<br>
----`sound_table` - The table of sounds to load, excluding the file extension.<br>
----`extension` - The file extention.<br>
-BSFX.Pack_Vanilla = function(args)
-    local name = args.name or ""
-    local desc = args.description or {}
-    local authors = args.authors or {}
-    local sound_table = args.sound_table or {}
-    local thumb = args.thumbnail
-    local f_extension = args.extension or ".ogg"
-
-    local returntable = {}
-    returntable.sounds = {}
-    for i,sound in ipairs(sound_table) do
-        returntable.sounds[i] = SMODS.Sound {
-            key = sound,
-            path = sound..f_extension
-        }
-    end
-    returntable.name = name
-    returntable.desc = desc
-    returntable.authors = authors
-    returntable.thumb = SMODS.Atlas { key = thumb , path = thumb..".png", px = 71, py = 95}
-    returntable.selected = false
-    returntable.modded = false
-    BSFX.packs[name] = returntable
-end
-
----Defines and creates a modded soundpack for BetterSFX to load.<br>
----@param args {name:string,modprefix:string,mod:string,description:string[],authors:string[],sound_table:table[],thumbnail:string,extension?:".ogg"|string}
----`name` - The Name of the sound pack.<br>
----`modprefix` - The mod prefix the sound pack replaces. Includes the "_" (Underscore).<br>
----`mod` - The mod whos sound you replace..<br>
----`description` - The Description of the sound pack.<br>
----`authors` - The authors of the soundpack.<br>
----`thumbnail` - string The thumbnail of the sound pack (Excluding the png suffix).<br>
----`sound_table` - The table of sounds to load, excluding the file extension.<br>
----`extension` - The file extention.<br>
-BSFX.Pack_Modded = function(args)
-    local name = args.name or ""
-    local desc = args.description or {}
-    local prefix = args.modprefix or "_"
-    local authors = args.authors or {}
-    local sound_table = args.sound_table or {}
-    local thumb = args.thumbnail
-    local f_extension = args.extension or ".ogg"
-    local mod = args.mod or "None"
-
-    local returntable = {}
-    returntable.sounds = {}
-    for i,sound in ipairs(sound_table) do
-        returntable.sounds[i] = {SMODS.Sound {
-            key = sound[1],
-            path = sound[1]..f_extension
-        }, prefix..sound[2]}
-    end
-    returntable.name = name
-    returntable.desc = desc
-    returntable.authors = authors
-    returntable.thumb = SMODS.Atlas { key = thumb , path = thumb..".png", px = 71, py = 95}
-    returntable.selected = false
-    returntable.mod = mod
-    returntable.modded = true
-    BSFX.packs[name] = returntable
-end
 
 function BSFX.truncate_string(str, length)
     if length > string.len(str) then
@@ -81,38 +11,65 @@ function BSFX.truncate_string(str, length)
     return returnstring
 end
 
----@param name table The sound pack to load.
+---Defines and creates a vanilla soundpack for BetterSFX to load.<br>
+---@param args {name:string,mods:string[],description:string[],authors:string[],sound_table:table[],thumbnail:string,extension?:".ogg"|string}
+---`name` - The Name of the sound pack.<br>
+---`description` - The Description of the sound pack.<br>
+---`authors` - The authors of the soundpack.<br>
+---`thumbnail` - string The thumbnail of the sound pack (Excluding the png suffix).<br>
+---`sound_table` - The table of sounds to load, excluding the file extension.<br>
+---`extension` - The file extention.<br>
+BSFX.Pack = function(args)
+    local name = args.name or ""
+    local desc = args.description or {}
+    local authors = args.authors or {}
+    local sound_table = args.sound_table or {}
+    local mods = args.mods or {"None"}
+    local thumb = args.thumbnail
+    local returntable = {}
+    returntable.sounds = {}
+    for i,sound in ipairs(sound_table) do
+        sound.name = sound.name or ""
+        sound.extention = sound.extention or ".ogg"
+        sound.properties = sound.properties or {vanilla = true, modded = false}
+        if sound.properties.vanilla == nil then sound.properties.vanilla = true end
+        if sound.properties.modded == nil then sound.properties.modded = false end
+            sound.properties.prefix = sound.properties.prefix or "_"
+        returntable.sounds[i][1] = SMODS.Sound {
+            key = sound.name,
+            path = sound.name..sound.extention }
+        if sound.properties.modded then
+            returntable.sounds[i][2] = sound.properties.prefix..sound.name
+        end
+        if sound.properties.vanilla then
+            returntable.sounds[i][2] = BSFX.truncate_string(sound[1].path, string.len(sound[1].path) - 4)
+        end
+    end
+    returntable.name = name
+    returntable.mods = mods
+    returntable.desc = desc
+    returntable.authors = authors
+    returntable.thumb = SMODS.Atlas { key = thumb , path = thumb..".png", px = 71, py = 95}
+    returntable.selected = false
+    BSFX.packs[name] = returntable
+end
+
+
+---@param name string The sound pack to load.
 BSFX.toggle_pack = function(name)
     local pack = BSFX.packs[name]
-    if not pack.modded then
-        if pack.selected then
-            pack.selected = false
-            for _, sound in ipairs(pack.sounds) do
-                sound.replace = nil
-                SMODS.Sound.replace_sounds[BSFX.truncate_string(sound.path, string.len(sound.path) - 4)] = nil
-            end
-        else
-            pack.selected = true
-            for _, sound in ipairs(pack.sounds) do
-                sound.replace = BSFX.truncate_string(sound.path, string.len(sound.path) - 4)
-                SMODS.Sound.replace_sounds[BSFX.truncate_string(sound.path, string.len(sound.path) - 4)] = {times = -1, key = sound.key}
-            end
-            -- return "i did it"
+    if pack.selected then
+        pack.selected = false
+        for _, sound in ipairs(pack.sounds) do
+            sound[1].replace = nil
+            SMODS.Sound.replace_sounds[sound[2]] = nil
         end
     else
-        if pack.selected then
-            pack.selected = false
-            for _, sound in ipairs(pack.sounds) do
-                sound[1].replace = nil
-                SMODS.Sound.replace_sounds[sound[2]] = nil
-            end
-        else
-            pack.selected = true
-            for _, sound in ipairs(pack.sounds) do
-                sound[1].replace = sound[2]
-                SMODS.Sound.replace_sounds[sound[2]] = {times = -1, key = sound[1].key}
-            end
-            -- return "i did it"
+        pack.selected = true
+        for _, sound in ipairs(pack.sounds) do
+            sound[1].replace = sound[2]
+            SMODS.Sound.replace_sounds[sound[2]] = {times = -1, key = sound[1].key}
         end
+        -- return "i did it"
     end
 end
