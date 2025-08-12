@@ -203,7 +203,7 @@ BSFX.config_tab = function ()
 
     BSFX.load_cards()
 
-    return {n = G.UIT.ROOT, config = {r = 0.1, minw = 5, align = "cm", padding = 0.15, colour = G.C.BLACK}, nodes = { 
+    return {n = G.UIT.ROOT, config = {r = 0.1, minw = 5, align = "cm", padding = 0.05, colour = G.C.BLACK}, nodes = { 
         {n = G.UIT.C, config = {align = "cm", padding = 0.1}, nodes = {
             {n = G.UIT.R, config = {align = "tm", colour = G.C.CLEAR}, nodes = {
                 {n = G.UIT.C, config = {align = "tm", colour = G.C.CLEAR}, nodes = {

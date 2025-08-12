@@ -39,7 +39,20 @@ local hookTo = Card.click
 function Card:click(...)
     local ret = hookTo(self,...)
     if self.ability and self.ability.bsfx_card then
-        --do shit here
+        BSFX.toggle_pack(self.config.center.original_key)
     end
     return ret
+end
+
+
+local ref = SMODS.create_mod_badges
+function SMODS.create_mod_badges(obj, badges)
+    if obj and type(obj.config.extra) ~= "nil" and not obj.config.extra.BSFX then
+        ref(obj, badges)
+    else
+        -- print("i did it")
+    end
+    if obj and type(obj.config.extra) == "nil" then
+        ref(obj, badges)
+    end
 end

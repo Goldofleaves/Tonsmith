@@ -1,7 +1,7 @@
 BSFX = {
     CARDAREAS = {},
     row = 2,
-    card_per_row = 7,
+    card_per_row = 6,
     page = 1,
     prompt_text_input = "",
     menu_mod = "base",

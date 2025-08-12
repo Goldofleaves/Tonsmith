@@ -58,6 +58,7 @@ BSFX.Pack = function(args)
         end,
         atlas = thumb,
         pos = { x = 0, y = 0 },
+        config = {extra = {BSFX = true}},
         loc_txt = {
             name = name,
             text = {loc_desc, authors_desc, mods_desc}
