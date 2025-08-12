@@ -46,13 +46,15 @@ BSFX.Pack = function(args)
     end
     SMODS.Atlas { key = thumb , path = thumb..".png", px = 71, py = 95}
     returntable.joker = SMODS.Joker {
-        no_collection = false,
-        prefix_config = {key = false},
+        no_collection = true,
+        unlocked = true,
+        discovered = true,
         key = name,
         in_pool = function(self, args)
             return false
         end,
         set_card_type_badge = function (self, card, badges)
+            badges[1] = nil
         end,
         atlas = thumb,
         pos = { x = 0, y = 0 },
@@ -67,6 +69,7 @@ BSFX.Pack = function(args)
     returntable.authors = authors
     returntable.thumb = SMODS.Atlas { key = thumb , path = thumb..".png", px = 71, py = 95}
     returntable.selected = false
+    returntable.mod_prefix = SMODS.current_mod.prefix
     BSFX.packs[name] = returntable
 end
 
@@ -87,5 +90,8 @@ BSFX.toggle_pack = function(name)
             SMODS.Sound.replace_sounds[sound[2]] = {times = -1, key = sound[1].key}
         end
         -- return "i did it"
+    end
+        if next(BSFX.CARDAREAS) then
+        BSFX.load_cards()
     end
 end

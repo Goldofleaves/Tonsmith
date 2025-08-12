@@ -94,17 +94,34 @@ function BSFX.refresh_cardareas()
 end
 
 function BSFX.load_cards()
-    local test_placement = {"j_joker", "j_joker", "j_joker"}
-    if test_placement then
-        for _,v in ipairs(test_placement) do
-            local card = BSFX.create_fake_card(v, BSFX.CARDAREAS.selected)
+    local row = 1
+    local card_n = 1
+    for _,v in pairs(BSFX.CARDAREAS) do
+        if v.cards then
+            for _,vv in ipairs(v.cards) do
+                vv:start_dissolve(nil,true,0)
+            end
+            v.cards = {}
+        end
+    end
+    if not BSFX.CARDAREAS.selected.cards then return end
+    local n_packs = 0
+    for _,_ in pairs(BSFX.packs) do n_packs = n_packs + 1 end
+    if n_packs < 1 then return end
+    
+    for k,v in pairs(BSFX.packs) do
+        if v.selected then
+            local card = BSFX.create_fake_card("j_"..v.mod_prefix.."_"..v.name, BSFX.CARDAREAS.selected)
             card.ability.bsfx_card = true
             card:resize(0.7)
-            for i = 1, BSFX.row do
-                local card = BSFX.create_fake_card(v, BSFX.CARDAREAS["available"..i])
+        else
+            if card_n <= BSFX.row*BSFX.card_per_row then
+                local card = BSFX.create_fake_card("j_"..v.mod_prefix.."_"..v.name, BSFX.CARDAREAS["available"..row])
                 card.ability.bsfx_card = true
                 card:resize(0.7)
+                if #BSFX.CARDAREAS["available"..row].cards >= BSFX.card_per_row then row = row + 1 end
             end
+            card_n = card_n + 1
         end
     end
 end 
