@@ -33,7 +33,7 @@ BSFX.Pack = function(args)
         sound.extention = sound.extention or ".ogg"
         sound.properties = sound.properties or {} 
             sound.properties.prefix = sound.properties.prefix or "_"
-        returntable.sounds[i] = SMODS.Sound {
+        returntable.sounds[i] = {SMODS.Sound {
             key = sound.name,
             path = sound.name..sound.extention },
             sound.properties.prefix..sound.name }
