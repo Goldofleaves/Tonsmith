@@ -40,6 +40,12 @@ function Card:click(...)
     local ret = hookTo(self,...)
     if self.ability and self.ability.bsfx_card then
         BSFX.toggle_pack(self.config.center.original_key)
+        G.E_MANAGER:add_event(Event{
+            func = function ()
+                BSFX.load_soundpack_order()
+                return true
+            end
+        })
     end
     return ret
 end
@@ -47,6 +53,7 @@ end
 
 local ref = SMODS.create_mod_badges
 function SMODS.create_mod_badges(obj, badges)
+<<<<<<< HEAD
     if obj then
         if obj.config then
             if type(obj.config.extra) ~= "table" then
@@ -57,7 +64,17 @@ function SMODS.create_mod_badges(obj, badges)
         else
             ref(obj,badges)
         end
+=======
+    if obj and obj.config and type(obj.config.extra) == "table" and not obj.config.extra.BSFX then
+        ref(obj, badges)
+>>>>>>> 9e44b209af68220e28108046c9da2b48cb022c23
     else
         ref(obj, badges)
     end
+end
+
+local ref = Game.main_menu
+function Game:main_menu(change_context)
+    BSFX.load_soundpack_order()
+    ref(self,change_context)
 end
