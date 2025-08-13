@@ -132,6 +132,8 @@ function BSFX.load_soundpack_order ()
         for ii, vv in ipairs(BSFX.packs) do
             -- Compares the card key and the pack key.
             if v == vv.mod_prefix.."_"..vv.name then
+                vv.selected = true
+                vv.priority = i
                 for _, sound in ipairs(vv.sounds) do
                     sound[1].replace = sound[2]
                     SMODS.Sound.replace_sounds[sound[2]] = {times = -1, key = sound[1].key}

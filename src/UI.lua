@@ -131,18 +131,18 @@ function BSFX.load_cards()
     BSFX.load_soundpack_order()
 
     local temp_fill = {}
-    local c = 1+(BSFX.row*BSFX.card_per_row*(BSFX.page-1))
-    while #temp_fill < BSFX.row*BSFX.card_per_row do
-        if c > #BSFX.packs then break end
-        if not BSFX.packs[c] then return end
-        if not BSFX.packs[c].selected and BSFX.packs[c].priority == 0 then
-            table.insert(temp_fill,BSFX.packs[c])
+
+    for i,v in ipairs(BSFX.packs) do
+        if v and not v.selected then
+            table.insert(temp_fill,v)
         end
-        c = c + 1
     end
+
+    for i=1, (BSFX.row*BSFX.card_per_row*(BSFX.page-1)) do table.remove(temp_fill,1) end
 
     local row = 1
     for i,v in ipairs(temp_fill) do
+        if row > BSFX.row then break end
         local card = BSFX.create_fake_card("j_"..v.mod_prefix.."_"..v.name, BSFX.CARDAREAS["available"..row])
         card.ability.bsfx_card = true
         card:resize(0.7)
@@ -162,7 +162,7 @@ function G.FUNCS.bsfx_prev_page(e)
     BSFX.load_cards()
 end
 
-BSFX.config_tab = function ()
+BSFX.config_tab = function ()   
     BSFX.refresh_cardareas()
 
     BSFX.CARDAREAS.selected = CardArea(
@@ -219,11 +219,11 @@ BSFX.config_tab = function ()
                 {n = G.UIT.T, config = {text = "<", scale = 0.4, colour = G.C.UI.TEXT_LIGHT}}
             }}
         }},
-        {n = G.UIT.C, config = {align = "cm", minw = 0.5, minh = 0.5, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLACK, shadow = true}, nodes = {
+        --[[{n = G.UIT.C, config = {align = "cm", minw = 0.5, minh = 0.5, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLACK, shadow = true}, nodes = {
             {n = G.UIT.R, config = {align = "cm", padding = 0.05}, nodes = {
                 {n = G.UIT.T, config = {text = "Page"..BSFX.page.."/"..page_count, scale = 0.4, colour = G.C.UI.TEXT_LIGHT, id = "page_test"}}
             }}
-        }}, 
+        }},]]
         {n = G.UIT.C, config = {align = "cm", minw = 0.5, minh = 0.5, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLACK, shadow = true, button = "bsfx_next_page"}, nodes = {
             {n = G.UIT.R, config = {align = "cm", padding = 0.05}, nodes = {
                 {n = G.UIT.T, config = {text = ">", scale = 0.4, colour = G.C.UI.TEXT_LIGHT}}
@@ -245,7 +245,7 @@ BSFX.config_tab = function ()
                 {n = G.UIT.T, config = {text = "SELECTED", scale = 0.45, colour = lighten(G.C.GREY,0.2), vert = true}},
                 {n = G.UIT.O, config = {object = BSFX.CARDAREAS.selected, func = "BSFX_save_soundpack"}}
             }},
-            {n = G.UIT.R, config = {align = "cr", padding = 0.1}, nodes = {
+            --[[{n = G.UIT.R, config = {align = "cr", padding = 0.1}, nodes = {
                 {n = G.UIT.C, config = {align = "cm", colour = {G.C.L_BLACK[1], G.C.L_BLACK[2], G.C.L_BLACK[3], 0.5}, r = 0.2, padding = 0.1}, nodes = {
                     {n = G.UIT.T, config = {text = "SEARCH", scale = 0.3, colour = lighten(G.C.GREY,0.2), vert = true}},
                     bsfx_create_text_input({w = 3, prompt_text = BSFX.prompt_text or "", id = "bsfx_search", extended_corpus = true, ref_table = BSFX, ref_value = 'prompt_text_input',
@@ -260,6 +260,7 @@ BSFX.config_tab = function ()
                     }},
                 }},
             }},
+            ]]
             {n = G.UIT.R, config = {align = "cm", colour = {G.C.L_BLACK[1], G.C.L_BLACK[2], G.C.L_BLACK[3], 0.5}, r = 0.2}, nodes = select_nodes},
         }},
     }}
