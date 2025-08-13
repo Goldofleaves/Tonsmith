@@ -123,14 +123,11 @@ end
 G.FUNCS.BSFX_save_soundpack = BSFX.save_soundpack_order
 
 function BSFX.load_soundpack_order ()
-
     -- Load modded sounds, in order of priority
-    for i,v in ipairs(BSFX.CARDAREAS.selected.cards) do
-        -- Save the priority to the config file.
-        BSFX.mod_config.soundpack_priority[i] = v.config.center.mod.prefix.."_"..v.config.center.original_key
+    for i,v in ipairs(BSFX.mod_config.soundpack_priority) do
         for ii, vv in ipairs(BSFX.packs) do
             -- Compares the card key and the pack key.
-            if v.config.center.mod.prefix.."_"..v.config.center.original_key == vv.mod_prefix.."_"..vv.name then
+            if v == vv.mod_prefix.."_"..vv.name then
                 for _, sound in ipairs(vv.sounds) do
                     sound[1].replace = sound[2]
                     SMODS.Sound.replace_sounds[sound[2]] = {times = -1, key = sound[1].key}

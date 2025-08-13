@@ -211,7 +211,7 @@ BSFX.config_tab = function ()
     end
 
     local page_count = 1
-    if #BSFX.packs ~= 0 then page_count = math.ceil((BSFX.row*BSFX.card_per_row)/#BSFX.packs) end
+    if #BSFX.packs ~= 0 then page_count = math.ceil((#BSFX.packs/(BSFX.row*BSFX.card_per_row))) end
 
     select_nodes[1].nodes[2].nodes[1].nodes[#select_nodes[1].nodes[2].nodes[1].nodes+1] = {n = G.UIT.R, config = {align = "cm", padding = 0.02}, nodes = {
         {n = G.UIT.C, config = {align = "cm", minw = 0.5, minh = 0.5, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLACK, shadow = true, button = "bsfx_prev_page"}, nodes = {
@@ -221,7 +221,7 @@ BSFX.config_tab = function ()
         }},
         {n = G.UIT.C, config = {align = "cm", minw = 0.5, minh = 0.5, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLACK, shadow = true}, nodes = {
             {n = G.UIT.R, config = {align = "cm", padding = 0.05}, nodes = {
-                {n = G.UIT.T, config = {text = "Page"..BSFX.page.."/"..page_count, scale = 0.4, colour = G.C.UI.TEXT_LIGHT}}
+                {n = G.UIT.T, config = {text = "Page"..BSFX.page.."/"..page_count, scale = 0.4, colour = G.C.UI.TEXT_LIGHT, id = "page_test"}}
             }}
         }}, 
         {n = G.UIT.C, config = {align = "cm", minw = 0.5, minh = 0.5, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLACK, shadow = true, button = "bsfx_next_page"}, nodes = {
