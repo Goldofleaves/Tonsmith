@@ -1,0 +1,3 @@
+return {
+    soundpack_priority = {}
+}

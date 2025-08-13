@@ -1,9 +1,0 @@
-{
-	"id": "betterSFX",
-	"name": "Better SFX",
-	"author": ["GoldenLeaf"],
-	"description": "Replaces sound effects from the base game.",
-	"prefix": "bsfx",
-	"main_file": "main.lua",
-	"version": "1.0.0"
-}

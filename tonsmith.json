@@ -1,0 +1,10 @@
+{
+	"id": "tonsmith",
+	"name": "Tonsmith",
+	"author": ["GoldenLeaf","Jogla","BepisFewer"],
+	"description": "Replaces sound effects from the base game.",
+	"prefix": "tnsmi",
+	"main_file": "main.lua",
+	"version": "1.0.0",
+	"priority": "-3000"
+}
