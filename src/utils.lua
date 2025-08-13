@@ -51,9 +51,9 @@ TNSMI.Pack = function(args)
         unlocked = true,
         discovered = true,
         key = name,
-        loc_vars = function (self, info_queue, card)
+        --[[loc_vars = function (self, info_queue, card)
             info_queue[#info_queue+1] = G.P_CENTERS.m_stone
-        end,
+        end,]]
         in_pool = function(self, args)
             return false
         end,
