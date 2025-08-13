@@ -1,13 +1,8 @@
 BSFX.packs = {}
 
 ---Defines and creates a vanilla soundpack for BetterSFX to load.<br>
+---[<u>View documentation<u>](https://github.com/Goldofleaves/BetterSFX/wiki#bsfxpack_vanilla)
 ---@param args {name:string,mods:string[],description:string[],authors:string[],sound_table:table[],thumbnail:string,extension?:".ogg"|string}
----`name` - The Name of the sound pack.<br>
----`description` - The Description of the sound pack.<br>
----`authors` - The authors of the soundpack.<br>
----`thumbnail` - string The thumbnail of the sound pack (Excluding the png suffix).<br>
----`sound_table` - The table of sounds to load, excluding the file extension.<br>
----`extension` - The file extention.<br>
 BSFX.Pack = function(args)
     local name = args.name or ""
     local desc = args.description or {}
@@ -19,12 +14,12 @@ BSFX.Pack = function(args)
     returntable.sounds = {}
     for i,sound in ipairs(sound_table) do
         sound.key = sound.key or ""
-        sound.extention = sound.extention or ".ogg"
+        sound.extention = sound.extention or "ogg"
         sound.prefix = sound.prefix or ""
         sound.file = sound.file or sound.key
         returntable.sounds[i] = {SMODS.Sound {
             key = sound.key,
-            path = sound.file..sound.extention,
+            path = sound.file.."."..sound.extention,
             pitch = sound.pitch,
             volume = sound.volume,
             sync = sound.sync
