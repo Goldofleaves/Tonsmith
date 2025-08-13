@@ -18,13 +18,18 @@ BSFX.Pack = function(args)
     local returntable = {}
     returntable.sounds = {}
     for i,sound in ipairs(sound_table) do
-        sound.name = sound.name or ""
+        sound.key = sound.key or ""
         sound.extention = sound.extention or ".ogg"
         sound.prefix = sound.prefix or ""
+        sound.file = sound.file or sound.key
         returntable.sounds[i] = {SMODS.Sound {
-            key = sound.name,
-            path = sound.name..sound.extention },
-            sound.prefix..sound.name }
+            key = sound.key,
+            path = sound.file..sound.extention,
+            pitch = sound.pitch,
+            volume = sound.volume,
+            sync = sound.sync
+        },
+        sound.prefix..sound.key }
     end
     local loc_desc = desc
     table.insert(loc_desc, 1, "{X:green,C:white}Description:")
