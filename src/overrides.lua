@@ -53,7 +53,6 @@ end
 
 local ref = SMODS.create_mod_badges
 function SMODS.create_mod_badges(obj, badges)
-<<<<<<< HEAD
     if obj then
         if obj.config then
             if type(obj.config.extra) ~= "table" then
@@ -64,10 +63,6 @@ function SMODS.create_mod_badges(obj, badges)
         else
             ref(obj,badges)
         end
-=======
-    if obj and obj.config and type(obj.config.extra) == "table" and not obj.config.extra.BSFX then
-        ref(obj, badges)
->>>>>>> 9e44b209af68220e28108046c9da2b48cb022c23
     else
         ref(obj, badges)
     end
