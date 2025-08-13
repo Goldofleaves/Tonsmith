@@ -125,7 +125,10 @@ function BSFX.save_soundpack_order ()
     end
 end
 
-G.FUNCS.BSFX_save_soundpack = BSFX.save_soundpack_order
+function G.FUNCS.BSFX_save_soundpack ()
+    BSFX.save_soundpack_order()
+    BSFX.load_soundpack_order()
+end
 
 function BSFX.load_soundpack_order ()
     -- Load modded sounds, in order of priority

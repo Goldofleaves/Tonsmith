@@ -112,6 +112,13 @@ function BSFX.load_cards()
         v:start_dissolve(nil,true,0)
     end
 
+    -- For already existing packs
+    for i,v in ipairs(BSFX.mod_config.soundpack_priority) do
+        local card = BSFX.create_fake_card("j_"..v,BSFX.CARDAREAS.selected)
+        card.ability.bsfx_card = true
+        card:resize(0.7)
+    end
+
     -- For newly added packs
     for i,v in ipairs(BSFX.packs) do
         if v.priority == 0 and v.selected then
@@ -119,13 +126,6 @@ function BSFX.load_cards()
             card.ability.bsfx_card = true
             card:resize(0.7)
         end
-    end
-
-    -- For already existing packs
-    for i,v in ipairs(BSFX.mod_config.soundpack_priority) do
-        local card = BSFX.create_fake_card("j_"..v,BSFX.CARDAREAS.selected)
-        card.ability.bsfx_card = true
-        card:resize(0.7)
     end
     
     BSFX.load_soundpack_order()
