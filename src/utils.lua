@@ -16,6 +16,7 @@ BSFX.Pack = function(args)
         sound.key = sound.key or ""
         sound.extention = sound.extention or "ogg"
         sound.prefix = sound.prefix or ""
+        if sound.prefix ~= "" then sound.prefix = sound.prefix.."_" end
         sound.file = sound.file or sound.key
         returntable.sounds[i] = {SMODS.Sound {
             key = sound.key,
