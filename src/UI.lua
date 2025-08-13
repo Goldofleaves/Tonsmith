@@ -1,4 +1,4 @@
-local function bsfx_desc_from_rows(desc_nodes, empty, align, maxw) 
+local function tnsmi_desc_from_rows(desc_nodes, empty, align, maxw) 
     local t = {}
     for k, v in ipairs(desc_nodes) do
         t[#t+1] = {n=G.UIT.R, config={align = align or "cl", maxw = maxw}, nodes=v}
@@ -16,7 +16,7 @@ function Card:resize(mod)
     self:set_sprites(self.config.center, self.base.id and self.config.card)
 end
 
-function BSFX.create_fake_card(c_key, area) --Taken from Balatro Star Rail :3
+function TNSMI.create_fake_card(c_key, area) --Taken from Balatro Star Rail :3
     local card = Card(area.T.x + area.T.w / 2, area.T.y,
     G.CARD_W, G.CARD_H, G.P_CARDS.empty,
     G.P_CENTERS[c_key])
@@ -32,7 +32,7 @@ function BSFX.create_fake_card(c_key, area) --Taken from Balatro Star Rail :3
     return card
 end
 
-G.FUNCS.bsfx_load_text_input = function(e)
+G.FUNCS.tnsmi_load_text_input = function(e)
     if not e.config or not e.config.auto_selected then
         if not e.config then e.config = {} end
         e.config.auto_selected = true
@@ -47,7 +47,7 @@ G.FUNCS.bsfx_load_text_input = function(e)
     end
 end
 
-function bsfx_create_text_input(args)
+function tnsmi_create_text_input(args)
     args = args or {}
     args.colour = copy_table(args.colour) or copy_table(G.C.BLUE)
     args.hooked_colour = copy_table(args.hooked_colour) or darken(copy_table(G.C.BLUE), 0.3)
@@ -75,9 +75,9 @@ function bsfx_create_text_input(args)
 
     local t = 
         {n=G.UIT.C, config={align = "cm", colour = G.C.CLEAR}, nodes = {
-            {n=G.UIT.C, config={id = args.id, align = "cm", padding = 0.05, r = 0.1, hover = true, colour = args.colour,minw = args.w, min_h = args.h, func = "bsfx_load_text_input", button = 'select_text_input', shadow = true}, nodes={
+            {n=G.UIT.C, config={id = args.id, align = "cm", padding = 0.05, r = 0.1, hover = true, colour = args.colour,minw = args.w, min_h = args.h, func = "tnsmi_load_text_input", button = 'select_text_input', shadow = true}, nodes={
                 {n=G.UIT.R, config={ref_table = args, padding = 0.05, align = "cm", r = 0.1, colour = G.C.CLEAR}, nodes={
-                {n=G.UIT.R, config={ref_table = args, align = "cm", r = 0.1, colour = G.C.CLEAR, func = 'text_input', bsfx_input = true}, nodes=
+                {n=G.UIT.R, config={ref_table = args, align = "cm", r = 0.1, colour = G.C.CLEAR, func = 'text_input', tnsmi_input = true}, nodes=
                     ui_letters
                 }
                 }}
@@ -85,17 +85,16 @@ function bsfx_create_text_input(args)
             }}
     return t
 end
-
-function BSFX.refresh_cardareas()
-    for i,v in pairs(BSFX.CARDAREAS) do
+function TNSMI.refresh_cardareas()
+    for i,v in pairs(TNSMI.CARDAREAS) do
         v:remove()
-        BSFX.CARDAREAS[i] = nil
+        TNSMI.CARDAREAS[i] = nil
     end
 end
 
-function BSFX.load_cards()
+function TNSMI.load_cards()
     
-    for _,v in pairs(BSFX.CARDAREAS) do
+    for _,v in pairs(TNSMI.CARDAREAS) do
         if v.cards then
             for _,vv in ipairs(v.cards) do
                 vv:start_dissolve(nil,true,0)
@@ -103,69 +102,72 @@ function BSFX.load_cards()
             v.cards = {}
         end
     end
-    if not BSFX.CARDAREAS.selected.cards then return end
+    if not TNSMI.CARDAREAS.selected.cards then return end
     local n_packs = 0
-    for _,_ in pairs(BSFX.packs) do n_packs = n_packs + 1 end
+    for _,_ in pairs(TNSMI.packs) do n_packs = n_packs + 1 end
     if n_packs < 1 then return end
     
-    for i,v in ipairs(BSFX.CARDAREAS.selected.cards) do
+    for i,v in ipairs(TNSMI.CARDAREAS.selected.cards) do
         v:start_dissolve(nil,true,0)
     end
 
     -- For already existing packs
-    for i,v in ipairs(BSFX.mod_config.soundpack_priority) do
-        local card = BSFX.create_fake_card("j_"..v,BSFX.CARDAREAS.selected)
-        card.ability.bsfx_card = true
+    for i,v in ipairs(TNSMI.mod_config.soundpack_priority) do
+        local card = TNSMI.create_fake_card("j_"..v,TNSMI.CARDAREAS.selected)
+        card.ability.tnsmi_card = true
         card:resize(0.7)
     end
 
     -- For newly added packs
-    for i,v in ipairs(BSFX.packs) do
+    for i,v in ipairs(TNSMI.packs) do
         if v.priority == 0 and v.selected then
-            local card = BSFX.create_fake_card("j_"..v.mod_prefix.."_"..v.name,BSFX.CARDAREAS.selected)
-            card.ability.bsfx_card = true
+            local card = TNSMI.create_fake_card("j_"..v.mod_prefix.."_"..v.name,TNSMI.CARDAREAS.selected)
+            card.ability.tnsmi_card = true
             card:resize(0.7)
         end
     end
     
-    BSFX.load_soundpack_order()
+    TNSMI.load_soundpack_order()
 
     local temp_fill = {}
 
-    for i,v in ipairs(BSFX.packs) do
+    for i,v in ipairs(TNSMI.packs) do
         if v and not v.selected then
             table.insert(temp_fill,v)
         end
     end
 
-    for i=1, (BSFX.row*BSFX.card_per_row*(BSFX.page-1)) do table.remove(temp_fill,1) end
+    for i=1, (TNSMI.row*TNSMI.card_per_row*(TNSMI.page-1)) do table.remove(temp_fill,1) end
 
     local row = 1
     for i,v in ipairs(temp_fill) do
-        if row > BSFX.row then break end
-        local card = BSFX.create_fake_card("j_"..v.mod_prefix.."_"..v.name, BSFX.CARDAREAS["available"..row])
-        card.ability.bsfx_card = true
+        if row > TNSMI.row then break end
+        local card = TNSMI.create_fake_card("j_"..v.mod_prefix.."_"..v.name, TNSMI.CARDAREAS["available"..row])
+        card.ability.tnsmi_card = true
         card:resize(0.7)
-        if #BSFX.CARDAREAS["available"..row].cards >= BSFX.card_per_row then row = row + 1 end
+        if #TNSMI.CARDAREAS["available"..row].cards >= TNSMI.card_per_row then row = row + 1 end
     end
 end
 
-function G.FUNCS.bsfx_next_page(e)
-    if BSFX.page >= #BSFX.packs/(BSFX.row*BSFX.card_per_row) then return end
-    BSFX.page = BSFX.page + 1
-    BSFX.load_cards()
+function G.FUNCS.tnsmi_next_page(e)
+    TNSMI.page = TNSMI.page + 1
+    TNSMI.page = ((TNSMI.page - 1) % math.ceil(#TNSMI.packs / (TNSMI.row * TNSMI.card_per_row))) + 1
+    TNSMI.load_cards()
 end
 
-function G.FUNCS.bsfx_prev_page(e)
-    if BSFX.page <= 1 then return end
-    BSFX.page = BSFX.page - 1
-    BSFX.load_cards()
+function G.FUNCS.tnsmi_prev_page(e)
+    TNSMI.page = TNSMI.page - 1
+    if TNSMI.page < 1 then
+        TNSMI.page = math.ceil(#TNSMI.packs / (TNSMI.row * TNSMI.card_per_row)) - TNSMI.page
+    end
+    TNSMI.load_cards()
 end
 
-BSFX.config_tab = function ()   
-    BSFX.refresh_cardareas()
 
-    BSFX.CARDAREAS.selected = CardArea(
+SMODS.current_mod.config_tab = function ()   
+    TNSMI.refresh_cardareas()
+
+    TNSMI.CARDAREAS.selected = CardArea(
         G.ROOM.T.x + 0.2 * G.ROOM.T.w / 2, G.ROOM.T.h,
         G.CARD_W * 4,
         G.CARD_H / 1.5,
@@ -173,13 +175,13 @@ BSFX.config_tab = function ()
     )
 
     local name_node = {}
-    localize {type = 'descriptions', key = "bsfx_config_tab_name", set = 'dictionary', nodes = name_node, scale = 2, text_colour = G.C.WHITE, shadow = true} 
-    name_node = bsfx_desc_from_rows(name_node,true,"cm") --Reorganizes the text in the node properly (?).
+    localize {type = 'descriptions', key = "tnsmi_config_tab_name", set = 'dictionary', nodes = name_node, scale = 2, text_colour = G.C.WHITE, shadow = true} 
+    name_node = tnsmi_desc_from_rows(name_node,true,"cm") --Reorganizes the text in the node properly (?).
     name_node.config.align = "cm"
 
     local desc_node = {}
-    localize {type = 'descriptions', key = "bsfx_config_tab_desc", set = 'dictionary', nodes = desc_node, scale = 1, text_colour = G.C.WHITE} 
-    desc_node = bsfx_desc_from_rows(desc_node,true,"cm")
+    localize {type = 'descriptions', key = "tnsmi_config_tab_desc", set = 'dictionary', nodes = desc_node, scale = 1, text_colour = G.C.WHITE} 
+    desc_node = tnsmi_desc_from_rows(desc_node,true,"cm")
     desc_node.config.align = "cm"
 
     local select_nodes = {
@@ -198,40 +200,37 @@ BSFX.config_tab = function ()
         }},
     }
 
-    for i = 1, BSFX.row do
-        BSFX.CARDAREAS["available"..i] = CardArea(
+    for i = 1, TNSMI.row do
+        TNSMI.CARDAREAS["available"..i] = CardArea(
             G.ROOM.T.x + 0.2 * G.ROOM.T.w / 2, G.ROOM.T.h,
             G.CARD_W * 4,
             G.CARD_H / 1.5,
             {card_limit = 5, type = 'shop', hide_card_count = true, horizontal_align = true, no_highlight = true}
         )
         select_nodes[1].nodes[1].nodes[2].nodes[#select_nodes[1].nodes[1].nodes[2].nodes+1] = {n = G.UIT.R, config = {align = "cm", colour = G.C.CLEAR}, nodes = {
-            {n = G.UIT.O, config = {object = BSFX.CARDAREAS["available"..i]}}
+            {n = G.UIT.O, config = {object = TNSMI.CARDAREAS["available"..i]}}
         }}
     end
 
-    local page_count = 1
-    if #BSFX.packs ~= 0 then page_count = math.ceil((#BSFX.packs/(BSFX.row*BSFX.card_per_row))) end
-
     select_nodes[1].nodes[2].nodes[1].nodes[#select_nodes[1].nodes[2].nodes[1].nodes+1] = {n = G.UIT.R, config = {align = "cm", padding = 0.02}, nodes = {
-        {n = G.UIT.C, config = {align = "cm", minw = 0.5, minh = 0.5, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLACK, shadow = true, button = "bsfx_prev_page"}, nodes = {
+        {n = G.UIT.C, config = {align = "cm", minw = 0.5, minh = 0.5, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLACK, shadow = true, button = "tnsmi_prev_page"}, nodes = {
             {n = G.UIT.R, config = {align = "cm", padding = 0.05}, nodes = {
                 {n = G.UIT.T, config = {text = "<", scale = 0.4, colour = G.C.UI.TEXT_LIGHT}}
             }}
         }},
         --[[{n = G.UIT.C, config = {align = "cm", minw = 0.5, minh = 0.5, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLACK, shadow = true}, nodes = {
             {n = G.UIT.R, config = {align = "cm", padding = 0.05}, nodes = {
-                {n = G.UIT.T, config = {text = "Page"..BSFX.page.."/"..page_count, scale = 0.4, colour = G.C.UI.TEXT_LIGHT, id = "page_test"}}
+                {n = G.UIT.T, config = {text = "Page "..TNSMI.page.."/"..math.ceil(#TNSMI.packs / (TNSMI.row * TNSMI.card_per_row)), scale = 0.4, colour = G.C.UI.TEXT_LIGHT, id = "page_test"}}
             }}
         }},]]
-        {n = G.UIT.C, config = {align = "cm", minw = 0.5, minh = 0.5, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLACK, shadow = true, button = "bsfx_next_page"}, nodes = {
+        {n = G.UIT.C, config = {align = "cm", minw = 0.5, minh = 0.5, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLACK, shadow = true, button = "tnsmi_next_page"}, nodes = {
             {n = G.UIT.R, config = {align = "cm", padding = 0.05}, nodes = {
                 {n = G.UIT.T, config = {text = ">", scale = 0.4, colour = G.C.UI.TEXT_LIGHT}}
             }}
         }},
     }}
 
-    BSFX.load_cards()
+    TNSMI.load_cards()
 
     return {n = G.UIT.ROOT, config = {r = 0.1, minw = 5, align = "cm", padding = 0.05, colour = G.C.BLACK}, nodes = { 
         {n = G.UIT.C, config = {align = "cm", padding = 0.1}, nodes = {
@@ -243,26 +242,24 @@ BSFX.config_tab = function ()
             }},
             {n = G.UIT.R, config = {align = "cm", colour = {G.C.L_BLACK[1], G.C.L_BLACK[2], G.C.L_BLACK[3], 0.5}, r = 0.2, padding = 0.1}, nodes = {
                 {n = G.UIT.T, config = {text = "SELECTED", scale = 0.45, colour = lighten(G.C.GREY,0.2), vert = true}},
-                {n = G.UIT.O, config = {object = BSFX.CARDAREAS.selected, func = "BSFX_save_soundpack"}}
+                {n = G.UIT.O, config = {object = TNSMI.CARDAREAS.selected, func = "TNSMI_save_soundpack"}}
             }},
             --[[{n = G.UIT.R, config = {align = "cr", padding = 0.1}, nodes = {
                 {n = G.UIT.C, config = {align = "cm", colour = {G.C.L_BLACK[1], G.C.L_BLACK[2], G.C.L_BLACK[3], 0.5}, r = 0.2, padding = 0.1}, nodes = {
                     {n = G.UIT.T, config = {text = "SEARCH", scale = 0.3, colour = lighten(G.C.GREY,0.2), vert = true}},
-                    bsfx_create_text_input({w = 3, prompt_text = BSFX.prompt_text or "", id = "bsfx_search", extended_corpus = true, ref_table = BSFX, ref_value = 'prompt_text_input',
+                    tnsmi_create_text_input({w = 3, prompt_text = TNSMI.prompt_text or "", id = "tnsmi_search", extended_corpus = true, ref_table = TNSMI, ref_value = 'prompt_text_input',
                         callback = function(_)
-                            BSFX.prompt_text = BSFX.prompt_text_input
+                            TNSMI.prompt_text = TNSMI.prompt_text_input
                         end
                     }),
-                    {n = G.UIT.C, config = {align = "cm", minw = 0.2, minh = 0.2, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLUE, shadow = true, button = "bsfx_next_page"}, nodes = {
+                    {n = G.UIT.C, config = {align = "cm", minw = 0.2, minh = 0.2, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLUE, shadow = true, button = "tnsmi_next_page"}, nodes = {
                         {n = G.UIT.R, config = {align = "cm", padding = 0.05}, nodes = {
                             {n = G.UIT.T, config = {text = "FILTER", scale = 0.4, colour = G.C.UI.TEXT_LIGHT}}
                         }}
                     }},
                 }},
-            }},
-            ]]
+            }},]]
             {n = G.UIT.R, config = {align = "cm", colour = {G.C.L_BLACK[1], G.C.L_BLACK[2], G.C.L_BLACK[3], 0.5}, r = 0.2}, nodes = select_nodes},
         }},
     }}
 end
-SMODS.current_mod.config_tab = BSFX.config_tab

@@ -1,9 +1,10 @@
 {
-	"id": "betterSFX",
-	"name": "Better SFX",
+	"id": "tonsmith",
+	"name": "Tonsmith",
 	"author": ["GoldenLeaf","Jogla","BepisFewer"],
 	"description": "Replaces sound effects from the base game.",
-	"prefix": "bsfx",
+	"prefix": "tnsmi",
 	"main_file": "main.lua",
-	"version": "1.0.0"
+	"version": "1.0.0",
+	"priority": "-3000"
 }

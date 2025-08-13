@@ -38,11 +38,11 @@ end
 local hookTo = Card.click
 function Card:click(...)
     local ret = hookTo(self,...)
-    if self.ability and self.ability.bsfx_card then
-        BSFX.toggle_pack(self.config.center.original_key)
+    if self.ability and self.ability.tnsmi_card then
+        TNSMI.toggle_pack(self.config.center.original_key)
         G.E_MANAGER:add_event(Event{
             func = function ()
-                BSFX.load_soundpack_order()
+                TNSMI.load_soundpack_order()
                 return true
             end
         })
@@ -57,7 +57,7 @@ function SMODS.create_mod_badges(obj, badges)
         if obj.config then
             if type(obj.config.extra) ~= "table" then
                 ref(obj, badges)
-            elseif not obj.config.extra.BSFX then
+            elseif not obj.config.extra.TNSMI then
                 ref(obj, badges)
             end
         else
@@ -70,6 +70,6 @@ end
 
 local ref = Game.main_menu
 function Game:main_menu(change_context)
-    BSFX.load_soundpack_order()
+    TNSMI.load_soundpack_order()
     ref(self,change_context)
 end

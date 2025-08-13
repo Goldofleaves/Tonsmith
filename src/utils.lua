@@ -1,9 +1,9 @@
-BSFX.packs = {}
+TNSMI.packs = {}
 
----Defines and creates a vanilla soundpack for BetterSFX to load.<br>
----[<u>View documentation<u>](https://github.com/Goldofleaves/BetterSFX/wiki#bsfxpack_vanilla)
+---Defines and creates a vanilla soundpack for tonsmith to load.<br>
+---[<u>View documentation<u>](https://github.com/Goldofleaves/tonsmith/wiki#tnsmipack_vanilla)
 ---@param args {name:string,mods:string[],description:string[],authors:string[],sound_table:table[],thumbnail:string,extension?:".ogg"|string}
-BSFX.Pack = function(args)
+TNSMI.Pack = function(args)
     local name = args.name or ""
     local desc = args.description or {}
     local authors = args.authors or {}
@@ -51,6 +51,9 @@ BSFX.Pack = function(args)
         unlocked = true,
         discovered = true,
         key = name,
+        loc_vars = function (self, info_queue, card)
+            info_queue[#info_queue+1] = G.P_CENTERS.m_stone
+        end,
         in_pool = function(self, args)
             return false
         end,
@@ -59,7 +62,7 @@ BSFX.Pack = function(args)
         end,
         atlas = thumb or nil,
         pos = { x = 0, y = 0 },
-        config = {extra = {BSFX = true}},
+        config = {extra = {TNSMI = true}},
         loc_txt = {
             name = name,
             text = {loc_desc, authors_desc, mods_desc}
@@ -70,16 +73,16 @@ BSFX.Pack = function(args)
     returntable.mod_prefix = SMODS.current_mod.prefix
     returntable.priority = 0
 
-    for i,v in ipairs(BSFX.mod_config.soundpack_priority) do
+    for i,v in ipairs(TNSMI.mod_config.soundpack_priority) do
         if v == returntable.mod_prefix.."_"..returntable.name then returntable.priority = i end
     end
-    table.insert(BSFX.packs,returntable)
+    table.insert(TNSMI.packs,returntable)
 end
 
 
 ---@param name string The sound pack to load.
-BSFX.toggle_pack = function(name)
-    for _, pack in ipairs(BSFX.packs) do
+TNSMI.toggle_pack = function(name)
+    for _, pack in ipairs(TNSMI.packs) do
         if pack.name == name then
             if pack.selected then -- Disable pack
                 pack.selected = false
@@ -88,9 +91,9 @@ BSFX.toggle_pack = function(name)
                     SMODS.Sound.replace_sounds[sound[2]] = nil
                 end
 
-                for i,v in ipairs(BSFX.mod_config.soundpack_priority) do
+                for i,v in ipairs(TNSMI.mod_config.soundpack_priority) do
                     if v == pack.mod_prefix.."_"..pack.name then
-                        table.remove(BSFX.mod_config.soundpack_priority,i)
+                        table.remove(TNSMI.mod_config.soundpack_priority,i)
                     end
                 end
                 -- Reset pack priority
@@ -99,18 +102,18 @@ BSFX.toggle_pack = function(name)
                 pack.selected = true
                 -- return "i did it"
             end
-                if next(BSFX.CARDAREAS) then
-                BSFX.load_cards()
+                if next(TNSMI.CARDAREAS) then
+                TNSMI.load_cards()
             end
         end
     end
 end
 
-function BSFX.save_soundpack_order ()
-    for i,v in ipairs(BSFX.CARDAREAS.selected.cards) do
+function TNSMI.save_soundpack_order ()
+    for i,v in ipairs(TNSMI.CARDAREAS.selected.cards) do
         -- Save the priority to the config file.
-        BSFX.mod_config.soundpack_priority[i] = v.config.center.mod.prefix.."_"..v.config.center.original_key
-        for ii, vv in ipairs(BSFX.packs) do
+        TNSMI.mod_config.soundpack_priority[i] = v.config.center.mod.prefix.."_"..v.config.center.original_key
+        for ii, vv in ipairs(TNSMI.packs) do
             -- Compares the card key and the pack key.
             if v.config.center.mod.prefix.."_"..v.config.center.original_key == vv.mod_prefix.."_"..vv.name then
                 -- Set the pack priority.
@@ -121,15 +124,15 @@ function BSFX.save_soundpack_order ()
     end
 end
 
-function G.FUNCS.BSFX_save_soundpack ()
-    BSFX.save_soundpack_order()
-    BSFX.load_soundpack_order()
+function G.FUNCS.TNSMI_save_soundpack ()
+    TNSMI.save_soundpack_order()
+    TNSMI.load_soundpack_order()
 end
 
-function BSFX.load_soundpack_order ()
+function TNSMI.load_soundpack_order ()
     -- Load modded sounds, in order of priority
-    for i,v in ipairs(BSFX.mod_config.soundpack_priority) do
-        for ii, vv in ipairs(BSFX.packs) do
+    for i,v in ipairs(TNSMI.mod_config.soundpack_priority) do
+        for ii, vv in ipairs(TNSMI.packs) do
             -- Compares the card key and the pack key.
             if v == vv.mod_prefix.."_"..vv.name then
                 vv.selected = true
