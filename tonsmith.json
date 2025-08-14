@@ -6,5 +6,5 @@
 	"prefix": "tnsmi",
 	"main_file": "main.lua",
 	"version": "1.0.0",
-	"priority": "-3000"
+	"priority": -3000
 }
