@@ -12,6 +12,7 @@ TNSMI.Pack = function(args)
     local thumb = args.thumbnail
     local returntable = {}
     returntable.sounds = {}
+    returntable.mod_prefix = SMODS.current_mod.prefix
     for i,sound in ipairs(sound_table) do
         sound.key = sound.key or ""
         sound.extention = sound.extention or "ogg"
@@ -19,7 +20,19 @@ TNSMI.Pack = function(args)
         if sound.prefix ~= "" then sound.prefix = sound.prefix.."_" end
         sound.file = sound.file or sound.key
         sound.music_track = sound.select_music_track or nil
-        if type(sound.music_track) ~= "function" then sound.music_track = nil end
+        if type(sound.music_track) ~= "function" then 
+            sound.music_track = nil 
+        else
+            local ref = sound.music_track
+            sound.music_track = function ()
+                local load = false
+                for _,v in ipairs(TNSMI.mod_config.soundpack_priority) do
+                    if v == returntable.mod_prefix.."_"..name then load = true else load = false end
+                end
+                if not load then return false end
+                return ref
+            end
+        end
         returntable.sounds[i] = {SMODS.Sound {
             key = sound.key,
             path = sound.file.."."..sound.extention,
@@ -73,7 +86,6 @@ TNSMI.Pack = function(args)
     }
     returntable.name = name
     returntable.selected = false
-    returntable.mod_prefix = SMODS.current_mod.prefix
     returntable.priority = 0
 
     for i,v in ipairs(TNSMI.mod_config.soundpack_priority) do
