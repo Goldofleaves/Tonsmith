@@ -18,12 +18,15 @@ TNSMI.Pack = function(args)
         sound.prefix = sound.prefix or ""
         if sound.prefix ~= "" then sound.prefix = sound.prefix.."_" end
         sound.file = sound.file or sound.key
+        sound.music_track = sound.select_music_track or nil
+        if type(sound.music_track) ~= "function" then sound.music_track = nil end
         returntable.sounds[i] = {SMODS.Sound {
             key = sound.key,
             path = sound.file.."."..sound.extention,
             pitch = sound.pitch,
             volume = sound.volume,
-            sync = sound.sync
+            sync = sound.sync,
+            select_music_track = sound.music_track
         },
         sound.prefix..sound.key }
     end
