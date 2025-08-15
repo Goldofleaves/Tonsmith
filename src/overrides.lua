@@ -68,8 +68,14 @@ function SMODS.create_mod_badges(obj, badges)
     end
 end
 
-local ref = Game.main_menu
-function Game:main_menu(change_context)
+local ref = Game.update
+function Game:update(dt)
     TNSMI.load_soundpack_order()
-    ref(self,change_context)
+    TNSMI.loaded_packs = {}
+    TNSMI.unloaded_packs = {}
+
+    for i,v in ipairs(TNSMI.packs) do if v.selected then table.insert(TNSMI.loaded_packs,v) else table.insert(TNSMI.unloaded_packs,v) end end
+
+    TNSMI.n_loaded_packs = #TNSMI.loaded_packs
+    ref(self,dt)
 end
