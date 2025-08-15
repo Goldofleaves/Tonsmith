@@ -113,9 +113,17 @@ function TNSMI.load_cards()
 
     -- For already existing packs
     for i,v in ipairs(TNSMI.mod_config.soundpack_priority) do
-        local card = TNSMI.create_fake_card("j_"..v,TNSMI.CARDAREAS.selected)
-        card.ability.tnsmi_card = true
-        card:resize(0.7)
+        local exists = false
+        for ii,vv in ipairs(TNSMI.packs) do
+            if v == vv.mod_prefix.."_"..vv.name then exists = true end
+        end
+        if exists then
+            local card = TNSMI.create_fake_card("j_"..v,TNSMI.CARDAREAS.selected)
+            card.ability.tnsmi_card = true
+            card:resize(0.7)
+        else
+            table.remove(TNSMI.mod_config.soundpack_priority,i)
+        end
     end
 
     -- For newly added packs
@@ -213,6 +221,9 @@ SMODS.current_mod.config_tab = function ()
     end
 
     select_nodes[1].nodes[2].nodes[1].nodes[#select_nodes[1].nodes[2].nodes[1].nodes+1] = {n = G.UIT.R, config = {align = "cm", padding = 0.02}, nodes = {
+
+        {n = G.UIT.C, config = {align = "cm"}, nodes = {{n = G.UIT.T, config = {text = "Soundpacks loaded: "..#TNSMI.packs, colour = G.C.UI.TEXT_LIGHT, scale = 0.4}}}},
+        {n = G.UIT.C, config = {align = "cm", minw = 0.2}},
         {n = G.UIT.C, config = {align = "cm", minw = 0.5, minh = 0.5, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLACK, shadow = true, button = "tnsmi_prev_page"}, nodes = {
             {n = G.UIT.R, config = {align = "cm", padding = 0.05}, nodes = {
                 {n = G.UIT.T, config = {text = "<", scale = 0.4, colour = G.C.UI.TEXT_LIGHT}}
@@ -228,6 +239,7 @@ SMODS.current_mod.config_tab = function ()
                 {n = G.UIT.T, config = {text = ">", scale = 0.4, colour = G.C.UI.TEXT_LIGHT}}
             }}
         }},
+
     }}
 
     TNSMI.load_cards()

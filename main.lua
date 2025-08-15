@@ -19,11 +19,16 @@ local mod_contents = {
 for k, v in pairs(mod_contents) do
 	assert(SMODS.load_file('/src/'..v..'.lua'))()
 end
-TNSMI.Pack{ 
-    name = "Fool's Gambit SFX",
+TNSMI.Pack{
+    name = "Fool's Gambit",
     description = {
-        "This is the SFX Used in",
-        "Fool's Gambit."
+        {
+            lan = 'en-us',
+            text = {
+                "This is the SFX Used in",
+                "Fool's Gambit."
+            },
+        },
     },
     mods = {"Vanilla"},
     authors = {"GoldenLeaf"},
