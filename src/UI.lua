@@ -31,19 +31,7 @@ function TNSMI.create_fake_card(c_key, area) --Taken from Balatro Star Rail :3
 
     return card
 end
-G.FUNCS.tnsmi_search = function ()
-    local t = TNSMI.prompt_text or ""
-    local ti = TNSMI.prompt_text_input or ""
-    TNSMI.filterpacks = TNSMI.packs
-    for k, v in ipairs(TNSMI.filterpacks)do
-        if v.name ~= nil then
-            if string.find(v.name, ti) == nil then
-                TNSMI.filterpacks[k] = {}
-            end
-        end
-    end
-    TNSMI.load_cards()
-end
+
 G.FUNCS.tnsmi_load_text_input = function(e)
     if not e.config or not e.config.auto_selected then
         if not e.config then e.config = {} end
@@ -116,7 +104,7 @@ function TNSMI.load_cards()
     end
     if not TNSMI.CARDAREAS.selected.cards then return end
     local n_packs = 0
-    for _,_ in pairs(TNSMI.filterpacks) do n_packs = n_packs + 1 end
+    for _,_ in pairs(TNSMI.packs) do n_packs = n_packs + 1 end
     if n_packs < 1 then return end
     
     for i,v in ipairs(TNSMI.CARDAREAS.selected.cards) do
@@ -126,10 +114,8 @@ function TNSMI.load_cards()
     -- For already existing packs
     for i,v in ipairs(TNSMI.mod_config.soundpack_priority) do
         local exists = false
-        for ii,vv in ipairs(TNSMI.filterpacks) do
-            if vv.name then
+        for ii,vv in ipairs(TNSMI.packs) do
             if v == vv.mod_prefix.."_"..vv.name then exists = true end
-            end
         end
         if exists then
             local card = TNSMI.create_fake_card("j_"..v,TNSMI.CARDAREAS.selected)
@@ -141,7 +127,7 @@ function TNSMI.load_cards()
     end
 
     -- For newly added packs
-    for i,v in ipairs(TNSMI.filterpacks) do
+    for i,v in ipairs(TNSMI.packs) do
         if v.priority == 0 and v.selected then
             local card = TNSMI.create_fake_card("j_"..v.mod_prefix.."_"..v.name,TNSMI.CARDAREAS.selected)
             card.ability.tnsmi_card = true
@@ -153,7 +139,7 @@ function TNSMI.load_cards()
 
     local temp_fill = {}
 
-    for i,v in ipairs(TNSMI.filterpacks) do
+    for i,v in ipairs(TNSMI.packs) do
         if v and not v.selected then
             table.insert(temp_fill,v)
         end
@@ -164,24 +150,23 @@ function TNSMI.load_cards()
     local row = 1
     for i,v in ipairs(temp_fill) do
         if row > TNSMI.row then break end
-        if v.name then
         local card = TNSMI.create_fake_card("j_"..v.mod_prefix.."_"..v.name, TNSMI.CARDAREAS["available"..row])
         card.ability.tnsmi_card = true
         card:resize(0.7)
-        if #TNSMI.CARDAREAS["available"..row].cards >= TNSMI.card_per_row then row = row + 1 end end
+        if #TNSMI.CARDAREAS["available"..row].cards >= TNSMI.card_per_row then row = row + 1 end
     end
 end
 
 function G.FUNCS.tnsmi_next_page(e)
     TNSMI.page = TNSMI.page + 1
-    TNSMI.page = ((TNSMI.page - 1) % math.ceil(#TNSMI.filterpacks / (TNSMI.row * TNSMI.card_per_row))) + 1
+    TNSMI.page = ((TNSMI.page - 1) % math.ceil(#TNSMI.packs / (TNSMI.row * TNSMI.card_per_row))) + 1
     TNSMI.load_cards()
 end
 
 function G.FUNCS.tnsmi_prev_page(e)
     TNSMI.page = TNSMI.page - 1
     if TNSMI.page < 1 then
-        TNSMI.page = math.ceil(#TNSMI.filterpacks / (TNSMI.row * TNSMI.card_per_row)) - TNSMI.page
+        TNSMI.page = math.ceil(#TNSMI.packs / (TNSMI.row * TNSMI.card_per_row)) - TNSMI.page
     end
     TNSMI.load_cards()
 end
@@ -284,7 +269,7 @@ SMODS.current_mod.config_tab = function ()
                 {n = G.UIT.T, config = {text = "SELECTED", scale = 0.45, colour = lighten(G.C.GREY,0.2), vert = true}},
                 {n = G.UIT.O, config = {object = TNSMI.CARDAREAS.selected, func = "TNSMI_save_soundpack"}}
             }},
-            {n = G.UIT.R, config = {align = "cr", padding = 0.1}, nodes = {
+            --[[{n = G.UIT.R, config = {align = "cr", padding = 0.1}, nodes = {
                 {n = G.UIT.C, config = {align = "cm", colour = {G.C.L_BLACK[1], G.C.L_BLACK[2], G.C.L_BLACK[3], 0.5}, r = 0.2, padding = 0.1}, nodes = {
                     {n = G.UIT.T, config = {text = "SEARCH", scale = 0.3, colour = lighten(G.C.GREY,0.2), vert = true}},
                     tnsmi_create_text_input({w = 3, prompt_text = TNSMI.prompt_text or "", id = "tnsmi_search", extended_corpus = true, ref_table = TNSMI, ref_value = 'prompt_text_input',
@@ -292,13 +277,13 @@ SMODS.current_mod.config_tab = function ()
                             TNSMI.prompt_text = TNSMI.prompt_text_input
                         end
                     }),
-                    {n = G.UIT.C, config = {align = "cm", minw = 0.2, minh = 0.2, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLUE, shadow = true, button = "tnsmi_search"}, nodes = {
+                    {n = G.UIT.C, config = {align = "cm", minw = 0.2, minh = 0.2, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLUE, shadow = true, button = "tnsmi_next_page"}, nodes = {
                         {n = G.UIT.R, config = {align = "cm", padding = 0.05}, nodes = {
                             {n = G.UIT.T, config = {text = "FILTER", scale = 0.4, colour = G.C.UI.TEXT_LIGHT}}
                         }}
                     }},
                 }},
-            }},
+            }},]]
             {n = G.UIT.R, config = {align = "cm", colour = {G.C.L_BLACK[1], G.C.L_BLACK[2], G.C.L_BLACK[3], 0.5}, r = 0.2}, nodes = select_nodes},
         }},
     }}
