@@ -6,7 +6,8 @@ TNSMI = {
     pagecounter = 0,
     prompt_text_input = "",
     menu_mod = "base",
-    mod_config = SMODS.current_mod.config
+    mod_config = SMODS.current_mod.config,
+    filterpacks = {}
 }
 SMODS.Atlas{key = "modicon", path = "modicon.png", px = 32, py = 32}
 

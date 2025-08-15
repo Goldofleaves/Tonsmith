@@ -1,7 +1,7 @@
 {
 	"id": "tonsmith",
 	"name": "Tonsmith",
-	"author": ["GoldenLeaf","Jogla","BepisFewer"],
+	"author": ["GoldenLeaf","Jogla","BepisFever"],
 	"description": "Replaces sound effects from the base game.",
 	"prefix": "tnsmi",
 	"main_file": "main.lua",
