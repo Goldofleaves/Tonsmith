@@ -3,6 +3,7 @@ TNSMI = {
     row = 2,
     card_per_row = 6,
     page = 1,
+    max_pages = 1,
     pagecounter = 0,
     prompt_text_input = "",
     menu_mod = "base",
