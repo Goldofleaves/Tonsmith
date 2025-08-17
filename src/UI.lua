@@ -193,7 +193,7 @@ function TNSMI.main_tab ()
         {n = G.UIT.C, config = {align = "cm"}, nodes = {
             {n = G.UIT.R, config = {align = "cm", padding = 0.1}, nodes = {
                 {n = G.UIT.C, config = {align = "cl", colour = G.C.CLEAR}, nodes = {
-                    {n = G.UIT.T, config = {text = "CLICK TO SELECT", scale = 0.45, colour = lighten(G.C.GREY,0.2), vert = true}},
+                    {n = G.UIT.T, config = {text = localize("tnsmi_manager_click_select"), scale = 0.45, colour = lighten(G.C.GREY,0.2), vert = true}},
                 }},
                 {n = G.UIT.C, config = {align = "cm", colour = adjust_alpha(G.C.BLACK, 0.5), r = 0.2}, nodes = {
                 }},
@@ -218,15 +218,15 @@ function TNSMI.main_tab ()
     end
 
     select_nodes[1].nodes[2].nodes[1].nodes[#select_nodes[1].nodes[2].nodes[1].nodes+1] = {n = G.UIT.R, config = {align = "cm", padding = 0.02, hover = true, shadow = true}, nodes = {
-        {n = G.UIT.C, config = {align = "cm"}, nodes = {UIBox_button{label = {"Close"}, minw = 2, minh = 0.5, colour = G.C.ORANGE}}},
+        {n = G.UIT.C, config = {align = "cm"}, nodes = {UIBox_button{label = {localize("tnsmi_close")}, minw = 2, minh = 0.5, colour = G.C.ORANGE}}},
         {n = G.UIT.C, config = {align = "cm", minw = 0.2}},
         {n = G.UIT.C, config = {align = "cm", minw = 2}, nodes = {
             {n = G.UIT.R, config = {align = "cr"}, nodes = {
-                {n = G.UIT.O, config = {object = DynaText{string = {"Soundpacks active "}, colours = {G.C.UI.TEXT_LIGHT}, scale = 0.25}}},
+                {n = G.UIT.O, config = {object = DynaText{string = {localize("tnsmi_manager_active")..": "}, colours = {G.C.UI.TEXT_LIGHT}, scale = 0.25}}},
                 {n = G.UIT.O, config = {object = DynaText{string = {{ref_table = TNSMI, ref_value = "n_loaded_packs"}}, colours = {G.C.UI.TEXT_LIGHT}, scale = 0.25}}}
             }},
             {n = G.UIT.R, config = {align = "cr"}, nodes = {
-                {n = G.UIT.O, config = {object = DynaText{string = {"Soundpacks installed "}, colours = {G.C.UI.TEXT_LIGHT}, scale = 0.25}}},
+                {n = G.UIT.O, config = {object = DynaText{string = {localize("tnsmi_manager_installed")..": "}, colours = {G.C.UI.TEXT_LIGHT}, scale = 0.25}}},
                 {n = G.UIT.O, config = {object = DynaText{string = {tostring(#TNSMI.packs)}, colours = {G.C.UI.TEXT_LIGHT}, scale = 0.25}}}
             }},
 
@@ -239,7 +239,7 @@ function TNSMI.main_tab ()
         }},
         {n = G.UIT.C, config = {align = "cm", minw = 0.5, minh = 0.5, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLACK, shadow = true}, nodes = {
             {n = G.UIT.R, config = {align = "cm", padding = 0.05}, nodes = {
-                {n = G.UIT.O, config = {object = DynaText{string = {"Page "}, colours = {G.C.UI.TEXT_LIGHT}, scale = 0.4}}},
+                {n = G.UIT.O, config = {object = DynaText{string = {localize("k_page").." "}, colours = {G.C.UI.TEXT_LIGHT}, scale = 0.4}}},
                 {n = G.UIT.O, config = {object = DynaText{string = {{ref_table = TNSMI, ref_value = "page"}}, colours = {G.C.UI.TEXT_LIGHT}, scale = 0.4}}},
                 {n = G.UIT.O, config = {object = DynaText{string = {"/"}, colours = {G.C.UI.TEXT_LIGHT}, scale = 0.4}}},
                 {n = G.UIT.O, config = {object = DynaText{string = {{ref_table = TNSMI, ref_value = "max_pages"}}, colours = {G.C.UI.TEXT_LIGHT}, scale = 0.4}}},
@@ -265,7 +265,7 @@ function TNSMI.main_tab ()
                 }},
             }},
             {n = G.UIT.R, config = {align = "cm", colour = {G.C.L_BLACK[1], G.C.L_BLACK[2], G.C.L_BLACK[3], 0.5}, r = 0.2, padding = 0.1}, nodes = {
-                {n = G.UIT.T, config = {text = "SELECTED", scale = 0.45, colour = lighten(G.C.GREY,0.2), vert = true}},
+                {n = G.UIT.T, config = {text = localize("tnsmi_manager_selected"), scale = 0.45, colour = lighten(G.C.GREY,0.2), vert = true}},
                 {n = G.UIT.O, config = {object = TNSMI.CARDAREAS.selected, func = "TNSMI_save_soundpack"}}
             }},
             --[[{n = G.UIT.R, config = {align = "cr", padding = 0.1}, nodes = {
@@ -303,7 +303,7 @@ end
 
 SMODS.current_mod.config_tab = function ()
    return { n = G.UIT.ROOT, config = {minw = 8, minh = 5, colour = G.C.CLEAR, align = "tm", padding = 0.2}, nodes = {
-        {n = G.UIT.R, config = {align = "tm"}, nodes = {UIBox_button{ label = {"Open soundpack manager"}, button = "TNSMI_main_tab", minw = 5}}},
+        {n = G.UIT.R, config = {align = "tm"}, nodes = {UIBox_button{ label = {localize("tnsmi_cfg_soundpack_manager")}, button = "TNSMI_main_tab", minw = 5}}},
         {n = G.UIT.R, config = {align = "tm"}, nodes = {create_toggle{
             label = "Display in pause menu",
             scale = 1,
@@ -312,14 +312,14 @@ SMODS.current_mod.config_tab = function ()
             ref_value = "display_menu_button"
         }}},
         {n = G.UIT.R, config = {align = "tm", padding = 0.1}, nodes = {
-            {n = G.UIT.C, config = {align = "cm"}, nodes = {{n = G.UIT.T, config = {align = "cr", text = "Rows to display: ", colour = G.C.WHITE, scale = 0.4}}}},
+            {n = G.UIT.C, config = {align = "cm"}, nodes = {{n = G.UIT.T, config = {align = "cr", text = localize("tnsmi_cfg_rows")..": ", colour = G.C.WHITE, scale = 0.4}}}},
             {n = G.UIT.C, config = {align = "cm"}, nodes = {{n = G.UIT.O, config = {align = "cr", object = DynaText{string = {{ref_table = TNSMI.mod_config, ref_value = "rows"}}, colours = {G.C.WHITE}, scale = 0.4}}}}},
             {n = G.UIT.C, config = {minw = 1}},
             {n = G.UIT.C, config = {align = "cm"}, nodes = {UIBox_button{ label = {"-"}, button = "TNSMI_change_pack_display", minw = 0.5, minh = 0.5, ref_table = {"rows",-1}}}},
             {n = G.UIT.C, config = {align = "cm"}, nodes = {UIBox_button{ label = {"+"}, button = "TNSMI_change_pack_display", minw = 0.5, minh = 0.5, ref_table = {"rows",1}}}},
         }},
         {n = G.UIT.R, config = {align = "tm", padding = 0.1}, nodes = {
-            {n = G.UIT.C, config = {align = "cm"}, nodes = {{n = G.UIT.T, config = {align = "cr", text = "Packs per row: ", colour = G.C.WHITE, scale = 0.4}}}},
+            {n = G.UIT.C, config = {align = "cm"}, nodes = {{n = G.UIT.T, config = {align = "cr", text = localize("tnsmi_cfg_c_rows")..": ", colour = G.C.WHITE, scale = 0.4}}}},
             {n = G.UIT.C, config = {align = "cm"}, nodes = {{n = G.UIT.O, config = {align = "cr", object = DynaText{string = {{ref_table = TNSMI.mod_config, ref_value = "c_rows"}}, colours = {G.C.WHITE}, scale = 0.4}}}}},
             {n = G.UIT.C, config = {minw = 1}},
             {n = G.UIT.C, config = {align = "cm"}, nodes = {UIBox_button{ label = {"-"}, button = "TNSMI_change_pack_display", minw = 0.5, minh = 0.5, ref_table = {"c_rows",-1}}}},

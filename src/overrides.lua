@@ -86,7 +86,7 @@ local ref = create_UIBox_options
 
 function create_UIBox_options(args)  
     local tbl = ref()
-    local tnmsi_button = UIBox_button{ label = {"Tonsmith"}, button = "TNSMI_main_tab", minw = 3.4, colour = G.C.PALE_GREEN}
+    local tnmsi_button = UIBox_button{ label = {localize("tnsmi_manager_pause")}, button = "TNSMI_main_tab", minw = 3.4, colour = G.C.PALE_GREEN}
     if TNSMI.mod_config.display_menu_button then
         local t = create_UIBox_generic_options({ contents = {
             tnmsi_button,
@@ -118,7 +118,7 @@ function create_UIBox_options(args)
             end
         end
         if not exists then 
-            tnmsi_button = UIBox_button{ label = {"Tonsmith"}, button = "TNSMI_main_tab", minw = 7, colour = G.C.PALE_GREEN}
+            tnmsi_button = UIBox_button{ label = {localize("tnsmi_manager_pause")}, button = "TNSMI_main_tab", minw = 7, colour = G.C.PALE_GREEN}
             table.insert(t_node,7,tnmsi_button) 
         end
     end
