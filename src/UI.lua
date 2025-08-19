@@ -102,7 +102,7 @@ function TNSMI.load_cards()
             v.cards = {}
         end
     end
-    if not TNSMI.CARDAREAS.selected.cards then return end
+    if not TNSMI.CARDAREAS.selected and not TNSMI.CARDAREAS.selected.cards then return end
     local n_packs = 0
     for _,_ in pairs(TNSMI.packs) do n_packs = n_packs + 1 end
     if n_packs < 1 then return end
