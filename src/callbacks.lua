@@ -9,3 +9,16 @@ function G.FUNCS.TNSMI_reload_lists()
         TNSMI.CARDAREAS.available:emplace(card)
     end
 end
+
+function G.FUNCS.TNSMI_main_tab () return TNSMI.main_tab() end
+
+function G.FUNCS.TNSMI_change_pack_display(e) -- e represents the node
+    TNSMI.mod_config[e.config.ref_table[1]] = TNSMI.mod_config[e.config.ref_table[1]] + e.config.ref_table[2]
+
+    if TNSMI.mod_config.rows < 1 then TNSMI.mod_config.rows = 1 end
+    if TNSMI.mod_config.rows > 4 then TNSMI.mod_config.rows = 4 end
+    
+    if TNSMI.mod_config.c_rows < 1 then TNSMI.mod_config.c_rows = 1 end
+    if TNSMI.mod_config.c_rows > 16 then TNSMI.mod_config.c_rows = 16 end
+    
+end

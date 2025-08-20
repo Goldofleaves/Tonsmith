@@ -102,7 +102,7 @@ function TNSMI.load_cards()
             v.cards = {}
         end
     end
-    if not TNSMI.CARDAREAS.selected.cards then return end
+    if not TNSMI.CARDAREAS.selected or not TNSMI.CARDAREAS.selected.cards then return end
     local n_packs = 0
     for _,_ in pairs(TNSMI.packs) do n_packs = n_packs + 1 end
     if n_packs < 1 then return end
@@ -113,9 +113,17 @@ function TNSMI.load_cards()
 
     -- For already existing packs
     for i,v in ipairs(TNSMI.mod_config.soundpack_priority) do
-        local card = TNSMI.create_fake_card("j_"..v,TNSMI.CARDAREAS.selected)
-        card.ability.tnsmi_card = true
-        card:resize(0.7)
+        local exists = false
+        for ii,vv in ipairs(TNSMI.packs) do
+            if v == vv.mod_prefix.."_"..vv.name then exists = true end
+        end
+        if exists then
+            local card = TNSMI.create_fake_card("j_"..v,TNSMI.CARDAREAS.selected)
+            card.ability.tnsmi_card = true
+            card:resize(0.7)
+        else
+            table.remove(TNSMI.mod_config.soundpack_priority,i)
+        end
     end
 
     -- For newly added packs
@@ -137,36 +145,33 @@ function TNSMI.load_cards()
         end
     end
 
-    for i=1, (TNSMI.row*TNSMI.card_per_row*(TNSMI.page-1)) do table.remove(temp_fill,1) end
+    for i=1, (TNSMI.mod_config.rows*TNSMI.mod_config.c_rows*(TNSMI.page-1)) do table.remove(temp_fill,1) end
 
     local row = 1
     for i,v in ipairs(temp_fill) do
-        if row > TNSMI.row then break end
+        if row > TNSMI.mod_config.rows then break end
         local card = TNSMI.create_fake_card("j_"..v.mod_prefix.."_"..v.name, TNSMI.CARDAREAS["available"..row])
         card.ability.tnsmi_card = true
         card:resize(0.7)
-        if #TNSMI.CARDAREAS["available"..row].cards >= TNSMI.card_per_row then row = row + 1 end
+        if #TNSMI.CARDAREAS["available"..row].cards >= TNSMI.mod_config.c_rows then row = row + 1 end
     end
 end
 
 function G.FUNCS.tnsmi_next_page(e)
     TNSMI.page = TNSMI.page + 1
-    TNSMI.page = ((TNSMI.page - 1) % math.ceil(#TNSMI.packs / (TNSMI.row * TNSMI.card_per_row))) + 1
+    TNSMI.page = ((TNSMI.page - 1) % math.ceil(#TNSMI.packs / (TNSMI.mod_config.rows * TNSMI.mod_config.c_rows))) + 1
     TNSMI.load_cards()
 end
 
 function G.FUNCS.tnsmi_prev_page(e)
     TNSMI.page = TNSMI.page - 1
     if TNSMI.page < 1 then
-        TNSMI.page = math.ceil(#TNSMI.packs / (TNSMI.row * TNSMI.card_per_row)) - TNSMI.page
+        TNSMI.page = math.ceil(#TNSMI.packs / (TNSMI.mod_config.rows * TNSMI.mod_config.c_rows)) - TNSMI.page
     end
     TNSMI.load_cards()
 end
 
-
-SMODS.current_mod.config_tab = function ()   
-    TNSMI.refresh_cardareas()
-
+function TNSMI.main_tab ()
     TNSMI.CARDAREAS.selected = CardArea(
         G.ROOM.T.x + 0.2 * G.ROOM.T.w / 2, G.ROOM.T.h,
         G.CARD_W * 4,
@@ -188,7 +193,7 @@ SMODS.current_mod.config_tab = function ()
         {n = G.UIT.C, config = {align = "cm"}, nodes = {
             {n = G.UIT.R, config = {align = "cm", padding = 0.1}, nodes = {
                 {n = G.UIT.C, config = {align = "cl", colour = G.C.CLEAR}, nodes = {
-                    {n = G.UIT.T, config = {text = "CLICK TO SELECT", scale = 0.45, colour = lighten(G.C.GREY,0.2), vert = true}},
+                    {n = G.UIT.T, config = {text = localize("tnsmi_manager_click_select"), scale = 0.45, colour = lighten(G.C.GREY,0.2), vert = true}},
                 }},
                 {n = G.UIT.C, config = {align = "cm", colour = adjust_alpha(G.C.BLACK, 0.5), r = 0.2}, nodes = {
                 }},
@@ -200,7 +205,7 @@ SMODS.current_mod.config_tab = function ()
         }},
     }
 
-    for i = 1, TNSMI.row do
+    for i = 1, TNSMI.mod_config.rows do
         TNSMI.CARDAREAS["available"..i] = CardArea(
             G.ROOM.T.x + 0.2 * G.ROOM.T.w / 2, G.ROOM.T.h,
             G.CARD_W * 4,
@@ -212,28 +217,47 @@ SMODS.current_mod.config_tab = function ()
         }}
     end
 
-    select_nodes[1].nodes[2].nodes[1].nodes[#select_nodes[1].nodes[2].nodes[1].nodes+1] = {n = G.UIT.R, config = {align = "cm", padding = 0.02}, nodes = {
+    select_nodes[1].nodes[2].nodes[1].nodes[#select_nodes[1].nodes[2].nodes[1].nodes+1] = {n = G.UIT.R, config = {align = "cm", padding = 0.02, hover = true, shadow = true}, nodes = {
+        {n = G.UIT.C, config = {align = "cm"}, nodes = {UIBox_button{label = {localize("tnsmi_close")}, minw = 2, minh = 0.5, colour = G.C.ORANGE}}},
+        {n = G.UIT.C, config = {align = "cm", minw = 0.2}},
+        {n = G.UIT.C, config = {align = "cm", minw = 2}, nodes = {
+            {n = G.UIT.R, config = {align = "cr"}, nodes = {
+                {n = G.UIT.O, config = {object = DynaText{string = {localize("tnsmi_manager_active")..": "}, colours = {G.C.UI.TEXT_LIGHT}, scale = 0.25}}},
+                {n = G.UIT.O, config = {object = DynaText{string = {{ref_table = TNSMI, ref_value = "n_loaded_packs"}}, colours = {G.C.UI.TEXT_LIGHT}, scale = 0.25}}}
+            }},
+            {n = G.UIT.R, config = {align = "cr"}, nodes = {
+                {n = G.UIT.O, config = {object = DynaText{string = {localize("tnsmi_manager_installed")..": "}, colours = {G.C.UI.TEXT_LIGHT}, scale = 0.25}}},
+                {n = G.UIT.O, config = {object = DynaText{string = {tostring(#TNSMI.packs)}, colours = {G.C.UI.TEXT_LIGHT}, scale = 0.25}}}
+            }},
+
+        }},
+        {n = G.UIT.C, config = {align = "cm", minw = 0.2}},
         {n = G.UIT.C, config = {align = "cm", minw = 0.5, minh = 0.5, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLACK, shadow = true, button = "tnsmi_prev_page"}, nodes = {
             {n = G.UIT.R, config = {align = "cm", padding = 0.05}, nodes = {
                 {n = G.UIT.T, config = {text = "<", scale = 0.4, colour = G.C.UI.TEXT_LIGHT}}
             }}
         }},
-        --[[{n = G.UIT.C, config = {align = "cm", minw = 0.5, minh = 0.5, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLACK, shadow = true}, nodes = {
+        {n = G.UIT.C, config = {align = "cm", minw = 0.5, minh = 0.5, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLACK, shadow = true}, nodes = {
             {n = G.UIT.R, config = {align = "cm", padding = 0.05}, nodes = {
-                {n = G.UIT.T, config = {text = "Page "..TNSMI.page.."/"..math.ceil(#TNSMI.packs / (TNSMI.row * TNSMI.card_per_row)), scale = 0.4, colour = G.C.UI.TEXT_LIGHT, id = "page_test"}}
+                {n = G.UIT.O, config = {object = DynaText{string = {localize("k_page").." "}, colours = {G.C.UI.TEXT_LIGHT}, scale = 0.4}}},
+                {n = G.UIT.O, config = {object = DynaText{string = {{ref_table = TNSMI, ref_value = "page"}}, colours = {G.C.UI.TEXT_LIGHT}, scale = 0.4}}},
+                {n = G.UIT.O, config = {object = DynaText{string = {"/"}, colours = {G.C.UI.TEXT_LIGHT}, scale = 0.4}}},
+                {n = G.UIT.O, config = {object = DynaText{string = {{ref_table = TNSMI, ref_value = "max_pages"}}, colours = {G.C.UI.TEXT_LIGHT}, scale = 0.4}}},
+                
             }}
-        }},]]
+        }},
         {n = G.UIT.C, config = {align = "cm", minw = 0.5, minh = 0.5, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLACK, shadow = true, button = "tnsmi_next_page"}, nodes = {
             {n = G.UIT.R, config = {align = "cm", padding = 0.05}, nodes = {
                 {n = G.UIT.T, config = {text = ">", scale = 0.4, colour = G.C.UI.TEXT_LIGHT}}
             }}
         }},
+
     }}
 
     TNSMI.load_cards()
 
-    return {n = G.UIT.ROOT, config = {r = 0.1, minw = 5, align = "cm", padding = 0.05, colour = G.C.BLACK}, nodes = { 
-        {n = G.UIT.C, config = {align = "cm", padding = 0.1}, nodes = {
+    local UI = {n = G.UIT.ROOT, config = {r = 0.1, minw = 5, align = "cm", padding = 0.2, colour = G.C.L_BLACK, outline = 1.5, outline_colour = G.C.UI.OUTLINE_LIGHT}, nodes = { 
+        {n = G.UIT.C, config = {r = 0.1, align = "cm", padding = 0.1, colour = G.C.BLACK}, nodes = {
             {n = G.UIT.R, config = {align = "tm", colour = G.C.CLEAR}, nodes = {
                 {n = G.UIT.C, config = {align = "tm", colour = G.C.CLEAR}, nodes = {
                     name_node,
@@ -241,7 +265,7 @@ SMODS.current_mod.config_tab = function ()
                 }},
             }},
             {n = G.UIT.R, config = {align = "cm", colour = {G.C.L_BLACK[1], G.C.L_BLACK[2], G.C.L_BLACK[3], 0.5}, r = 0.2, padding = 0.1}, nodes = {
-                {n = G.UIT.T, config = {text = "SELECTED", scale = 0.45, colour = lighten(G.C.GREY,0.2), vert = true}},
+                {n = G.UIT.T, config = {text = localize("tnsmi_manager_selected"), scale = 0.45, colour = lighten(G.C.GREY,0.2), vert = true}},
                 {n = G.UIT.O, config = {object = TNSMI.CARDAREAS.selected, func = "TNSMI_save_soundpack"}}
             }},
             --[[{n = G.UIT.R, config = {align = "cr", padding = 0.1}, nodes = {
@@ -262,4 +286,44 @@ SMODS.current_mod.config_tab = function ()
             {n = G.UIT.R, config = {align = "cm", colour = {G.C.L_BLACK[1], G.C.L_BLACK[2], G.C.L_BLACK[3], 0.5}, r = 0.2}, nodes = select_nodes},
         }},
     }}
+
+    if G.OVERLAY_MENU then G.OVERLAY_MENU:remove() end
+    G.OVERLAY_MENU = UIBox{
+        definition = UI,
+        config = {
+            align = "cm",
+            offset = {x=0,y=0},
+            major = G.ROOM_ATTACH,
+            bond = 'Weak',
+            no_esc = false
+        },
+    }
+end
+
+
+SMODS.current_mod.config_tab = function ()
+   return { n = G.UIT.ROOT, config = {minw = 8, minh = 5, colour = G.C.CLEAR, align = "tm", padding = 0.2}, nodes = {
+        {n = G.UIT.R, config = {align = "tm"}, nodes = {UIBox_button{ label = {localize("tnsmi_cfg_soundpack_manager")}, button = "TNSMI_main_tab", minw = 5}}},
+        {n = G.UIT.R, config = {align = "tm"}, nodes = {create_toggle{
+            label = "Display in pause menu",
+            scale = 1,
+            minw = 2, minh = 0.5,
+            ref_table = TNSMI.mod_config,
+            ref_value = "display_menu_button"
+        }}},
+        {n = G.UIT.R, config = {align = "tm", padding = 0.1}, nodes = {
+            {n = G.UIT.C, config = {align = "cm"}, nodes = {{n = G.UIT.T, config = {align = "cr", text = localize("tnsmi_cfg_rows")..": ", colour = G.C.WHITE, scale = 0.4}}}},
+            {n = G.UIT.C, config = {align = "cm"}, nodes = {{n = G.UIT.O, config = {align = "cr", object = DynaText{string = {{ref_table = TNSMI.mod_config, ref_value = "rows"}}, colours = {G.C.WHITE}, scale = 0.4}}}}},
+            {n = G.UIT.C, config = {minw = 1}},
+            {n = G.UIT.C, config = {align = "cm"}, nodes = {UIBox_button{ label = {"-"}, button = "TNSMI_change_pack_display", minw = 0.5, minh = 0.5, ref_table = {"rows",-1}}}},
+            {n = G.UIT.C, config = {align = "cm"}, nodes = {UIBox_button{ label = {"+"}, button = "TNSMI_change_pack_display", minw = 0.5, minh = 0.5, ref_table = {"rows",1}}}},
+        }},
+        {n = G.UIT.R, config = {align = "tm", padding = 0.1}, nodes = {
+            {n = G.UIT.C, config = {align = "cm"}, nodes = {{n = G.UIT.T, config = {align = "cr", text = localize("tnsmi_cfg_c_rows")..": ", colour = G.C.WHITE, scale = 0.4}}}},
+            {n = G.UIT.C, config = {align = "cm"}, nodes = {{n = G.UIT.O, config = {align = "cr", object = DynaText{string = {{ref_table = TNSMI.mod_config, ref_value = "c_rows"}}, colours = {G.C.WHITE}, scale = 0.4}}}}},
+            {n = G.UIT.C, config = {minw = 1}},
+            {n = G.UIT.C, config = {align = "cm"}, nodes = {UIBox_button{ label = {"-"}, button = "TNSMI_change_pack_display", minw = 0.5, minh = 0.5, ref_table = {"c_rows",-1}}}},
+            {n = G.UIT.C, config = {align = "cm"}, nodes = {UIBox_button{ label = {"+"}, button = "TNSMI_change_pack_display", minw = 0.5, minh = 0.5, ref_table = {"c_rows",1}}}},
+        }},
+   }}
 end

@@ -3,7 +3,7 @@ return{
         dictionary = {
             tnsmi_config_tab_name = {
                 text = {
-                    "Soundpack Menu"
+                    "Soundpack manager"
                 }
             },
             tnsmi_config_tab_desc = {
@@ -15,7 +15,22 @@ return{
     },
     misc = {
         dictionary = {
+            -- config
+            tnsmi_cfg_soundpack_manager = "Open soundpack manager",
+            tnsmi_cfg_rows = "Rows to display",
+            tnsmi_cfg_c_rows = "Packs per row",
 
+            -- manager
+            tnsmi_manager_pause = "Soundpacks",
+            tnsmi_manager_display_in_pause = "Display in pause menu",
+            tnsmi_manager_selected = "SELECTED",
+            tnsmi_manager_click_select = "CLICK TO SELECT",
+            tnsmi_manager_active = "Soundpacks active",
+            tnsmi_manager_installed = "Soundpacks installed",
+
+            -- misc
+            tnsmi_close = "Close",
+            
         },
     },
 }

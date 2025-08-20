@@ -68,8 +68,70 @@ function SMODS.create_mod_badges(obj, badges)
     end
 end
 
-local ref = Game.main_menu
-function Game:main_menu(change_context)
+local ref = Game.update
+function Game:update(dt)
     TNSMI.load_soundpack_order()
-    ref(self,change_context)
+
+    for i,v in ipairs(TNSMI.mod_config.soundpack_priority) do
+        local exists = false
+        for ii,vv in ipairs(TNSMI.packs) do
+            if v == vv.mod_prefix.."_"..vv.name then exists = true end
+        end
+        if not exists then
+            table.remove(TNSMI.mod_config.soundpack_priority,i)
+        end
+    end
+    
+    TNSMI.loaded_packs = {}
+    TNSMI.unloaded_packs = {}
+    if TNSMI.page > TNSMI.max_pages then TNSMI.page = TNSMI.page - 1; TNSMI.load_cards() end
+    for i,v in ipairs(TNSMI.packs) do if v.selected then table.insert(TNSMI.loaded_packs,v) else table.insert(TNSMI.unloaded_packs,v) end end
+
+
+    TNSMI.n_loaded_packs = #TNSMI.loaded_packs
+    TNSMI.max_pages = math.ceil(#TNSMI.unloaded_packs/(TNSMI.mod_config.rows*TNSMI.mod_config.c_rows))
+    ref(self,dt)
+end
+
+local ref = create_UIBox_options
+
+function create_UIBox_options(args)  
+    local tbl = ref()
+    local tnmsi_button = UIBox_button{ label = {localize("tnsmi_manager_pause")}, button = "TNSMI_main_tab", minw = 3.4, colour = G.C.PALE_GREEN}
+    if TNSMI.mod_config.display_menu_button then
+        local t = create_UIBox_generic_options({ contents = {
+            tnmsi_button,
+        }})
+
+        local t_node = tbl.nodes[1].nodes[1].nodes[1].nodes
+
+        for k,v in pairs(t_node) do
+            if v.nodes[1].nodes[1].config then
+                if v.nodes[1].nodes[1].config.minw == 5 then
+                    v.nodes[1].nodes[1].config.minw = 7
+                elseif v.nodes[1].nodes[1].config.minw == 2.4 then
+                    v.nodes[1].nodes[1].config.minw = 3.4
+                end
+            end
+        end
+
+        local exists = false
+        for k,v in pairs(t_node) do
+            if v.nodes[1].config.button == "your_collection" then
+                v.nodes[1].nodes[1].config.minw = 3.4
+                local btn = v
+                t_node[k] = {n = G.UIT.R, nodes = {{n = G.UIT.C, nodes = {
+                    {n = G.UIT.C, nodes = {btn}},
+                    {n = G.UIT.C, config = {minw = 0.2}},
+                    {n = G.UIT.C, nodes = {tnmsi_button}},
+                }}}}
+                exists = true
+            end
+        end
+        if not exists then 
+            tnmsi_button = UIBox_button{ label = {localize("tnsmi_manager_pause")}, button = "TNSMI_main_tab", minw = 7, colour = G.C.PALE_GREEN}
+            table.insert(t_node,7,tnmsi_button) 
+        end
+    end
+    return tbl
 end
