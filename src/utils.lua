@@ -77,7 +77,6 @@ TNSMI.Pack = function(args)
         unlocked = true,
         discovered = true,
         key = name,
-
         set_card_type_badge = function (self, card, badges)badges[1] = nil end,
         in_pool = function(self, args) return false end,
         atlas = thumb or nil,
