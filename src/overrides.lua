@@ -71,6 +71,17 @@ end
 local ref = Game.update
 function Game:update(dt)
     TNSMI.load_soundpack_order()
+
+    for i,v in ipairs(TNSMI.mod_config.soundpack_priority) do
+        local exists = false
+        for ii,vv in ipairs(TNSMI.packs) do
+            if v == vv.mod_prefix.."_"..vv.name then exists = true end
+        end
+        if not exists then
+            table.remove(TNSMI.mod_config.soundpack_priority,i)
+        end
+    end
+    
     TNSMI.loaded_packs = {}
     TNSMI.unloaded_packs = {}
     if TNSMI.page > TNSMI.max_pages then TNSMI.page = TNSMI.page - 1; TNSMI.load_cards() end
