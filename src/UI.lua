@@ -173,15 +173,19 @@ function G.FUNCS.tnsmi_search()
 end
 
 function G.FUNCS.tnsmi_next_page(e)
+    if TNSMI.max_pages > 0 then
     TNSMI.page = TNSMI.page + 1
     TNSMI.page = ((TNSMI.page - 1) % math.ceil(#TNSMI.packs / (TNSMI.mod_config.rows * TNSMI.mod_config.c_rows))) + 1
+    end
     TNSMI.load_cards()
 end
 
 function G.FUNCS.tnsmi_prev_page(e)
+    if TNSMI.max_pages > 0 then
     TNSMI.page = TNSMI.page - 1
     if TNSMI.page < 1 then
         TNSMI.page = math.ceil(#TNSMI.packs / (TNSMI.mod_config.rows * TNSMI.mod_config.c_rows)) - TNSMI.page
+    end
     end
     TNSMI.load_cards()
 end
