@@ -157,6 +157,21 @@ function TNSMI.load_cards()
     end
 end
 
+function G.FUNCS.tnsmi_search()
+    TNSMI.packs = SMODS.shallow_copy(TNSMI.reference)
+    local fuckyou = TNSMI.prompt_text or ""
+    local function j () 
+        for k, v in ipairs(TNSMI.packs) do
+            if type(string.find(v.name, fuckyou)) == "nil" then
+                table.remove(TNSMI.packs, k)
+                j()
+            end
+        end
+    end
+    j()
+    TNSMI.load_cards()
+end
+
 function G.FUNCS.tnsmi_next_page(e)
     TNSMI.page = TNSMI.page + 1
     TNSMI.page = ((TNSMI.page - 1) % math.ceil(#TNSMI.packs / (TNSMI.mod_config.rows * TNSMI.mod_config.c_rows))) + 1
@@ -268,7 +283,7 @@ function TNSMI.main_tab ()
                 {n = G.UIT.T, config = {text = localize("tnsmi_manager_selected"), scale = 0.45, colour = lighten(G.C.GREY,0.2), vert = true}},
                 {n = G.UIT.O, config = {object = TNSMI.CARDAREAS.selected, func = "TNSMI_save_soundpack"}}
             }},
-            --[[{n = G.UIT.R, config = {align = "cr", padding = 0.1}, nodes = {
+            {n = G.UIT.R, config = {align = "cr", padding = 0.1}, nodes = {
                 {n = G.UIT.C, config = {align = "cm", colour = {G.C.L_BLACK[1], G.C.L_BLACK[2], G.C.L_BLACK[3], 0.5}, r = 0.2, padding = 0.1}, nodes = {
                     {n = G.UIT.T, config = {text = "SEARCH", scale = 0.3, colour = lighten(G.C.GREY,0.2), vert = true}},
                     tnsmi_create_text_input({w = 3, prompt_text = TNSMI.prompt_text or "", id = "tnsmi_search", extended_corpus = true, ref_table = TNSMI, ref_value = 'prompt_text_input',
@@ -276,13 +291,13 @@ function TNSMI.main_tab ()
                             TNSMI.prompt_text = TNSMI.prompt_text_input
                         end
                     }),
-                    {n = G.UIT.C, config = {align = "cm", minw = 0.2, minh = 0.2, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLUE, shadow = true, button = "tnsmi_next_page"}, nodes = {
+                    {n = G.UIT.C, config = {align = "cm", minw = 0.2, minh = 0.2, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLUE, shadow = true, button = "tnsmi_search"}, nodes = {
                         {n = G.UIT.R, config = {align = "cm", padding = 0.05}, nodes = {
                             {n = G.UIT.T, config = {text = "FILTER", scale = 0.4, colour = G.C.UI.TEXT_LIGHT}}
                         }}
                     }},
                 }},
-            }},]]
+            }},
             {n = G.UIT.R, config = {align = "cm", colour = {G.C.L_BLACK[1], G.C.L_BLACK[2], G.C.L_BLACK[3], 0.5}, r = 0.2}, nodes = select_nodes},
         }},
     }}

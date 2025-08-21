@@ -1,4 +1,5 @@
 TNSMI.packs = {}
+TNSMI.reference = {}
 
 ---Defines and creates a vanilla soundpack for tonsmith to load.<br>
 ---[<u>View documentation<u>](https://github.com/Goldofleaves/tonsmith/wiki#tnsmipack_vanilla)
@@ -95,6 +96,7 @@ TNSMI.Pack = function(args)
         if v == returntable.mod_prefix.."_"..returntable.name then returntable.priority = i end
     end
     table.insert(TNSMI.packs,returntable)
+    table.insert(TNSMI.reference,returntable)
 end
 
 
