@@ -29,7 +29,10 @@ return{
             tnsmi_manager_installed = "Soundpacks installed",
 
             -- misc
+            tnsmi_filter_label = "FILTER",
             tnsmi_close = "Close",
+            tnsmi_options = "Options",
+            tnsmi_version_label = "Version",
             
         },
     },

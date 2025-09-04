@@ -22,3 +22,12 @@ function G.FUNCS.TNSMI_change_pack_display(e) -- e represents the node
     if TNSMI.mod_config.c_rows > 16 then TNSMI.mod_config.c_rows = 16 end
     
 end
+
+function G.FUNCS.TNSMI_open_mod_options ()
+    G.SETTINGS.paused = true
+    _, G.ACTIVE_MOD_UI = next(SMODS.find_mod("tonsmith"))
+    SMODS.LAST_SELECTED_MOD_TAB = "config"
+    G.FUNCS.overlay_menu({
+        definition = create_UIBox_mods()
+    })
+end

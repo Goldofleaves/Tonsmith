@@ -1,4 +1,5 @@
 TNSMI.packs = {}
+TNSMI.reference = {}
 
 ---Defines and creates a vanilla soundpack for tonsmith to load.<br>
 ---[<u>View documentation<u>](https://github.com/Goldofleaves/tonsmith/wiki#tnsmipack_vanilla)
@@ -10,9 +11,9 @@ TNSMI.Pack = function(args)
     local sound_table = args.sound_table or {}
     local mods = args.mods or {"Vanilla"}
     local thumb = args.thumbnail
-    local returntable = {}
-    returntable.sounds = {}
-    returntable.mod_prefix = SMODS.current_mod.prefix
+    local ret = {}
+    ret.sounds = {}
+    ret.mod_prefix = SMODS.current_mod.prefix
     for i,sound in ipairs(sound_table) do
         sound.key = sound.key or ""
         sound.extention = sound.extention or "ogg"
@@ -20,28 +21,26 @@ TNSMI.Pack = function(args)
         if sound.prefix ~= "" then sound.prefix = sound.prefix.."_" end
         sound.file = sound.file or sound.key
         sound.music_track = sound.select_music_track or nil
-        if type(sound.music_track) ~= "function" then 
-            sound.music_track = nil 
-        else
-            local ref = sound.music_track
+        if string.find(sound.key,"music") then 
+            local ref = sound.music_track or true
             sound.music_track = function ()
-                local load = false
-                for _,v in ipairs(TNSMI.mod_config.soundpack_priority) do
-                    if v == returntable.mod_prefix.."_"..name then load = true else load = false end
+                if not ref then return end -- Evaluate if the sound should play
+                for i,v in ipairs(TNSMI.mod_config.soundpack_priority) do
+                    if v == ret.mod_prefix.."_"..name then return i end
                 end
-                if not load then return false end
-                return ref
             end
         end
-        returntable.sounds[i] = {SMODS.Sound {
-            key = sound.key,
-            path = sound.file.."."..sound.extention,
-            pitch = sound.pitch,
-            volume = sound.volume,
-            sync = sound.sync,
-            select_music_track = sound.music_track
-        },
-        sound.prefix..sound.key }
+        if (sound.req_mod and next(SMODS.find_mod(sound.req_mod))) or not sound.req_mod then
+            ret.sounds[i] = {SMODS.Sound {
+                key = sound.key,
+                path = sound.file.."."..sound.extention,
+                pitch = sound.pitch,
+                volume = sound.volume,
+                sync = sound.sync,
+                select_music_track = sound.music_track
+            },
+            sound.prefix..sound.key }
+        end
     end
 
     local loc_txt = {}
@@ -72,7 +71,7 @@ TNSMI.Pack = function(args)
 
     if thumb then SMODS.Atlas { key = thumb , path = thumb..".png", px = 71, py = 95} end
     
-    returntable.joker = SMODS.Joker {
+    ret.joker = SMODS.Joker {
         no_collection = true,
         unlocked = true,
         discovered = true,
@@ -87,14 +86,15 @@ TNSMI.Pack = function(args)
 
 
 
-    returntable.name = name
-    returntable.selected = false
-    returntable.priority = 0
+    ret.name = name
+    ret.selected = false
+    ret.priority = 0
 
     for i,v in ipairs(TNSMI.mod_config.soundpack_priority) do
-        if v == returntable.mod_prefix.."_"..returntable.name then returntable.priority = i end
+        if v == ret.mod_prefix.."_"..ret.name then ret.priority = i end
     end
-    table.insert(TNSMI.packs,returntable)
+    table.insert(TNSMI.packs,ret)
+    table.insert(TNSMI.reference,ret)
 end
 
 

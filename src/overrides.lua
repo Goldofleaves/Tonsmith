@@ -85,6 +85,9 @@ function Game:update(dt)
     TNSMI.loaded_packs = {}
     TNSMI.unloaded_packs = {}
     if TNSMI.page > TNSMI.max_pages then TNSMI.page = TNSMI.page - 1; TNSMI.load_cards() end
+    if TNSMI.page <= 0 and TNSMI.max_pages > 0 then
+        TNSMI.page = 1
+    end
     for i,v in ipairs(TNSMI.packs) do if v.selected then table.insert(TNSMI.loaded_packs,v) else table.insert(TNSMI.unloaded_packs,v) end end
 
 
