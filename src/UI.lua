@@ -260,7 +260,7 @@ function TNSMI.main_tab ()
 
     local footer = {
         {n = G.UIT.R, config = {align = "cm", padding = 0.02, hover = true, shadow = true}, nodes = {
-            {n = G.UIT.C, config = {align = "cm"}, nodes = {UIBox_button{label = {localize("tnsmi_close")}, minw = 2, minh = 0.65, colour = G.C.ORANGE}}},
+            {n = G.UIT.C, config = {align = "cm"}, nodes = {UIBox_button{label = {localize("tnsmi_close")}, minw = 2, minh = 0.65, colour = G.C.ORANGE, button = "options"}}},
             {n = G.UIT.C, config = {align = "cm", minw = 0.1}},
             {n = G.UIT.C, config = {align = "cm"}, nodes = {UIBox_button{label = {localize("tnsmi_options")}, minw = 2, minh = 0.65, colour = G.C.GREEN, button = "TNSMI_open_mod_options"}}},
             {n = G.UIT.C, config = {align = "cm", minw = 0.2}},
