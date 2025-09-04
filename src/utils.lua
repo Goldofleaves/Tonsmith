@@ -26,7 +26,7 @@ TNSMI.Pack = function(args)
             sound.music_track = function ()
                 if not ref then return end -- Evaluate if the sound should play
                 for i,v in ipairs(TNSMI.mod_config.soundpack_priority) do
-                    if v == ret.mod_prefix.."_"..name then return i end
+                    if v == ret.mod_prefix.."_"..name then return 9e300+i end
                 end
             end
         end

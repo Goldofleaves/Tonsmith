@@ -29,7 +29,10 @@ return{
             tnsmi_manager_installed = "Paquetes instalados",
 
             -- misc
+            tnsmi_filter_label = "FILTRAR",
             tnsmi_close = "Cerrar",
+            tnsmi_options = "Opciones",
+            tnsmi_version_label = "Versión",
             
         },
     },
