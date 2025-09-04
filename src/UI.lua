@@ -237,12 +237,12 @@ function TNSMI.main_tab ()
     end
 
     local page_cycle = {
-        {n = G.UIT.C, config = {align = "cm", minw = 0.5, minh = 0.5, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLACK, shadow = true, button = "tnsmi_prev_page"}, nodes = {
+        {n = G.UIT.C, config = {align = "cm", minw = 0.5, minh = 0.5, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLUE, shadow = true, button = "tnsmi_prev_page"}, nodes = {
             {n = G.UIT.R, config = {align = "cm", padding = 0.05}, nodes = {
                 {n = G.UIT.T, config = {text = "<", scale = 0.4, colour = G.C.UI.TEXT_LIGHT}}
             }}
         }},
-        {n = G.UIT.C, config = {align = "cm", minw = 2.5, minh = 0.5, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLACK, shadow = true}, nodes = {
+        {n = G.UIT.C, config = {align = "cm", minw = 2.5, minh = 0.5, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLUE, shadow = true}, nodes = {
             {n = G.UIT.R, config = {align = "cm", padding = 0.05}, nodes = {
                 {n = G.UIT.O, config = {object = DynaText{string = {localize("k_page").." "}, colours = {G.C.UI.TEXT_LIGHT}, scale = 0.4}}},
                 {n = G.UIT.O, config = {object = DynaText{string = {{ref_table = TNSMI, ref_value = "page"}}, colours = {G.C.UI.TEXT_LIGHT}, scale = 0.4}}},
@@ -251,7 +251,7 @@ function TNSMI.main_tab ()
                 
             }}
         }},
-        {n = G.UIT.C, config = {align = "cm", minw = 0.5, minh = 0.5, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLACK, shadow = true, button = "tnsmi_next_page"}, nodes = {
+        {n = G.UIT.C, config = {align = "cm", minw = 0.5, minh = 0.5, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLUE, shadow = true, button = "tnsmi_next_page"}, nodes = {
             {n = G.UIT.R, config = {align = "cm", padding = 0.05}, nodes = {
                 {n = G.UIT.T, config = {text = ">", scale = 0.4, colour = G.C.UI.TEXT_LIGHT}}
             }}
@@ -261,7 +261,7 @@ function TNSMI.main_tab ()
     local footer = {
         {n = G.UIT.R, config = {align = "cm", padding = 0.02, hover = true, shadow = true}, nodes = {
             {n = G.UIT.C, config = {align = "cm"}, nodes = {UIBox_button{label = {localize("tnsmi_close")}, minw = 2, minh = 0.65, colour = G.C.ORANGE}}},
-            {n = G.UIT.C, config = {align = "cm", minw = 0.2}},
+            {n = G.UIT.C, config = {align = "cm", minw = 0.1}},
             {n = G.UIT.C, config = {align = "cm"}, nodes = {UIBox_button{label = {localize("tnsmi_options")}, minw = 2, minh = 0.65, colour = G.C.GREEN, button = "TNSMI_open_mod_options"}}},
             {n = G.UIT.C, config = {align = "cm", minw = 0.2}},
             {n = G.UIT.C, config = {align = "cr", minw = 2}, nodes = {
@@ -274,7 +274,7 @@ function TNSMI.main_tab ()
                     {n = G.UIT.O, config = {object = DynaText{string = {tostring(#TNSMI.packs)}, colours = {G.C.UI.TEXT_LIGHT}, scale = 0.25}}}
                 }},
             }},
-            {n = G.UIT.C, config = {align = "cm", minw = 0.2}},
+            {n = G.UIT.C, config = {align = "cm", minw = 0.1}},
             {n = G.UIT.C, config = {align = "cr", minw = 0}, nodes = {
                 {n = G.UIT.R, config = {align = "cr"}, nodes = {
                     {n = G.UIT.O, config = {object = DynaText{string = {localize("tnsmi_version_label")..": "}, colours = {G.C.UI.TEXT_LIGHT}, scale = 0.35}}},
@@ -287,7 +287,7 @@ function TNSMI.main_tab ()
 
     TNSMI.load_cards()
 
-    local UI = {n = G.UIT.ROOT, config = {r = 0.1, minw = 5, align = "cm", padding = 0, colour = G.C.L_BLACK, outline = 1.5, outline_colour = G.C.UI.OUTLINE_LIGHT}, nodes = { 
+    local UI = {n = G.UIT.ROOT, config = {r = 0.1, minw = 5, align = "cm", padding = 0, colour = G.C.L_BLACK, outline = 3, outline_colour = G.C.UI.OUTLINE_LIGHT}, nodes = { 
         {n = G.UIT.C, config = {r = 0.1, align = "cm", padding = 0.1, colour = G.C.BLACK}, nodes = {
             {n = G.UIT.R, config = {align = "tm", colour = G.C.CLEAR}, nodes = {
                 {n = G.UIT.C, config = {align = "tm", colour = G.C.CLEAR}, nodes = {
@@ -317,7 +317,7 @@ function TNSMI.main_tab ()
                 }},
             }},
             {n = G.UIT.R, config = {align = "cm", colour = {G.C.L_BLACK[1], G.C.L_BLACK[2], G.C.L_BLACK[3], 0.5}, r = 0.2}, nodes = select_nodes},
-            {n = G.UIT.R, config = {align = "cm", colour = {G.C.L_BLACK[1], G.C.L_BLACK[2], G.C.L_BLACK[3], 0.5}, r = 0.2}, nodes = footer}
+            {n = G.UIT.R, config = {align = "cm", colour = {G.C.L_BLACK[1], G.C.L_BLACK[2], G.C.L_BLACK[3], 0.5}, r = 0.2, padding = 0.1}, nodes = footer}
         }},
     }}
 
