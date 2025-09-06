@@ -16,7 +16,7 @@ TNSMI.Pack = function(args)
     ret.mod_prefix = SMODS.current_mod.prefix
     for i,sound in ipairs(sound_table) do
         sound.key = sound.key or ""
-        sound.extention = sound.extention or "ogg"
+        sound.extension = sound.extention or sound.extension or "ogg"
         sound.prefix = sound.prefix or ""
         if sound.prefix ~= "" then sound.prefix = sound.prefix.."_" end
         sound.file = sound.file or sound.key
@@ -33,7 +33,7 @@ TNSMI.Pack = function(args)
         if (sound.req_mod and next(SMODS.find_mod(sound.req_mod))) or not sound.req_mod then
             ret.sounds[i] = {SMODS.Sound {
                 key = sound.key,
-                path = sound.file.."."..sound.extention,
+                path = sound.file.."."..sound.extension,
                 pitch = sound.pitch,
                 volume = sound.volume,
                 sync = sound.sync,
