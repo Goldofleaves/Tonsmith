@@ -34,6 +34,13 @@ return{
             tnsmi_options = "Options",
             tnsmi_version_label = "Version",
             
+            --tooltip
+            tnsmi_tltp_info = "Soundpack Info",
+            tnsmi_tltp_firstline = "This sound pack replaces",
+            tnsmi_tltp_secondline = "the following sounds:",
+            tnsmi_tltp_dot_dot_dot = "...",
+            tnsmi_tltp_and = "...And ",
+            tnsmi_tltp_more = " more.",
         },
     },
 }

@@ -30,6 +30,7 @@ TNSMI.Pack = function(args)
                 end
             end
         end
+
         if (sound.req_mod and next(SMODS.find_mod(sound.req_mod))) or not sound.req_mod then
             ret.sounds[i] = {SMODS.Sound {
                 key = sound.key,
@@ -44,7 +45,40 @@ TNSMI.Pack = function(args)
     end
 
     local loc_txt = {}
+    local reference = G.localization.descriptions.Other
+    --[[
+            med_orange_seal = {
+                name = "Orange Seal",
+                text = {
+                    "{C:attention}+#1#{} Jank",
+                    "while held in hand",
+                },
+            },     
+    ]]
+    init_localization()
+    local jank = false
+    local threshold = 5
+    local tooltip_table = {}
+    tooltip_table[1] = "This sound pack"
+    tooltip_table[2] = "replaces the"
+    tooltip_table[3] = "following sounds:"
+    tooltip_table[4] = "{} {}"
+    local amount = #sound_table
+    local remainder = 0
+    if amount > threshold then remainder = amount - threshold amount = threshold jank = true end
+    for i = 1, amount do
+        table.insert(tooltip_table, sound_table[i].key..((i == amount and not jank) and "." or ","))
+    end
+    if jank then
+        table.insert(tooltip_table, "...")
+        table.insert(tooltip_table, "{} {}")
+        table.insert(tooltip_table, "...And "..remainder.." more.")
+    end
 
+    reference["tnsmi_"..string.lower(name).."_desc"] = {
+        name = "Soundpack Info",
+        text = tooltip_table
+    }
     for i,v in ipairs(desc) do
 
         loc_txt[v.lan] = {
@@ -55,7 +89,6 @@ TNSMI.Pack = function(args)
                 {"{X:legendary,C:white}"..(G.localization.misc.dictionary.k_tnsmi_mods or "Mods")}
             }
         }
-
         for _,vv in ipairs(v.text) do
             table.insert(loc_txt[v.lan].text[1],vv)
         end
@@ -75,6 +108,9 @@ TNSMI.Pack = function(args)
         no_collection = true,
         unlocked = true,
         discovered = true,
+        loc_vars = function (self, info_queue, card)
+            info_queue[#info_queue + 1] = { set = "Other", key = "tnsmi_"..string.lower(name).."_desc" } 
+        end,
         key = name,
         set_card_type_badge = function (self, card, badges)badges[1] = nil end,
         in_pool = function(self, args) return false end,
