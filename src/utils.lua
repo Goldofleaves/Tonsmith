@@ -46,15 +46,6 @@ TNSMI.Pack = function(args)
 
     local loc_txt = {}
     local reference = G.localization.descriptions.Other
-    --[[
-            med_orange_seal = {
-                name = "Orange Seal",
-                text = {
-                    "{C:attention}+#1#{} Jank",
-                    "while held in hand",
-                },
-            },     
-    ]]
     init_localization()
     local jank = false
     local threshold = 5
