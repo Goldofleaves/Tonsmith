@@ -3,3 +3,5 @@
 A Balatro sound loader.
 
 _Developed by: [Goldenleaf](https://golden-leaf.itch.io), [JoglaCraft](https://github.com/Joglacraft), [BepisFever](https://github.com/bepisfever)._
+
+Note: Please check rhe [Github Wiki](https://github.com/Goldofleaves/Tonsmith/wiki) if you find yourself troubled when making a soundpack.
