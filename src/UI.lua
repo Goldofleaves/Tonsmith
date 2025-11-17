@@ -129,36 +129,6 @@ function create_overlaymenu_musicpacks(current_page)
         }},
     }}
 
-
-    --[[
-    local footer = {
-        {n = G.UIT.R, config = {align = "cm", padding = 0.02, hover = true, shadow = true}, nodes = {
-            {n = G.UIT.C, config = {align = "cm"}, nodes = {UIBox_button{label = {localize("tnsmi_close")}, minw = 2, minh = 0.65, colour = G.C.ORANGE, button = "options"}}},
-            {n = G.UIT.C, config = {align = "cm", minw = 0.1}},
-            {n = G.UIT.C, config = {align = "cm"}, nodes = {UIBox_button{label = {localize("tnsmi_options")}, minw = 2, minh = 0.65, colour = G.C.GREEN, button = "TNSMI_open_mod_options"}}},
-            {n = G.UIT.C, config = {align = "cm", minw = 0.2}},
-            {n = G.UIT.C, config = {align = "cr", minw = 2}, nodes = {
-                {n = G.UIT.R, config = {align = "cr"}, nodes = {
-                    {n = G.UIT.O, config = {object = DynaText{string = {localize("tnsmi_manager_active")..": "}, colours = {G.C.UI.TEXT_LIGHT}, scale = 0.25}}},
-                    {n = G.UIT.O, config = {object = DynaText{string = {{ref_table = TNSMI, ref_value = "n_loaded_packs"}}, colours = {G.C.UI.TEXT_LIGHT}, scale = 0.25}}}
-                }},
-                {n = G.UIT.R, config = {align = "cr"}, nodes = {
-                    {n = G.UIT.O, config = {object = DynaText{string = {localize("tnsmi_manager_installed")..": "}, colours = {G.C.UI.TEXT_LIGHT}, scale = 0.25}}},
-                    {n = G.UIT.O, config = {object = DynaText{string = {tostring(#TNSMI.packs)}, colours = {G.C.UI.TEXT_LIGHT}, scale = 0.25}}}
-                }},
-            }},
-            {n = G.UIT.C, config = {align = "cm", minw = 0.1}},
-            {n = G.UIT.C, config = {align = "cr", minw = 0}, nodes = {
-                {n = G.UIT.R, config = {align = "cr"}, nodes = {
-                    {n = G.UIT.O, config = {object = DynaText{string = {localize("tnsmi_version_label")..": "}, colours = {G.C.UI.TEXT_LIGHT}, scale = 0.35}}},
-                    {n = G.UIT.O, config = {object = DynaText{string = {tostring(SMODS.find_mod("tonsmith")[1].version)}, colours = {G.C.UI.TEXT_LIGHT}, scale = 0.35}}}
-                }},
-            }},
-
-        }}
-    }
-    --]]
-
     G.FUNCS.reload_music_cards(current_page)
 
     local option_text = {}
