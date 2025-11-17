@@ -1,0 +1,15 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 0
+
+[[patches]]
+[patches.pattern]
+target = "functions/UI_definitions.lua"
+pattern = '''customize,
+credits'''
+position = "at"
+payload = '''customize,
+UIBox_button{ label = {localize("tnsmi_manager_pause")}, button = "TNSMI_packs_button", minw = 5, colour = G.C.PALE_GREEN},
+credits'''
+match_indent = true
