@@ -1,6 +1,6 @@
 return {
     loaded_packs = {},
     menu_button = true,
-    rows = 2,
+    rows = 1,
     cols = 6
 }

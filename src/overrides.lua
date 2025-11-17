@@ -1,8 +1,8 @@
 local ref_card_click = Card.click
 function Card:click(...)
-    if self.params and self.params.soundpack then
-        local toggle = self.area ~= TNSMI.TNSMI.cardareas.priority
-        TNSMI.toggle_pack(self.params.soundpack, toggle)
+    if self.params and self.params.tnsmi_soundpack and self.area then
+        local toggle = self.area ~= TNSMI.cardareas.priority
+        TNSMI.toggle_pack(self.params.tnsmi_soundpack, toggle)
     end
 
     return ref_card_click(self, ...)

@@ -1,4 +1,5 @@
-SMODS.Atlas({key = 'default_music_pack', path = 'default_music_pack.png', px = 71, py = 75, prefix_config = false})
+SMODS.Atlas({key = 'default_soundpack', path = 'default_soundpack.png', px = 71, py = 75, prefix_config = false})
+SMODS.Atlas({key = 'thumb' , path = 'thumb.png', px = 71, py = 95, prefix_config = false})
 
 ---Defines and creates a vanilla soundpack for tonsmith to load.<br>
 ---[<u>View documentation<u>](https://github.com/Goldofleaves/tonsmith/wiki#tnsmipack_vanilla)
@@ -9,7 +10,10 @@ TNSMI.SoundPack = SMODS.GameObject:extend ({
     set = 'SoundPack',
     obj_table = TNSMI.SoundPacks,
     class_prefix = "sp",
-    atlas = 'default_music_pack',
+    prefix_config = {
+        atlas = false
+    },
+    atlas = 'default_soundpack',
     required_params = {
         'key',
         'sound_table'
@@ -26,10 +30,6 @@ TNSMI.SoundPack = SMODS.GameObject:extend ({
         TNSMI.SoundPack.super.register(self)
     end,
     inject = function(self)
-        if not G.ASSET_ATLAS[self.atlas] and not G.ANIMATION_ATLAS[self.atlas] then
-            SMODS.Atlas({ key = self.atlas , path = self.atlas..".png", px = 71, py = 95, prefix_config = false})
-        end
-
         for _, v in ipairs(self.sound_table) do
             if v.key and not v.replace_key and not v.select_music_track then
                 v.replace_key = v.key
@@ -43,9 +43,7 @@ TNSMI.SoundPack = SMODS.GameObject:extend ({
             elseif not string.find(path, '.ogg') and not string.find(path, '.wav') then
                 path = path..'.ogg'
             end
-            v.key = self.mod.prefix..v.key
-
-            -- TODO: prefix config
+            v.key = self.mod.prefix..'_'..v.key
 
             local select_music_track = v.select_music_track
             if string.find(v.key, "music") and not select_music_track then
@@ -68,32 +66,35 @@ TNSMI.SoundPack = SMODS.GameObject:extend ({
                     prefix_config = false
                 }
             end
-
         end
-
-        TNSMI.SoundPacks[self.key] = self
     end,
 })
 
 ---@param name string The sound pack to load.
 function TNSMI.toggle_pack(key, toggle)
-    local pack = TNSMI.SoundPacks[key]
+    sendDebugMessage('toggling soundpack '..tostring(key)..': '..tostring(toggle))
 
     if not toggle then -- Disable pack
         for i = #TNSMI.config.loaded_packs, 1, -1 do
-            if TNSMI.config.loaded_packs[i] == pack.key then
+            if TNSMI.config.loaded_packs[i] == key then
+                sendDebugMessage('removing: '..key)
+                local card = TNSMI.cardareas.priority.cards[i - #TNSMI.config.loaded_packs + 1]
+                card:remove()
                 table.remove(TNSMI.config.loaded_packs, i)
                 break
             end
         end
     else
-        table.insert(TNSMI.config.loaded_packs, pack.key)
+        local card = create_soundpack_card(TNSMI.cardareas.priority, TNSMI.SoundPacks[key])
+        TNSMI.cardareas.priority:emplace(card)
+        table.insert(TNSMI.config.loaded_packs, key)
     end
 
-    TNSMI.save_soundpack()
+    G.FUNCS.reload_soundpack_cards()
+    TNSMI.save_soundpacks()
 end
 
-function TNSMI.save_soundpacks()
+function TNSMI.save_soundpacks(reset_config)
     -- resets all existing replace sounds
     local replace_map = TNSMI.config.loaded_packs.replace_map or {}
     for k, v in pairs (replace_map) do
@@ -102,24 +103,19 @@ function TNSMI.save_soundpacks()
     end
 
     replace_map = {}
-    TNSMI.config.loaded_packs = {}
-    for i, v in ipairs(TNSMI.cardareas.priority.cards) do
+    for i = #TNSMI.config.loaded_packs, 1, -1 do
         -- Save the priority to the config file.
-        local priority = TNSMI.cardareas.priority.cards - i - 1
-        TNSMI.config.loaded_packs[priority] = v.params.soundpack
-        local pack = TNSMI.SoundPacks[v.params.soundpack]
+        local pack = TNSMI.SoundPacks[TNSMI.config.loaded_packs[i]]
 
-
-        for _, sound in ipairs(pack.sounds) do
+        for _, sound in ipairs(pack.sound_table) do
             if sound.replace_key and not replace_map[sound.replace_key] then
-                replace_map[sound.replace_key] = { key = sound.key, priority = priority}
+                replace_map[sound.replace_key] = { key = sound.key, priority = i}
                 local obj = SMODS.Sounds[sound.key]
-                obj:create_replace_sound(obj.replace_key)
+                obj:create_replace_sound(sound.replace_key)
             end
         end
     end
-    TNSMI.config.loaded_packs.replace_map = {}
+    TNSMI.config.loaded_packs.replace_map = replace_map
 
     SMODS.save_mod_config(TNSMI)
-    G.FUNCS.reload_soundpack_cards()
 end

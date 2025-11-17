@@ -1,4 +1,5 @@
 TNSMI = SMODS.current_mod
+TNSMI.config.loaded_packs.replace_map = {}
 TNSMI.cardareas = {}
 TNSMI.pages = {current = 1, num = 1}
 TNSMI.prompt_text_input = ''
@@ -16,6 +17,7 @@ end
 
 TNSMI.SoundPack({
     key = 'fools_gambit',
+    atlas = 'thumb',
     sound_table = {
         { key = "ambientFire1" },
         { key = "ambientFire2"  },
@@ -99,3 +101,4 @@ TNSMI.SoundPack({
         { key = "music5", path = 'boss.ogg', pitch = 1}
     },
 })
+TNSMI.save_soundpacks()

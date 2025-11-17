@@ -24,6 +24,7 @@ return{
             tnsmi_manager_pause = "Soundpacks",
             tnsmi_manager_display_in_pause = "Display in pause menu",
             tnsmi_manager_selected = "SELECTED",
+            tnsmi_manager_loaded = "DRAG FOR PRIORITY",
             tnsmi_manager_click_select = "CLICK TO SELECT",
             tnsmi_manager_active = "Soundpacks active",
             tnsmi_manager_installed = "Soundpacks installed",
@@ -33,7 +34,7 @@ return{
             tnsmi_close = "Close",
             tnsmi_options = "Options",
             tnsmi_version_label = "Version",
-            
+
         },
     },
 }
