@@ -20,10 +20,10 @@ end
 function G.FUNCS.TNSMI_packs_button(e)
 	G.SETTINGS.paused = true
     SMODS.save_mod_config(TNSMI)
-    create_overlaymenu_musicpacks(1)
+    create_overlaymenu_soundpacks(1)
 end
 
-function G.FUNCS.music_packs_page(args)
+function G.FUNCS.sound_packs_page(args)
     TNSMI.pages.current = args.cycle_config.current_option
 
     local option_cycle = G.OVERLAY_MENU:get_UIE_by_ID('tnsmi_pack_option_cycle')
@@ -38,7 +38,7 @@ function G.FUNCS.music_packs_page(args)
             options = option_text,
             w = 4.5,
             cycle_shoulders = true,
-            opt_callback = 'music_packs_page',
+            opt_callback = 'sound_packs_page',
             focus_args = {snap_to = true, nav = 'wide'},
             current_option = TNSMI.pages.current,
             colour = G.C.RED

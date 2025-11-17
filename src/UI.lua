@@ -1,4 +1,4 @@
-function create_music_card(area, pack)
+function create_soundpack_card(area, pack)
     local atlas = G.ANIMATION_ATLAS[pack.atlas] or G.ASSET_ATLAS[pack.atlas]
     local card = Card(
         area.T.x,
@@ -7,7 +7,7 @@ function create_music_card(area, pack)
         G.CARD_H,
         nil,
         copy_table(G.P_CENTERS.j_joker),
-        {music_pack = pack}
+        {tnsmi_soundpack = pack}
     )
 
     local layer = atlas.animated and 'animatedSprite' or 'center'
@@ -49,7 +49,7 @@ function create_music_card(area, pack)
     return card
 end
 
-G.FUNCS.reload_music_cards = function(current_page)
+G.FUNCS.reload_soundpack_cards = function(current_page)
     sendDebugMessage('calling reload')
     TNSMI.pages.current = current_page or TNSMI.pages.current
 
@@ -57,8 +57,8 @@ G.FUNCS.reload_music_cards = function(current_page)
     local loaded_map = {}
     for _, v in ipairs(TNSMI.config.loaded_packs) do
         loaded_map[v] = true
-        local pack = SMODS.MusicPacks[v]
-        local card = create_music_card(TNSMI.cardareas.priority, pack)
+        local pack = TNSMI.SoundPacks[v]
+        local card = create_soundpack_card(TNSMI.cardareas.priority, pack)
         TNSMI.cardareas.priority:emplace(card, 'front')
     end
 
@@ -66,33 +66,33 @@ G.FUNCS.reload_music_cards = function(current_page)
     local start_index = num_per_page * (TNSMI.pages.current - 1)
 
     -- filtering for the current text input and selected packs
-    local music_cards = {}
-    for i, v in ipairs(TNSMI.MusicPack.obj_buffer) do
-        if (TNSMI.prompt_text_input == '' or string.find(localize{type = 'name_text', key = v, set = 'MusicPack'}, TNSMI.prompt_text_input))
+    local soundpack_cards = {}
+    for i, v in ipairs(TNSMI.SoundPack.obj_buffer) do
+        if (TNSMI.prompt_text_input == '' or string.find(localize{type = 'name_text', key = v, set = 'SoundPack'}, TNSMI.prompt_text_input))
         and not loaded_map[v] then
-            music_cards[#music_cards+1] = v
+            soundpack_cards[#soundpack_cards+1] = v
         end
     end
 
     -- if it would result in too many pages, go to the last page
-    if #music_cards < start_index then
+    if #soundpack_cards < start_index then
         start_index = num_per_page * (TNSMI.pages.current - 1)
     end
 
-    TNSMI.pages.num = math.floor(#music_cards/num_per_page) + 1
+    TNSMI.pages.num = math.floor(#soundpack_cards/num_per_page) + 1
     TNSMI.pages.current = math.min(TNSMI.pages.current, TNSMI.pages.num)
 
     for i=1, num_per_page do
-        local pack = TNSMI.MusicPacks[music_cards[start_index + i]]
+        local pack = TNSMI.SoundPacks[soundpack_cards[start_index + i]]
         local area_idx = math.floor(i/TNSMI.config.rows) + 1
-        local card = create_music_card(TNSMI.cardareas[area_idx], pack)
+        local card = create_soundpack_card(TNSMI.cardareas[area_idx], pack)
         TNSMI.cardareas[area_idx]:emplace(card)
 
-        if (start_index + i) == #TNSMI.MusicPack.obj_buffer then break end
+        if (start_index + i) == #TNSMI.SoundPack.obj_buffer then break end
     end
 end
 
-function create_overlaymenu_musicpacks(current_page)
+function create_overlaymenu_soundpacks(current_page)
     TNSMI.pages.num = 1
 
     if TNSMI.cardareas.priority then TNSMI.cardareas.priority:remove() end
@@ -106,7 +106,7 @@ function create_overlaymenu_musicpacks(current_page)
         TNSMI.cardareas[i] = nil
     end
 
-    if #TNSMI.MusicPack.obj_buffer < 1 then return end
+    if #TNSMI.SoundPack.obj_buffer < 1 then return end
 
     local area_nodes = {}
     for i=1, TNSMI.config.rows do
@@ -129,7 +129,7 @@ function create_overlaymenu_musicpacks(current_page)
         }},
     }}
 
-    G.FUNCS.reload_music_cards(current_page)
+    G.FUNCS.reload_soundpack_cards(current_page)
 
     local option_text = {}
     for i=1, TNSMI.pages.num do
@@ -140,7 +140,7 @@ function create_overlaymenu_musicpacks(current_page)
             options = option_text,
             w = 4.5,
             cycle_shoulders = true,
-            opt_callback = 'music_packs_page',
+            opt_callback = 'sound_packs_page',
             focus_args = {snap_to = true, nav = 'wide'},
             current_option = TNSMI.pages.current,
             colour = G.C.RED
@@ -166,7 +166,7 @@ function create_overlaymenu_musicpacks(current_page)
             {n = G.UIT.C, config = {align = "cm", colour = {G.C.L_BLACK[1], G.C.L_BLACK[2], G.C.L_BLACK[3], 0.5}, r = 0.2, padding = 0.1}, nodes = {
                 {n = G.UIT.T, config = {text = "SEARCH", scale = 0.3, colour = lighten(G.C.GREY,0.2), vert = true}},
                 create_text_input({max_length = 12, w = 2.5, ref_table = TNSMI, ref_value = 'prompt_text_input'}),
-                {n = G.UIT.C, config = {align = "cm", minw = 0.2, minh = 0.2, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLUE, shadow = true, button = "reload_music_cards"}, nodes = {
+                {n = G.UIT.C, config = {align = "cm", minw = 0.2, minh = 0.2, padding = 0.1, r = 0.1, hover = true, colour = G.C.BLUE, shadow = true, button = "reload_soundpack_cards"}, nodes = {
                     {n = G.UIT.R, config = {align = "cm", padding = 0.05, minw = 1.5}, nodes = {
                         {n = G.UIT.T, config = {text = localize("tnsmi_filter_label"), scale = 0.4, colour = G.C.UI.TEXT_LIGHT}}
                     }}

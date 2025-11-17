@@ -3,19 +3,19 @@ SMODS.Atlas({key = 'default_music_pack', path = 'default_music_pack.png', px = 7
 ---Defines and creates a vanilla soundpack for tonsmith to load.<br>
 ---[<u>View documentation<u>](https://github.com/Goldofleaves/tonsmith/wiki#tnsmipack_vanilla)
 ---@param args {name:string,mods:string[],description:{},authors:string[],sound_table:table[],thumbnail:string,extension?:".ogg"|string}
-TNSMI.MusicPacks = {}
-TNSMI.MusicPack = SMODS.GameObject:extend ({
+TNSMI.SoundPacks = {}
+TNSMI.SoundPack = SMODS.GameObject:extend ({
     obj_buffer = {},
-    set = 'MusicPack',
-    obj_table = TNSMI.MusicPacks,
-    class_prefix = "mp",
+    set = 'SoundPack',
+    obj_table = TNSMI.SoundPacks,
+    class_prefix = "sp",
     atlas = 'default_music_pack',
     required_params = {
         'key',
-        'sounds'
+        'sound_table'
     },
     process_loc_text = function(self) -- LOC_TXT structure = name = string, text = table of strings
-        SMODS.process_loc_text(G.localization.descriptions.music_packs, self.key, self.loc_txt)
+        SMODS.process_loc_text(G.localization.descriptions.SoundPacks, self.key, self.loc_txt)
     end,
     register = function(self)
         if self.registered then
@@ -23,16 +23,26 @@ TNSMI.MusicPack = SMODS.GameObject:extend ({
             return
         end
 
-        TNSMI.MusicPack.super.register(self)
+        TNSMI.SoundPack.super.register(self)
     end,
     inject = function(self)
         if not G.ASSET_ATLAS[self.atlas] and not G.ANIMATION_ATLAS[self.atlas] then
             SMODS.Atlas({ key = self.atlas , path = self.atlas..".png", px = 71, py = 95, prefix_config = false})
         end
 
-        for _, v in ipairs(self.sounds) do
-            if not v.key then v.key = v.replace_key end
-            local path = v.path or (v.key..'.ogg')
+        for _, v in ipairs(self.sound_table) do
+            if v.key and not v.replace_key and not v.select_music_track then
+                v.replace_key = v.key
+            end
+
+            if not v.key and v.replace_key then v.key = v.replace_key end
+
+            local path = v.path or v.file
+            if not path then
+                path = (v.key..'.ogg')
+            elseif not string.find(path, '.ogg') and not string.find(path, '.wav') then
+                path = path..'.ogg'
+            end
             v.key = self.mod.prefix..v.key
 
             -- TODO: prefix config
@@ -61,13 +71,13 @@ TNSMI.MusicPack = SMODS.GameObject:extend ({
 
         end
 
-        TNSMI.MusicPacks[self.key] = self
+        TNSMI.SoundPacks[self.key] = self
     end,
 })
 
 ---@param name string The sound pack to load.
 function TNSMI.toggle_pack(key, toggle)
-    local pack = TNSMI.MusicPacks[key]
+    local pack = TNSMI.SoundPacks[key]
 
     if not toggle then -- Disable pack
         for i = #TNSMI.config.loaded_packs, 1, -1 do
@@ -97,7 +107,7 @@ function TNSMI.save_soundpacks()
         -- Save the priority to the config file.
         local priority = TNSMI.cardareas.priority.cards - i - 1
         TNSMI.config.loaded_packs[priority] = v.params.soundpack
-        local pack = TNSMI.MusicPacks[v.params.soundpack]
+        local pack = TNSMI.SoundPacks[v.params.soundpack]
 
 
         for _, sound in ipairs(pack.sounds) do
@@ -111,5 +121,5 @@ function TNSMI.save_soundpacks()
     TNSMI.config.loaded_packs.replace_map = {}
 
     SMODS.save_mod_config(TNSMI)
-    G.FUNCS.reload_music_cards()
+    G.FUNCS.reload_soundpack_cards()
 end
