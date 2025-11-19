@@ -31,34 +31,14 @@ end
 function G.FUNCS.TNSMI_packs_button(e)
 	G.SETTINGS.paused = true
     SMODS.save_mod_config(TNSMI)
-    create_overlaymenu_soundpacks()
+    G.FUNCS.overlay_menu({
+		definition = create_UIBox_soundpacks()
+	})
+    G.OVERLAY_MENU:recalculate()
 end
 
 function G.FUNCS.soundpacks_page(args)
-    TNSMI.pages.current = args.cycle_config.current_option
-    sendDebugMessage('current page: '..tostring(args.cycle_config.current_option))
-
-    local option_cycle = G.OVERLAY_MENU:get_UIE_by_ID('tnsmi_pack_option_cycle')
-    option_cycle.config.object:remove()
-
-    local option_text = {}
-    for i=1, TNSMI.pages.num do
-        option_text[i] = (TNSMI.pages.current == i) and localize('k_page')..' '..tostring(TNSMI.pages.current)..'/'..tostring(TNSMI.pages.num) or ''
-    end
-    option_cycle.config.object = UIBox{
-        definition = create_option_cycle({
-            options = option_text,
-            w = 4.5,
-            cycle_shoulders = true,
-            opt_callback = 'soundpacks_page',
-            focus_args = {snap_to = true, nav = 'wide'},
-            current_option = TNSMI.pages.current,
-            colour = G.C.RED
-        }),
-        config = {align = 'cm', offset = {x = 0, y = 0}, parent = option_cycle}
-    }
-
-    option_cycle.UIBox:recalculate()
+    G.FUNCS.reload_soundpack_cards()
 end
 
 
@@ -72,18 +52,17 @@ G.FUNCS.reload_soundpack_cards = function()
     -- For already loaded packs
     local loaded_map = {}
     for _, v in ipairs(TNSMI.config.loaded_packs) do
-        sendDebugMessage('loaded packs: '..v)
         loaded_map[v] = true
     end
 
     local num_per_page = TNSMI.config.cols * TNSMI.config.rows
-    local start_index = num_per_page * (TNSMI.pages.current - 1)
+    local start_index = num_per_page * (TNSMI.cycle_config.current_option - 1)
 
     -- filtering for the current text input and selected packs
     local soundpack_cards = {}
     for i, v in ipairs(TNSMI.SoundPack.obj_buffer) do
-        if (TNSMI.prompt_text_input == '' or string.find(localize{type = 'name_text', key = v, set = 'SoundPack'}, TNSMI.prompt_text_input))
-        and not loaded_map[v] then
+        if not loaded_map[v] and (TNSMI.prompt_text_input == ''
+        or string.find(localize{type = 'name_text', key = v, set = 'SoundPack'}, TNSMI.prompt_text_input)) then
             soundpack_cards[#soundpack_cards+1] = v
         end
     end
@@ -92,11 +71,18 @@ G.FUNCS.reload_soundpack_cards = function()
 
     -- if it would result in too many pages, go to the last page
     if #soundpack_cards < start_index then
-        start_index = num_per_page * (TNSMI.pages.current - 1)
+        start_index = num_per_page * (TNSMI.cycle_config.current_option - 1)
     end
 
-    TNSMI.pages.num = math.floor(#soundpack_cards/num_per_page) + 1
-    TNSMI.pages.current = math.min(TNSMI.pages.current, TNSMI.pages.num)
+    local num_options = math.floor(#soundpack_cards/num_per_page) + 1
+    local options = {}
+    for i=1, num_options do
+        options[i] = localize('k_page')..' '..tostring(i)..'/'..tostring(num_options)
+    end
+
+    TNSMI.cycle_config.options = options
+    TNSMI.cycle_config.current_option = math.min(TNSMI.cycle_config.current_option, num_options)
+    TNSMI.cycle_config.current_option_val = TNSMI.cycle_config.options[TNSMI.cycle_config.current_option]
 
     for i=1, num_per_page do
         local pack = TNSMI.SoundPacks[soundpack_cards[start_index + i]]

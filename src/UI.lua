@@ -54,9 +54,7 @@ function create_soundpack_card(area, pack)
     return card
 end
 
-function create_overlaymenu_soundpacks()
-    TNSMI.pages.num = 1
-
+function create_UIBox_soundpacks()
     if TNSMI.cardareas.priority then TNSMI.cardareas.priority:remove() end
     TNSMI.cardareas.priority = CardArea(0, 0, 9, G.CARD_H * 0.75,
         {card_limit = #TNSMI.config.loaded_packs,  type = 'shop', thin_draw = true, highlight_limit = 0, deck_height = 0.75}
@@ -86,37 +84,22 @@ function create_overlaymenu_soundpacks()
         }}
     end
 
-    TNSMI.pages.current = 1
-    G.FUNCS.reload_soundpack_cards()
-
-    local option_text = {}
-    for i=1, TNSMI.pages.num do
-        option_text[i] = localize('k_page')..' 1/'..tostring(TNSMI.pages.num)
-    end
-    local option_cycle = UIBox{
-        definition = create_option_cycle({
-            options = option_text,
-            w = 4.5,
-            cycle_shoulders = true,
-            opt_callback = 'soundpacks_page',
-            focus_args = {snap_to = true, nav = 'wide'},
-            current_option = 1,
-            colour = G.C.RED
-        }),
-        config = {align = 'cm', offset = {x = 0, y = 0}}
+    TNSMI.cycle_config = {
+        options = {},
+        w = 4.5,
+        cycle_shoulders = true,
+        opt_callback = 'soundpacks_page',
+        focus_args = {snap_to = true, nav = 'wide'},
+        current_option = 1,
+        colour = G.C.RED,
+        no_pips = true,
     }
 
+    G.FUNCS.reload_soundpack_cards()
+
     local t = {
-        --[[
-        {n = G.UIT.R, config = {align = "tm", colour = G.C.CLEAR}, nodes = {
-            {n = G.UIT.C, config = {align = "tm", colour = G.C.CLEAR}, nodes = {
-                name_node,
-                desc_node
-            }},
-        }},
-        --]]
-        {n = G.UIT.R, config = {align = "cl", colour = G.C.UI.TEXT_DARK, r = 0.2, minw = 10, minh = 0.9, padding = 0.1}, nodes = {
-            {n = G.UIT.T, config = {align = 'cl', text = localize("tnsmi_manager_loaded"), scale = 0.45, colour = lighten(G.C.GREY,0.2), vert = true}},
+        {n = G.UIT.R, config = {align = "cl", colour = G.C.BLACK, r = 0.2, minw = 10, minh = 0.8, padding = 0.1}, nodes = {
+            {n = G.UIT.T, config = {align = 'cl', text = localize("tnsmi_manager_loaded"), padding = 0.1, scale = 0.25, colour = lighten(G.C.GREY,0.2), vert = true}},
             {n = G.UIT.O, config = {align = 'cl', minw = 6, object = TNSMI.cardareas.priority}}
         }},
         {n = G.UIT.R, config = {align = "cm", padding = 0}, nodes = {
@@ -132,31 +115,13 @@ function create_overlaymenu_soundpacks()
             }},
 
         }},
-        {n = G.UIT.R, config = {align = "cm", colour = G.C.UI.TEXT_DARK, r = 0.2, minw = 10, minh = 4.5, padding = 0.1}, nodes = {
+        {n = G.UIT.R, config = {align = "cm", colour = G.C.BLACK, r = 0.2, minw = 10, minh = 4, padding = 0.1}, nodes = {
             {n = G.UIT.C, config = {align = "cm", colour = G.C.CLEAR}, nodes = area_nodes}
         }},
-        {n = G.UIT.R, config = {align = "cm", padding = 0, minw = 5, minh = 1}, nodes = {
-            {n = G.UIT.O, config = {id = 'tnsmi_pack_option_cycle', object = option_cycle}}
-        }}
+        create_option_cycle(TNSMI.cycle_config)
     }
 
-    G.FUNCS.overlay_menu({
-		definition = {
-            n = G.UIT.ROOT,
-            config = {
-                emboss = 0.05,
-                r = 0.1,
-                align = "tm",
-                padding = 0.2,
-                colour = G.C.BLACK
-            },
-            nodes = t
-        }
-	})
-
-    local cycle_node = G.OVERLAY_MENU:get_UIE_by_ID('tnsmi_pack_option_cycle')
-    cycle_node.config.object.config.parent = cycle_node
-    cycle_node.UIBox:recalculate()
+    return create_UIBox_generic_options({ contents = t, back_func = 'options', snap_back = nil })
 end
 
 
@@ -167,8 +132,8 @@ SMODS.current_mod.config_tab = function ()
             label = "Display in pause menu",
             scale = 1,
             minw = 2, minh = 0.5,
-            ref_table = TNSMI.mod_config,
-            ref_value = "display_menu_button"
+            ref_table = TNSMI.config,
+            ref_value = "menu_button"
         }}},
         {n = G.UIT.R, config = {align = "tm", padding = 0.1}, nodes = {
             {n = G.UIT.C, config = {align = "cm"}, nodes = {{n = G.UIT.T, config = {align = "cr", text = localize("tnsmi_cfg_rows")..": ", colour = G.C.WHITE, scale = 0.4}}}},

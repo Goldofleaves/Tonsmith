@@ -1,9 +1,10 @@
 TNSMI = SMODS.current_mod
 TNSMI.config.loaded_packs.replace_map = {}
 TNSMI.cardareas = {}
-TNSMI.pages = {current = 1, num = 1}
 TNSMI.prompt_text_input = ''
 SMODS.Atlas{key = "modicon", path = "modicon.png", px = 32, py = 32}
+
+G.C.SET.SoundPack = HEX("56A887")
 
 local mod_contents = {
 	"utils",
@@ -101,4 +102,75 @@ TNSMI.SoundPack({
         { key = "music5", path = 'boss.ogg', pitch = 1}
     },
 })
+
+TNSMI.SoundPack({
+    key = 'dummy1',
+    sound_table = {
+        { key = "ambientFire1" },
+    },
+})
+
+TNSMI.SoundPack({
+    key = 'dummy2',
+    sound_table = {
+        { key = "ambientFire1" },
+    },
+})
+
+TNSMI.SoundPack({
+    key = 'dummy3',
+    sound_table = {
+        { key = "ambientFire1" },
+    },
+})
+
+TNSMI.SoundPack({
+    key = 'dummy4',
+    sound_table = {
+        { key = "ambientFire1" },
+    },
+})
+
+--[[
+TNSMI.SoundPack({
+    key = 'dummy5',
+    sound_table = {
+        { key = "ambientFire1" },
+    },
+})
+TNSMI.SoundPack({
+    key = 'dummy6',
+    sound_table = {
+        { key = "ambientFire1" },
+    },
+})
+
+TNSMI.SoundPack({
+    key = 'dummy7',
+    sound_table = {
+        { key = "ambientFire1" },
+    },
+})
+
+TNSMI.SoundPack({
+    key = 'dummy8',
+    sound_table = {
+        { key = "ambientFire1" },
+    },
+})
+
+TNSMI.SoundPack({
+    key = 'dummy9',
+    sound_table = {
+        { key = "ambientFire1" },
+    },
+})
+
+TNSMI.SoundPack({
+    key = 'dummy10',
+    sound_table = {
+        { key = "ambientFire1" },
+    },
+})
+--]]
 TNSMI.save_soundpacks()

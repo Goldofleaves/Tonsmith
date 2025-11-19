@@ -43,7 +43,6 @@ TNSMI.SoundPack = SMODS.GameObject:extend ({
             elseif not string.find(path, '.ogg') and not string.find(path, '.wav') then
                 path = path..'.ogg'
             end
-            v.key = self.mod.prefix..'_'..v.key
 
             local select_music_track = v.select_music_track
             if string.find(v.key, "music") and not select_music_track then
@@ -56,6 +55,7 @@ TNSMI.SoundPack = SMODS.GameObject:extend ({
             end
 
             if not v.req_mod or next(SMODS.find_mod(v.req_mod)) then
+                sendDebugMessage('registering key '..v.key)
                 SMODS.Sound {
                     key = v.key,
                     path = path,
@@ -63,7 +63,6 @@ TNSMI.SoundPack = SMODS.GameObject:extend ({
                     volume = v.volume or self.volume,
                     sync = v.sync,
                     select_music_track = v.music_track,
-                    prefix_config = false
                 }
             end
         end
@@ -78,7 +77,7 @@ function TNSMI.toggle_pack(key, toggle)
         for i = #TNSMI.config.loaded_packs, 1, -1 do
             if TNSMI.config.loaded_packs[i] == key then
                 sendDebugMessage('removing: '..key)
-                local card = TNSMI.cardareas.priority.cards[i - #TNSMI.config.loaded_packs + 1]
+                local card = TNSMI.cardareas.priority.cards[#TNSMI.config.loaded_packs - i + 1]
                 card:remove()
                 table.remove(TNSMI.config.loaded_packs, i)
                 break
@@ -94,7 +93,7 @@ function TNSMI.toggle_pack(key, toggle)
     TNSMI.save_soundpacks()
 end
 
-function TNSMI.save_soundpacks(reset_config)
+function TNSMI.save_soundpacks()
     -- resets all existing replace sounds
     local replace_map = TNSMI.config.loaded_packs.replace_map or {}
     for k, v in pairs (replace_map) do
@@ -111,7 +110,9 @@ function TNSMI.save_soundpacks(reset_config)
             if sound.replace_key and not replace_map[sound.replace_key] then
                 replace_map[sound.replace_key] = { key = sound.key, priority = i}
                 local obj = SMODS.Sounds[sound.key]
+                sendDebugMessage('creating replace sound '..sound.key..' for '..sound.replace_key)
                 obj:create_replace_sound(sound.replace_key)
+                sendDebugMessage('replace sound: '..SMODS.Sound.replace_sounds[sound.replace_key].key)
             end
         end
     end

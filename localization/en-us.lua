@@ -1,21 +1,19 @@
 return{
     descriptions = {
-        dictionary = {
-            tnsmi_config_tab_name = {
+        SoundPack = {
+            sp_tnsmi_fools_gambit = {
+                name = "Fool's Gambit",
                 text = {
-                    "Soundpack manager"
+                    "{X:chips,C:white}Author{}",
+                    "{C:attention,E:1}GoldenLeaf{}"
                 }
-            },
-            tnsmi_config_tab_desc = {
-                text = {
-                    "Left less priority, right more priority",
-                },
-            },
+            }
         }
     },
     misc = {
         dictionary = {
             -- config
+            k_soundpack = 'Sound Pack',
             tnsmi_cfg_soundpack_manager = "Open soundpack manager",
             tnsmi_cfg_rows = "Rows to display",
             tnsmi_cfg_c_rows = "Packs per row",
