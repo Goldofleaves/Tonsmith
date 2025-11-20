@@ -9,6 +9,8 @@ end
 
 function G.FUNCS.TNSMI_change_priority(e)
     -- check if anything has been moved from expected positions and then save
+    if TNSMI.dissolve_flag then return end
+
     local priority_changed = false
     for i, v in ipairs(TNSMI.cardareas.priority.cards) do
         local priority = #TNSMI.cardareas.priority.cards - i + 1
@@ -154,9 +156,8 @@ G.FUNCS.toggle_soundpack = function(e)
         blockable = false,
         func = (function()
             G.FUNCS.reload_soundpack_cards()
+            TNSMI.save_soundpacks()
             return true
         end)
     }))
-
-    TNSMI.save_soundpacks()
 end
