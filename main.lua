@@ -1,16 +1,11 @@
-TNSMI = {
-    CARDAREAS = {},
-    row = 2,
-    card_per_row = 6,
-    page = 1,
-    max_pages = 1,
-    pagecounter = 0,
-    prompt_text_input = "",
-    menu_mod = "base",
-    mod_config = SMODS.current_mod.config,
-    filterpacks = {}
-}
+TNSMI = SMODS.current_mod
+TNSMI.config.loaded_packs.replace_map = {}
+TNSMI.cardareas = {}
+TNSMI.prompt_text_input = ''
+TNSMI.search_text = ''
 SMODS.Atlas{key = "modicon", path = "modicon.png", px = 32, py = 32}
+
+G.C.SECONDARY_SET.SoundPack = HEX("56A887")
 
 local mod_contents = {
 	"utils",
@@ -21,20 +16,10 @@ local mod_contents = {
 for k, v in pairs(mod_contents) do
 	assert(SMODS.load_file('/src/'..v..'.lua'))()
 end
-TNSMI.Pack{
-    name = "Fool's Gambit",
-    description = {
-        {
-            lan = 'en-us',
-            text = {
-                "This is the SFX Used in",
-                "Fool's Gambit."
-            },
-        },
-    },
-    mods = {"Vanilla"},
-    authors = {"GoldenLeaf"},
-    thumbnail = "thumb",
+
+TNSMI.SoundPack({
+    key = 'fools_gambit',
+    atlas = 'thumb',
     sound_table = {
         { key = "ambientFire1" },
         { key = "ambientFire2"  },
@@ -111,10 +96,87 @@ TNSMI.Pack{
         { key = "whoosh1" },
         { key = "whoosh2" },
         { key = "win" },
-        { key = "music1" , file = "main", pitch = 1},
-        { key = "music2" , file = "arcana", pitch = 1},
-        { key = "music3" , file = "celestial", pitch = 1},
-        { key = "music4" , file = "shop", pitch = 1},
-        { key = "music5" , file = "boss", pitch = 1}
+        { key = "music1", path = 'main.ogg', pitch = 1},
+        { key = "music2", path = 'arcana.ogg', pitch = 1},
+        { key = "music3", path = 'celestial.ogg', pitch = 1},
+        { key = "music4", path = 'shop.ogg', pitch = 1},
+        { key = "music5", path = 'boss.ogg', pitch = 1}
     },
-}
+})
+
+TNSMI.SoundPack({
+    key = 'dummy1',
+    sound_table = {
+        { key = "ambientFire1" },
+    },
+})
+
+TNSMI.SoundPack({
+    key = 'dummy2',
+    sound_table = {
+        { key = "ambientFire1" },
+    },
+})
+
+TNSMI.SoundPack({
+    key = 'dummy3',
+    sound_table = {
+        { key = "ambientFire1" },
+    },
+})
+
+TNSMI.SoundPack({
+    key = 'dummy4',
+    sound_table = {
+        { key = "ambientFire1" },
+    },
+})
+
+
+TNSMI.SoundPack({
+    key = 'dummy5',
+    sound_table = {
+        { key = "ambientFire1" },
+    },
+})
+TNSMI.SoundPack({
+    key = 'dummy6',
+    sound_table = {
+        { key = "ambientFire1" },
+    },
+})
+
+TNSMI.SoundPack({
+    key = 'dummy7',
+    sound_table = {
+        { key = "ambientFire1" },
+    },
+})
+
+TNSMI.SoundPack({
+    key = 'dummy8',
+    sound_table = {
+        { key = "ambientFire1" },
+    },
+})
+
+TNSMI.SoundPack({
+    key = 'dummy9',
+    sound_table = {
+        { key = "ambientFire1" },
+    },
+})
+
+TNSMI.SoundPack({
+    key = 'dummy10',
+    sound_table = {
+        { key = "ambientFire1" },
+    },
+})
+
+local ref_post_splash = G.FUNCS.initPostSplash or function() end
+G.FUNCS.initPostSplash = function()
+	local ret = ref_post_splash()
+	TNSMI.save_soundpacks()
+    return ret
+end
