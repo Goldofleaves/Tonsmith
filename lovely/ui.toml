@@ -10,6 +10,6 @@ pattern = '''customize,
 credits'''
 position = "at"
 payload = '''customize,
-UIBox_button{ label = {localize("tnsmi_manager_pause")}, button = "TNSMI_packs_button", minw = 5, colour = G.C.PALE_GREEN},
+UIBox_button{ label = {localize("tnsmi_manager_pause")}, button = "TNSMI_packs_button", minw = 5, colour = G.C.RED},
 credits'''
 match_indent = true

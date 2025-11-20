@@ -14,7 +14,7 @@ pattern = '''customize = {n=G.UIT.R, config={minw = 5, align='cl'}, nodes = {
 }}'''
 position = "after"
 payload = '''
-if Malverk and TNSMI and TNSMI.mod_config.display_menu_button then
+if Malverk and TNSMI and TNSMI.config.menu_button then
     customize = {n=G.UIT.R, config={minw = 5, align='cl'}, nodes = {
         UIBox_button{ label = {localize('b_deck_skins')}, col = true, button = "customize_deck", minw = 3.4},
         { n = G.UIT.C, config = {minw = 0.2}},

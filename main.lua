@@ -2,9 +2,10 @@ TNSMI = SMODS.current_mod
 TNSMI.config.loaded_packs.replace_map = {}
 TNSMI.cardareas = {}
 TNSMI.prompt_text_input = ''
+TNSMI.search_text = ''
 SMODS.Atlas{key = "modicon", path = "modicon.png", px = 32, py = 32}
 
-G.C.SET.SoundPack = HEX("56A887")
+G.C.SECONDARY_SET.SoundPack = HEX("56A887")
 
 local mod_contents = {
 	"utils",
@@ -131,7 +132,7 @@ TNSMI.SoundPack({
     },
 })
 
---[[
+
 TNSMI.SoundPack({
     key = 'dummy5',
     sound_table = {
@@ -172,5 +173,10 @@ TNSMI.SoundPack({
         { key = "ambientFire1" },
     },
 })
---]]
-TNSMI.save_soundpacks()
+
+local ref_post_splash = G.FUNCS.initPostSplash or function() end
+G.FUNCS.initPostSplash = function()
+	local ret = ref_post_splash()
+	TNSMI.save_soundpacks()
+    return ret
+end

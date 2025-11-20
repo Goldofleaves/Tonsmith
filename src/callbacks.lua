@@ -10,9 +10,9 @@ end
 function G.FUNCS.TNSMI_change_priority(e)
     -- check if anything has been moved from expected positions and then save
     local priority_changed = false
-    for i = #TNSMI.cardareas.priority.cards, 1, -1 do
-        local priority = i - #TNSMI.cardareas.priority.cards + 1
-        if TNSMI.cardareas.priority.cards[i].params.tnsmi_soundpack ~= TNSMI.config.loaded_packs[priority] then
+    for i, v in ipairs(TNSMI.cardareas.priority.cards) do
+        local priority = #TNSMI.cardareas.priority.cards - i + 1
+        if v.params.tnsmi_soundpack ~= TNSMI.config.loaded_packs[priority] then
             priority_changed = true
             break
         end
@@ -20,10 +20,12 @@ function G.FUNCS.TNSMI_change_priority(e)
 
     if not priority_changed then return end
 
+    TNSMI.config.loaded_packs = {}
     for i, v in ipairs(TNSMI.cardareas.priority.cards) do
-        local priority = i + #TNSMI.cardareas.priority.cards - 1
+        local priority = #TNSMI.cardareas.priority.cards - i + 1
         TNSMI.config.loaded_packs[priority] = v.params.tnsmi_soundpack
     end
+
 
     TNSMI.save_soundpacks()
 end
@@ -41,12 +43,29 @@ function G.FUNCS.soundpacks_page(args)
     G.FUNCS.reload_soundpack_cards()
 end
 
+function G.FUNCS.tnsmi_shoulder_buttons(e)
+    if #TNSMI.cycle_config.options > 1 then
+        e.config.colour = G.C.RED
+        e.config.hover = true
+        e.config.shadow = true
+        e.config.button = 'option_cycle'
+        e.children[1].config.colour = G.C.UI.TEXT_LIGHT
+    else
+        e.config.colour = G.C.BLACK
+        e.config.hover = nil
+        e.config.shadow = nil
+        e.config.button = nil
+        e.children[1].config.colour = G.C.UI.TEXT_INACTIVE
+    end
+end
+
 
 G.FUNCS.reload_soundpack_cards = function()
     for i = #TNSMI.cardareas, 1, -1 do
         if #TNSMI.cardareas[i].cards > 0 then
             remove_all(TNSMI.cardareas[i].cards)
         end
+        TNSMI.cardareas[i].highlighted = {}
     end
 
     -- For already loaded packs
@@ -62,19 +81,25 @@ G.FUNCS.reload_soundpack_cards = function()
     local soundpack_cards = {}
     for i, v in ipairs(TNSMI.SoundPack.obj_buffer) do
         if not loaded_map[v] and (TNSMI.prompt_text_input == ''
-        or string.find(localize{type = 'name_text', key = v, set = 'SoundPack'}, TNSMI.prompt_text_input)) then
+        or string.find(string.lower(localize{type = 'name_text', key = v, set = 'SoundPack'}), string.lower(TNSMI.prompt_text_input))) then
             soundpack_cards[#soundpack_cards+1] = v
         end
     end
-
-    if #soundpack_cards < 1 then return end
 
     -- if it would result in too many pages, go to the last page
     if #soundpack_cards < start_index then
         start_index = num_per_page * (TNSMI.cycle_config.current_option - 1)
     end
 
-    local num_options = math.floor(#soundpack_cards/num_per_page) + 1
+    TNSMI.search_text = localize{type = 'variable', key = 'tnsmi_search_text', vars = {
+        start_index + 1,
+        math.min((start_index + num_per_page), #soundpack_cards),
+        #soundpack_cards
+    }}
+
+    if #soundpack_cards < 1 then return end
+
+    local num_options = math.ceil(#soundpack_cards/num_per_page)
     local options = {}
     for i=1, num_options do
         options[i] = localize('k_page')..' '..tostring(i)..'/'..tostring(num_options)
@@ -86,11 +111,52 @@ G.FUNCS.reload_soundpack_cards = function()
 
     for i=1, num_per_page do
         local pack = TNSMI.SoundPacks[soundpack_cards[start_index + i]]
-        local area_idx = math.floor(i/TNSMI.config.cols) + 1
-        local card = create_soundpack_card(TNSMI.cardareas[area_idx], pack)
+        local area_idx = math.floor((i - 1)/TNSMI.config.cols) + 1
+        create_soundpack_card(TNSMI.cardareas[area_idx], pack)
 
-        TNSMI.cardareas[area_idx]:emplace(card)
-
-        if (start_index + i) == #soundpack_cards then break end
+        if (start_index + i) >= #soundpack_cards then break end
     end
+end
+
+G.FUNCS.toggle_soundpack = function(e)
+    local card = e.config.ref_table
+    local key = card.params.tnsmi_soundpack
+    local is_priority = card.area and card.area == TNSMI.cardareas.priority
+
+    if is_priority then -- Disable pack
+        for i = #TNSMI.config.loaded_packs, 1, -1 do
+            if TNSMI.config.loaded_packs[i] == key then
+                card:start_dissolve(nil, nil, 0.25)
+                table.remove(TNSMI.config.loaded_packs, i)
+                break
+            end
+        end
+        TNSMI.dissolve_flag = key
+    else
+        for _, pack_area in ipairs(TNSMI.cardareas) do
+            for _, pack_card in ipairs(pack_area.cards) do
+                if pack_card.params.tnsmi_soundpack == key then
+                    pack_card:start_dissolve(nil, nil, 0.25)
+                    break
+                end
+            end
+        end
+
+        TNSMI.dissolve_flag = key
+        create_soundpack_card(TNSMI.cardareas.priority, TNSMI.SoundPacks[key])
+        table.insert(TNSMI.config.loaded_packs, key)
+    end
+
+    G.E_MANAGER:add_event(Event({
+        trigger = 'after',
+        delay = 0.25,
+        blocking = false,
+        blockable = false,
+        func = (function()
+            G.FUNCS.reload_soundpack_cards()
+            return true
+        end)
+    }))
+
+    TNSMI.save_soundpacks()
 end
