@@ -150,7 +150,13 @@ G.FUNCS.reload_soundpack_cards = function()
         #soundpack_cards
     }}
 
-    if #soundpack_cards < 1 then return end
+    if #soundpack_cards < 1 then
+        TNSMI.cycle_config.options = {''}
+        TNSMI.cycle_config.current_option = 1
+        TNSMI.cycle_config.current_option_val = TNSMI.cycle_config.options[TNSMI.cycle_config.current_option]
+        G.OVERLAY_MENU:recalculate()
+        return
+    end
 
     local num_options = math.ceil(#soundpack_cards/num_per_page)
     local options = {}
@@ -161,7 +167,6 @@ G.FUNCS.reload_soundpack_cards = function()
     TNSMI.cycle_config.options = options
     TNSMI.cycle_config.current_option = math.min(TNSMI.cycle_config.current_option, num_options)
     TNSMI.cycle_config.current_option_val = TNSMI.cycle_config.options[TNSMI.cycle_config.current_option]
-
 
     local end_index = math.min(start_index + num_per_page, #soundpack_cards)
     local page_total = math.min(start_index + num_per_page, #soundpack_cards) - start_index
