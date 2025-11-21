@@ -1,3 +1,6 @@
+-- early return if TNSMI global is already defined by another provide
+if TNSMI then return end
+
 TNSMI = SMODS.current_mod
 TNSMI.config.loaded_packs.replace_map = {}
 TNSMI.cardareas = {}

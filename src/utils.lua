@@ -31,6 +31,8 @@ TNSMI.SoundPack = SMODS.GameObject:extend ({
         TNSMI.SoundPack.super.register(self)
     end,
     inject = function(self)
+        if self.key == 'sp_balatro' then return end
+
         for _, v in ipairs(self.sound_table) do
             if v.key and not v.replace_key and not v.select_music_track then
                 v.replace_key = v.key
@@ -102,9 +104,7 @@ function TNSMI.save_soundpacks()
                 if pack.key == 'sp_balatro' then
                     -- fill the replace map slot to prevent overriding of vanilla sounds at priority
                     replace_map[sound.key] = true
-                end
-
-                if sound.replace_key and not replace_map[sound.replace_key] then
+                elseif sound.replace_key and not replace_map[sound.replace_key] then
                     replace_map[sound.replace_key] = { key = sound.key }
                     local obj = SMODS.Sounds[sound.key]
                     obj:create_replace_sound(sound.replace_key)
@@ -121,9 +121,10 @@ function TNSMI.get_size_mod()
     return (1 - (TNSMI.config.rows - 1) * 0.2)
 end
 
-TNSMI.SoundPacks['sp_balatro'] = {
+TNSMI.SoundPack({
     key = 'sp_balatro',
     atlas = 'sp_balatro',
+    prefix_config = false,
     sound_table = {
         { key = "ambientFire1" },
         { key = "ambientFire2"  },
@@ -206,4 +207,4 @@ TNSMI.SoundPacks['sp_balatro'] = {
         { key = "music4" },
         { key = "music5" }
     },
-}
+})

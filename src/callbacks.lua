@@ -42,48 +42,6 @@ function G.FUNCS.tnsmi_packs_button(e)
     G.OVERLAY_MENU:recalculate()
 end
 
--- Most of the old config menu was moved here for better vanilla integration
--- Some minor reorganization here, mostly visually
-local ref_settings_tab = G.UIDEF.settings_tab
-function G.UIDEF.settings_tab(tab)
-    if tab == 'Audio' then
-        return {n=G.UIT.ROOT, config={align = "cm", padding = 0.05, colour = G.C.CLEAR}, nodes={
-            create_slider({label = localize('b_set_master_vol'), w = 5, h = 0.4, ref_table = G.SETTINGS.SOUND, ref_value = 'volume', min = 0, max = 100}),
-            create_slider({label = localize('b_set_music_vol'), w = 5, h = 0.4, ref_table = G.SETTINGS.SOUND, ref_value = 'music_volume', min = 0, max = 100}),
-            create_slider({label = localize('b_set_game_vol'), w = 5, h = 0.4, ref_table = G.SETTINGS.SOUND, ref_value = 'game_sounds_volume', min = 0, max = 100}),
-            {n = G.UIT.R, config = {align = "cm", padding = 0.1, minh = 2}, nodes = {
-                {n = G.UIT.C, config = {align = "cm", padding = 0.1, minh = 2.5}, nodes = {
-                    UIBox_button{ label = {localize("tnsmi_manager_pause")}, button = "tnsmi_packs_button", minw = 4, colour = G.C.PALE_GREEN},
-                }},
-                {n = G.UIT.C, config = {align = "cm", padding = 0.1, minh = 2.5}, nodes = {
-                    {n = G.UIT.R, config = {align = "cl", padding = 0.1}, nodes = {
-                        {n = G.UIT.C, config = {align = "cl", minw = 2.5}, nodes = {
-                            {n = G.UIT.C, config = {align = "cl"}, nodes = {{n = G.UIT.T, config = {align = "cr", text = localize("tnsmi_cfg_rows")..": ", colour = G.C.WHITE, scale = 0.3}}}},
-                            {n = G.UIT.C, config = {align = "cl"}, nodes = {{n = G.UIT.O, config = {align = "cr", object = DynaText{string = {{ref_table = TNSMI.config, ref_value = "rows"}}, colours = {G.C.WHITE}, scale = 0.3}}}}},
-                        }},
-                        {n = G.UIT.C, config = {align = "cl", minw = 0.4}, nodes = {
-                            {n = G.UIT.C, config = {align = "cl", minw = 0.65}, nodes = {UIBox_button{ label = {"-"}, button = "tnsmi_change_pack_display", minw = 0.6, minh = 0.4, ref_table = {"rows",-1}}}},
-                            {n = G.UIT.C, config = {align = "cl", minw = 0.65}, nodes = {UIBox_button{ label = {"+"}, button = "tnsmi_change_pack_display", minw = 0.6, minh = 0.4, ref_table = {"rows",1}}}},
-                        }},
-                    }},
-                    {n = G.UIT.R, config = {align = "cl", padding = 0.1}, nodes = {
-                        {n = G.UIT.C, config = {align = "cl", minw = 2.5}, nodes = {
-                            {n = G.UIT.C, config = {align = "cl"}, nodes = {{n = G.UIT.T, config = {align = "cr", text = localize("tnsmi_cfg_cols")..": ", colour = G.C.WHITE, scale = 0.3}}}},
-                            {n = G.UIT.C, config = {align = "cl"}, nodes = {{n = G.UIT.O, config = {align = "cr", object = DynaText{string = {{ref_table = TNSMI.config, ref_value = "cols"}}, colours = {G.C.WHITE}, scale = 0.3}}}}},
-                        }},
-                        {n = G.UIT.C, config = {align = "cl", minw = 0.4}, nodes = {
-                            {n = G.UIT.C, config = {align = "cl", minw = 0.65}, nodes = {UIBox_button{ label = {"-"}, button = "tnsmi_change_pack_display", minw = 0.6, minh = 0.4, ref_table = {"cols",-1}}}},
-                            {n = G.UIT.C, config = {align = "cl", minw = 0.65}, nodes = {UIBox_button{ label = {"+"}, button = "tnsmi_change_pack_display", minw = 0.6, minh = 0.4, ref_table = {"cols",1}}}},
-                        }},
-                    }},
-                }},
-            }},
-        }}
-    end
-
-     return ref_settings_tab(tab)
-end
-
 --- Callback for soundpack page select
 --- All values involving what page is selected are stored in TNSMI.cycle_config
 function G.FUNCS.tnsmi_soundpacks_page(args)
