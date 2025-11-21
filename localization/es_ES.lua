@@ -1,39 +1,37 @@
 return{
     descriptions = {
-        dictionary = {
-            tnsmi_config_tab_name = {
+        SoundPack = {
+            sp_balatro = {
+                name = "Banda sonora de Balatro",
                 text = {
-                    "Paquetes de sonido"
+                    "{C:blue,E:1}Luis Clemente{}",
+                    "{C:blue,E:1}(LouisF){}"
                 }
             },
-            tnsmi_config_tab_desc = {
+            sp_tnsmi_fools_gambit = {
+                name = "Fool's Gambit",
                 text = {
-                    "Izquierda menos prioridad, derecha más prioridad",
-                },
+                    "{C:attention,E:1}GoldenLeaf{}"
+                }
             },
         }
     },
     misc = {
+        v_dictionary = {
+            tnsmi_search_text = "#1#-#2# de #3# resultados"
+        },
         dictionary = {
             -- config
-            tnsmi_cfg_soundpack_manager = "Abrir paquetes de sonido",
+            k_soundpack = 'Paquete de sonido',
+            b_remove = 'Eliminas',
             tnsmi_cfg_rows = "Filas a mostrar",
-            tnsmi_cfg_c_rows = "Paquetes por fila",
+            tnsmi_cfg_cols = "Paquetes por fila",
 
             -- manager
             tnsmi_manager_pause = "Paquetes de sonido",
-            tnsmi_manager_display_in_pause = "Mostrar en menú de páusa",
-            tnsmi_manager_selected = "ACTIVOS",
-            tnsmi_manager_click_select = "CLICK PARA SELECCIONAR",
-            tnsmi_manager_active = "Paquetes activos",
-            tnsmi_manager_installed = "Paquetes instalados",
+            tnsmi_manager_loaded = "ARRASTRA PARA PRIORIZAR",
 
-            -- misc
             tnsmi_filter_label = "FILTRAR",
-            tnsmi_close = "Cerrar",
-            tnsmi_options = "Opciones",
-            tnsmi_version_label = "Versión",
-            
         },
     },
 }
