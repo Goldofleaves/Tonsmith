@@ -151,7 +151,7 @@ G.FUNCS.reload_soundpack_cards = function()
     }}
 
     if #soundpack_cards < 1 then
-        TNSMI.cycle_config.options = {''}
+        TNSMI.cycle_config.options = {localize('k_page')..' 1/1'}
         TNSMI.cycle_config.current_option = 1
         TNSMI.cycle_config.current_option_val = TNSMI.cycle_config.options[TNSMI.cycle_config.current_option]
         G.OVERLAY_MENU:recalculate()
