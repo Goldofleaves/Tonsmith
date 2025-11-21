@@ -17,7 +17,7 @@ function Card:highlight(is_higlighted)
         end
 
         self.children.use_button = UIBox{
-            definition = G.UIDEF.soundpack_button(self),
+            definition = G.UIDEF.tnsmi_soundpack_button(self),
             config = {align = "bmi", offset = {x=0,y=0.5}, parent = self}
         }
     elseif self.children.use_button then

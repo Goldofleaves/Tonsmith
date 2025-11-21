@@ -1,4 +1,4 @@
-function G.FUNCS.TNSMI_change_pack_display(e) -- e represents the node
+function G.FUNCS.tnsmi_change_pack_display(e) -- e represents the node
     TNSMI.config[e.config.ref_table[1]] = TNSMI.config[e.config.ref_table[1]] + e.config.ref_table[2]
 
     TNSMI.config.rows = math.max(1, math.min(4, TNSMI.config.rows))
@@ -7,7 +7,7 @@ function G.FUNCS.TNSMI_change_pack_display(e) -- e represents the node
     SMODS.save_mod_config(TNSMI)
 end
 
-function G.FUNCS.TNSMI_change_priority(e)
+function G.FUNCS.tnsmi_change_priority(e)
     -- check if anything has been moved from expected positions and then save
     if TNSMI.dissolve_flag then return end
 
@@ -32,11 +32,11 @@ function G.FUNCS.TNSMI_change_priority(e)
     TNSMI.save_soundpacks()
 end
 
-function G.FUNCS.TNSMI_packs_button(e)
+function G.FUNCS.tnsmi_packs_button(e)
 	G.SETTINGS.paused = true
     SMODS.save_mod_config(TNSMI)
     G.FUNCS.overlay_menu({
-		definition = create_UIBox_soundpacks(),
+		definition = tnsmi_create_UIBox_soundpacks(),
 	})
     G.OVERLAY_MENU.config.id = 'tnsmi_soundpack_menu'
     G.OVERLAY_MENU:recalculate()
@@ -53,7 +53,7 @@ function G.UIDEF.settings_tab(tab)
             create_slider({label = localize('b_set_game_vol'), w = 5, h = 0.4, ref_table = G.SETTINGS.SOUND, ref_value = 'game_sounds_volume', min = 0, max = 100}),
             {n = G.UIT.R, config = {align = "cm", padding = 0.1, minh = 2}, nodes = {
                 {n = G.UIT.C, config = {align = "cm", padding = 0.1, minh = 2.5}, nodes = {
-                    UIBox_button{ label = {localize("tnsmi_manager_pause")}, button = "TNSMI_packs_button", minw = 4, colour = G.C.PALE_GREEN},
+                    UIBox_button{ label = {localize("tnsmi_manager_pause")}, button = "tnsmi_packs_button", minw = 4, colour = G.C.PALE_GREEN},
                 }},
                 {n = G.UIT.C, config = {align = "cm", padding = 0.1, minh = 2.5}, nodes = {
                     {n = G.UIT.R, config = {align = "cl", padding = 0.1}, nodes = {
@@ -62,8 +62,8 @@ function G.UIDEF.settings_tab(tab)
                             {n = G.UIT.C, config = {align = "cl"}, nodes = {{n = G.UIT.O, config = {align = "cr", object = DynaText{string = {{ref_table = TNSMI.config, ref_value = "rows"}}, colours = {G.C.WHITE}, scale = 0.3}}}}},
                         }},
                         {n = G.UIT.C, config = {align = "cl", minw = 0.4}, nodes = {
-                            {n = G.UIT.C, config = {align = "cl", minw = 0.65}, nodes = {UIBox_button{ label = {"-"}, button = "TNSMI_change_pack_display", minw = 0.6, minh = 0.4, ref_table = {"rows",-1}}}},
-                            {n = G.UIT.C, config = {align = "cl", minw = 0.65}, nodes = {UIBox_button{ label = {"+"}, button = "TNSMI_change_pack_display", minw = 0.6, minh = 0.4, ref_table = {"rows",1}}}},
+                            {n = G.UIT.C, config = {align = "cl", minw = 0.65}, nodes = {UIBox_button{ label = {"-"}, button = "tnsmi_change_pack_display", minw = 0.6, minh = 0.4, ref_table = {"rows",-1}}}},
+                            {n = G.UIT.C, config = {align = "cl", minw = 0.65}, nodes = {UIBox_button{ label = {"+"}, button = "tnsmi_change_pack_display", minw = 0.6, minh = 0.4, ref_table = {"rows",1}}}},
                         }},
                     }},
                     {n = G.UIT.R, config = {align = "cl", padding = 0.1}, nodes = {
@@ -72,8 +72,8 @@ function G.UIDEF.settings_tab(tab)
                             {n = G.UIT.C, config = {align = "cl"}, nodes = {{n = G.UIT.O, config = {align = "cr", object = DynaText{string = {{ref_table = TNSMI.config, ref_value = "cols"}}, colours = {G.C.WHITE}, scale = 0.3}}}}},
                         }},
                         {n = G.UIT.C, config = {align = "cl", minw = 0.4}, nodes = {
-                            {n = G.UIT.C, config = {align = "cl", minw = 0.65}, nodes = {UIBox_button{ label = {"-"}, button = "TNSMI_change_pack_display", minw = 0.6, minh = 0.4, ref_table = {"cols",-1}}}},
-                            {n = G.UIT.C, config = {align = "cl", minw = 0.65}, nodes = {UIBox_button{ label = {"+"}, button = "TNSMI_change_pack_display", minw = 0.6, minh = 0.4, ref_table = {"cols",1}}}},
+                            {n = G.UIT.C, config = {align = "cl", minw = 0.65}, nodes = {UIBox_button{ label = {"-"}, button = "tnsmi_change_pack_display", minw = 0.6, minh = 0.4, ref_table = {"cols",-1}}}},
+                            {n = G.UIT.C, config = {align = "cl", minw = 0.65}, nodes = {UIBox_button{ label = {"+"}, button = "tnsmi_change_pack_display", minw = 0.6, minh = 0.4, ref_table = {"cols",1}}}},
                         }},
                     }},
                 }},
@@ -86,8 +86,8 @@ end
 
 --- Callback for soundpack page select
 --- All values involving what page is selected are stored in TNSMI.cycle_config
-function G.FUNCS.soundpacks_page(args)
-    G.FUNCS.reload_soundpack_cards()
+function G.FUNCS.tnsmi_soundpacks_page(args)
+    G.FUNCS.tnsmi_reload_soundpack_cards()
 end
 
 --- Function callback to determine shoulder button state
@@ -110,7 +110,7 @@ function G.FUNCS.tnsmi_shoulder_buttons(e)
 end
 
 --- Reloads soundpack cards in existing cardareas based on current page and search query
-G.FUNCS.reload_soundpack_cards = function()
+G.FUNCS.tnsmi_reload_soundpack_cards = function()
     -- removes any existing cards and highlights
     -- slightly unperformant, but better than recreating it
     for i = #TNSMI.cardareas, 1, -1 do
@@ -180,14 +180,14 @@ G.FUNCS.reload_soundpack_cards = function()
     for i=(start_index+1), end_index do
         local pack = TNSMI.SoundPacks[soundpack_cards[i]]
         local area_idx = math.floor((i - start_index - 1)/TNSMI.config.cols) + 1
-        create_soundpack_card(TNSMI.cardareas[area_idx], pack)
+        tnsmi_create_soundpack_card(TNSMI.cardareas[area_idx], pack)
     end
 
     G.OVERLAY_MENU:recalculate()
 end
 
 --- Callback for toggling a soundpack with a button
-G.FUNCS.toggle_soundpack = function(e)
+G.FUNCS.tnsmi_toggle_soundpack = function(e)
     local card = e.config.ref_table
     local key = card.params.tnsmi_soundpack
     local is_priority = card.area and card.area == TNSMI.cardareas.priority
@@ -212,7 +212,7 @@ G.FUNCS.toggle_soundpack = function(e)
         end
 
         TNSMI.dissolve_flag = key
-        create_soundpack_card(TNSMI.cardareas.priority, TNSMI.SoundPacks[key])
+        tnsmi_create_soundpack_card(TNSMI.cardareas.priority, TNSMI.SoundPacks[key])
         table.insert(TNSMI.config.loaded_packs, key)
     end
 
@@ -224,7 +224,7 @@ G.FUNCS.toggle_soundpack = function(e)
         blocking = false,
         blockable = false,
         func = (function()
-            G.FUNCS.reload_soundpack_cards()
+            G.FUNCS.tnsmi_reload_soundpack_cards()
             TNSMI.save_soundpacks()
             return true
         end)
