@@ -1,10 +1,16 @@
 return{
     descriptions = {
         SoundPack = {
+            sp_balatro = {
+                name = "Balatro OST",
+                text = {
+                    "{C:blue,E:1}Luis Clemente{}",
+                    "{C:blue,E:1}(LouisF){}"
+                }
+            },
             sp_tnsmi_fools_gambit = {
                 name = "Fool's Gambit",
                 text = {
-                    "{X:chips,C:white}Author{}",
                     "{C:attention,E:1}GoldenLeaf{}"
                 }
             },

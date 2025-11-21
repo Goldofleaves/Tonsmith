@@ -1,5 +1,6 @@
-SMODS.Atlas({key = 'default_soundpack', path = 'default_soundpack.png', px = 71, py = 75, prefix_config = false})
-SMODS.Atlas({key = 'thumb' , path = 'thumb.png', px = 71, py = 95, prefix_config = false})
+SMODS.Atlas({key = 'default_soundpack', path = 'default_soundpack.png', px = 71, py = 71, prefix_config = false})
+SMODS.Atlas({key = 'sp_balatro', path = 'sp_balatro.png', px = 71, py = 75, prefix_config = false})
+SMODS.Atlas({key = 'thumb' , path = 'thumb.png', px = 71, py = 71, prefix_config = false})
 
 ---Defines and creates a vanilla soundpack for tonsmith to load.<br>
 ---[<u>View documentation<u>](https://github.com/Goldofleaves/tonsmith/wiki#tnsmipack_vanilla)
@@ -83,26 +84,35 @@ function TNSMI.save_soundpacks()
     -- resets all existing replace sounds
     local replace_map = TNSMI.config.loaded_packs.replace_map or {}
     for k, v in pairs (replace_map) do
-        SMODS.Sounds[v.key].replace = nil
-        SMODS.Sound.replace_sounds[k] = nil
+        if type(v) == 'table' then
+            SMODS.Sounds[v.key].replace = nil
+            SMODS.Sound.replace_sounds[k] = nil
+        end
     end
 
     replace_map = {}
-
+    local str = 'loaded: '
     if #TNSMI.config.loaded_packs > 0 then
-        for i = #TNSMI.config.loaded_packs, 1, -1 do
+        for i, v in ipairs(TNSMI.config.loaded_packs) do
             -- Save the priority to the config file.
-            local pack = TNSMI.SoundPacks[TNSMI.config.loaded_packs[i]]
+            local pack = TNSMI.SoundPacks[v]
+            str = str..pack.key..', '
 
             for _, sound in ipairs(pack.sound_table) do
+                if pack.key == 'sp_balatro' then
+                    -- fill the replace map slot to prevent overriding of vanilla sounds at priority
+                    replace_map[sound.key] = true
+                end
+
                 if sound.replace_key and not replace_map[sound.replace_key] then
-                    replace_map[sound.replace_key] = { key = sound.key, priority = i}
+                    replace_map[sound.replace_key] = { key = sound.key }
                     local obj = SMODS.Sounds[sound.key]
                     obj:create_replace_sound(sound.replace_key)
                 end
             end
         end
     end
+    sendDebugMessage(str)
     TNSMI.config.loaded_packs.replace_map = replace_map
 
     SMODS.save_mod_config(TNSMI)
@@ -111,3 +121,90 @@ end
 function TNSMI.get_size_mod()
     return (1 - (TNSMI.config.rows - 1) * 0.2)
 end
+
+TNSMI.SoundPacks['sp_balatro'] = {
+    key = 'sp_balatro',
+    atlas = 'sp_balatro',
+    sound_table = {
+        { key = "ambientFire1" },
+        { key = "ambientFire2"  },
+        { key = "ambientFire3"  },
+        { key = "ambientOrgan1"  },
+        { key = "button"  },
+        { key = "cancel"  },
+        { key = "card1"  },
+        { key = "card3"  },
+        { key = "cardFan2"  },
+        { key = "cardSlide1"  },
+        { key = "cardSlide2"  },
+        { key = "chips1"  },
+        { key = "chips2"  },
+        { key = "coin1"  },
+        { key = "coin2"  },
+        { key = "coin3"  },
+        { key = "coin4"  },
+        { key = "coin5"  },
+        { key = "coin6"  },
+        { key = "coin7"  },
+        { key = "crumple1"  },
+        { key = "crumple2"  },
+        { key = "crumple3"  },
+        { key = "crumple4"  },
+        { key = "crumple5"  },
+        { key = "crumpleLong1"  },
+        { key = "crumpleLong2"  },
+        { key = "explosion_buildup1"  },
+        { key = "explosion_release1"  },
+        { key = "explosion1"  },
+        { key = "foil1"  },
+        { key = "foil2"  },
+        { key = "generic1"  },
+        { key = "glass1"  },
+        { key = "glass2"  },
+        { key = "glass3"  },
+        { key = "glass4"  },
+        { key = "glass5"  },
+        { key = "glass6"  },
+        { key = "gold_seal"  },
+        { key = "gong"  },
+        { key = "highlight1"  },
+        { key = "highlight2"  },
+        { key = "holo1"  },
+        { key = "introPad1"  },
+        { key = "magic_crumple"  },
+        { key = "magic_crumple2"  },
+        { key = "magic_crumple3"  },
+        { key = "multhit1"  },
+        { key = "multhit2"  },
+        { key = "negative"  },
+        { key = "other1"  },
+        { key = "paper1"  },
+        { key = "polychrome1"  },
+        { key = "slice1"  },
+        { key = "splash_buildup"  },
+        { key = "tarot1"  },
+        { key = "tarot2"  },
+        { key = "timpani"  },
+        { key = "voice1"  },
+        { key = "voice2"  },
+        { key = "voice3"  },
+        { key = "voice4"  },
+        { key = "voice5"  },
+        { key = "voice6"  },
+        { key = "voice7" },
+        { key = "voice8" },
+        { key = "voice9" },
+        { key = "voice10" },
+        { key = "voice11" },
+        { key = "whoosh_long" },
+        { key = "whoosh" },
+        { key = "whoosh1" },
+        { key = "whoosh2" },
+        { key = "win" },
+        { key = "music1" },
+        { key = "music2" },
+        { key = "music3" },
+        { key = "music4" },
+        { key = "music5" }
+    },
+}

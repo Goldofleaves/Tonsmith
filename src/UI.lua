@@ -5,7 +5,7 @@ function create_soundpack_card(area, pack, pos)
         area.T.x,
         area.T.y,
         G.CARD_W * size_mod,
-        G.CARD_H * size_mod,
+        G.CARD_W * size_mod,
         nil,
         {key = pack.key, name = "Sound Pack", atlas = pack.atlas, pos={x=0,y=0}, set = "SoundPack", label = 'Sound Pack', config = {}, generate_ui = SMODS.Center.generate_ui},
         {tnsmi_soundpack = pack.key}
@@ -51,7 +51,7 @@ end
 function create_UIBox_soundpacks()
     local size_mod = TNSMI.get_size_mod()
     if TNSMI.cardareas.priority then TNSMI.cardareas.priority:remove() end
-    TNSMI.cardareas.priority = CardArea(0, 0, G.CARD_W * TNSMI.config.cols * size_mod * 1.5, G.CARD_H * size_mod,
+    TNSMI.cardareas.priority = CardArea(0, 0, G.CARD_W * TNSMI.config.cols * size_mod * 1.1, G.CARD_H * size_mod,
         {card_limit = TNSMI.config.cols, type = 'soundpack', highlight_limit = 99}
     )
 
@@ -69,11 +69,11 @@ function create_UIBox_soundpacks()
 
     local area_nodes = {}
     for i=1, TNSMI.config.rows do
-        TNSMI.cardareas[i] = CardArea(0, 0, G.CARD_W * TNSMI.config.cols * size_mod * 1.5, G.CARD_H * size_mod,
+        TNSMI.cardareas[i] = CardArea(0, 0, G.CARD_W * TNSMI.config.cols * size_mod * 1.1, G.CARD_H * size_mod,
             {card_limit = TNSMI.config.cols, highlight_limit = 99, type = 'soundpack'}
         )
 
-        area_nodes[#area_nodes+1] = {n = G.UIT.R, config = {align = "cm", colour = G.C.CLEAR}, nodes = {
+        area_nodes[#area_nodes+1] = {n = G.UIT.R, config = {align = "cl", colour = G.C.CLEAR}, nodes = {
             {n = G.UIT.O, config = {id = 'tnsmi_area_'..i, object = TNSMI.cardareas[i]}}
         }}
     end
@@ -123,7 +123,7 @@ function create_UIBox_soundpacks()
         opt_cycle
     }
 
-    return create_UIBox_generic_options({ contents = t, back_func = 'options', snap_back = nil })
+    return create_UIBox_generic_options({ contents = t, back_func = 'settings', snap_back = nil })
 end
 
 function G.UIDEF.soundpack_button(card)
@@ -137,6 +137,23 @@ function G.UIDEF.soundpack_button(card)
             }},
         }
     }
+end
+
+local ref_create_tabs = create_tabs
+function create_tabs(args)
+    if args.tabs then
+        local reset_chosen = false
+        for i = #args.tabs, 1, -1 do
+            if reset_chosen then
+                args.tabs[i].chosen = nil
+            elseif args.tabs[i].tab_definition_function_args == 'Audio' and G.OVERLAY_MENU.config.id == 'tnsmi_soundpack_menu' then
+                args.tabs[i].chosen = true
+                reset_chosen = false
+            end
+        end
+    end
+
+    return ref_create_tabs(args)
 end
 
 SMODS.current_mod.config_tab = function ()
