@@ -42,6 +42,8 @@ function G.FUNCS.TNSMI_packs_button(e)
     G.OVERLAY_MENU:recalculate()
 end
 
+-- Most of the old config menu was moved here for better vanilla integration
+-- Some minor reorganization here, mostly visually
 local ref_settings_tab = G.UIDEF.settings_tab
 function G.UIDEF.settings_tab(tab)
     if tab == 'Audio' then
@@ -82,10 +84,15 @@ function G.UIDEF.settings_tab(tab)
      return ref_settings_tab(tab)
 end
 
+--- Callback for soundpack page select
+--- All values involving what page is selected are stored in TNSMI.cycle_config
 function G.FUNCS.soundpacks_page(args)
     G.FUNCS.reload_soundpack_cards()
 end
 
+--- Function callback to determine shoulder button state
+--- This is intended to update when search results decrease
+--- the number of soundpacks from multiple pages to a single page
 function G.FUNCS.tnsmi_shoulder_buttons(e)
     if #TNSMI.cycle_config.options > 1 then
         e.config.colour = G.C.RED
@@ -102,8 +109,10 @@ function G.FUNCS.tnsmi_shoulder_buttons(e)
     end
 end
 
-
+--- Reloads soundpack cards in existing cardareas based on current page and search query
 G.FUNCS.reload_soundpack_cards = function()
+    -- removes any existing cards and highlights
+    -- slightly unperformant, but better than recreating it
     for i = #TNSMI.cardareas, 1, -1 do
         if #TNSMI.cardareas[i].cards > 0 then
             remove_all(TNSMI.cardareas[i].cards)
@@ -111,7 +120,7 @@ G.FUNCS.reload_soundpack_cards = function()
         TNSMI.cardareas[i].highlighted = {}
     end
 
-    -- For already loaded packs
+    -- Mark already loaded packs to not be shown as "available"
     local loaded_map = {}
     for _, v in ipairs(TNSMI.config.loaded_packs) do
         loaded_map[v] = true
@@ -134,6 +143,7 @@ G.FUNCS.reload_soundpack_cards = function()
         start_index = num_per_page * (TNSMI.cycle_config.current_option - 1)
     end
 
+    -- update the search text, a "1-10 of 50 results" type thing
     TNSMI.search_text = localize{type = 'variable', key = 'tnsmi_search_text', vars = {
         start_index + 1,
         math.min((start_index + num_per_page), #soundpack_cards),
@@ -157,6 +167,9 @@ G.FUNCS.reload_soundpack_cards = function()
     local page_total = math.min(start_index + num_per_page, #soundpack_cards) - start_index
     local final_cols = page_total % TNSMI.config.cols
     final_cols = final_cols ~= 0 and final_cols or TNSMI.config.cols
+
+    -- adjusts the size of the cardareas based on the current size mod, determined by the rows/cols
+    -- makes it easier to fit more into frame
     TNSMI.cardareas[#TNSMI.cardareas].T.w = G.CARD_W * final_cols * TNSMI.get_size_mod() * 1.1
 
     for i=(start_index+1), end_index do
@@ -168,6 +181,7 @@ G.FUNCS.reload_soundpack_cards = function()
     G.OVERLAY_MENU:recalculate()
 end
 
+--- Callback for toggling a soundpack with a button
 G.FUNCS.toggle_soundpack = function(e)
     local card = e.config.ref_table
     local key = card.params.tnsmi_soundpack
@@ -197,6 +211,8 @@ G.FUNCS.toggle_soundpack = function(e)
         table.insert(TNSMI.config.loaded_packs, key)
     end
 
+    -- This delay is to account for the dissolve flag causing the recreated card to be delayed
+    -- since reload/save are based on cards in the current areas
     G.E_MANAGER:add_event(Event({
         trigger = 'after',
         delay = 0.25,

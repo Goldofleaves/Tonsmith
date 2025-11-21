@@ -5,6 +5,7 @@ TNSMI.prompt_text_input = ''
 TNSMI.search_text = ''
 SMODS.Atlas{key = "modicon", path = "modicon.png", px = 32, py = 32}
 
+-- for the badge
 G.C.SECONDARY_SET.SoundPack = HEX("56A887")
 
 local mod_contents = {
@@ -101,76 +102,6 @@ TNSMI.SoundPack({
         { key = "music3", path = 'celestial.ogg', pitch = 1},
         { key = "music4", path = 'shop.ogg', pitch = 1},
         { key = "music5", path = 'boss.ogg', pitch = 1}
-    },
-})
-
-TNSMI.SoundPack({
-    key = 'dummy1',
-    sound_table = {
-        { key = "ambientFire1" },
-    },
-})
-
-TNSMI.SoundPack({
-    key = 'dummy2',
-    sound_table = {
-        { key = "ambientFire1" },
-    },
-})
-
-TNSMI.SoundPack({
-    key = 'dummy3',
-    sound_table = {
-        { key = "ambientFire1" },
-    },
-})
-
-TNSMI.SoundPack({
-    key = 'dummy4',
-    sound_table = {
-        { key = "ambientFire1" },
-    },
-})
-
-
-TNSMI.SoundPack({
-    key = 'dummy5',
-    sound_table = {
-        { key = "ambientFire1" },
-    },
-})
-TNSMI.SoundPack({
-    key = 'dummy6',
-    sound_table = {
-        { key = "ambientFire1" },
-    },
-})
-
-TNSMI.SoundPack({
-    key = 'dummy7',
-    sound_table = {
-        { key = "ambientFire1" },
-    },
-})
-
-TNSMI.SoundPack({
-    key = 'dummy8',
-    sound_table = {
-        { key = "ambientFire1" },
-    },
-})
-
-TNSMI.SoundPack({
-    key = 'dummy9',
-    sound_table = {
-        { key = "ambientFire1" },
-    },
-})
-
-TNSMI.SoundPack({
-    key = 'dummy10',
-    sound_table = {
-        { key = "ambientFire1" },
     },
 })
 

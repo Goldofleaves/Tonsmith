@@ -7,6 +7,7 @@ function Card:highlight(is_higlighted)
     self.highlighted = is_higlighted
     if self.highlighted and self.area then
         -- unhighlight all other cards even in different cardareas
+        -- so you can only highlight one "available" card at once
         for _, pack_area in ipairs(TNSMI.cardareas) do
             for _, v in ipairs(pack_area.highlighted) do
                 if v ~= self then
@@ -27,6 +28,7 @@ end
 
 local ref_cardarea_canhighlight = CardArea.can_highlight
 function CardArea:can_highlight(card)
+    -- the default balatro object cant be highlighted or rearranged
     return (self.config.type == 'soundpack' and card.params.tnsmi_soundpack ~= 'sp_balatro') or ref_cardarea_canhighlight(self, card)
 end
 
@@ -36,6 +38,9 @@ function CardArea:align_cards()
         return ref_cardarea_align(self)
     end
 
+    -- the entire purpose of this is so cards on the soundpack menu immediately
+    -- snap into place when something changes
+    -- EXCEPT when dragging in the priority area
     local smooth_align = false
     for k, card in ipairs(self.cards) do
         if G.CONTROLLER.dragging.target == card then
@@ -66,6 +71,8 @@ function CardArea:align_cards()
         end
     end
 
+    -- this sort essentially pins the default balatro card always to the left, since if you want something lower priority than
+    -- default balatro sound, it should just be unloaded
     table.sort(self.cards, function (a, b)
         if a.params.tnsmi_soundpack == 'sp_balatro' and b.params.tnsmi_soundpack ~= 'sp_balatro' then return true
         elseif b.params.tnsmi_soundpack == 'sp_balatro' and a.params.tnsmi_soundpack ~= 'sp_balatro' then return false
@@ -79,6 +86,7 @@ function CardArea:set_ranks()
         return ref_cardarea_ranks(self)
     end
 
+    -- prevents the default balatro object from being dragged
     for k, card in ipairs(self.cards) do
         card.rank = k
         card.states.collide.can = true
@@ -86,6 +94,9 @@ function CardArea:set_ranks()
     end
 end
 
+-- this hook is needed because the drawing code for cardareas doesn't
+-- allow drawing for unspecified types
+-- so this is the drawing definition for cards of the new soundpack type
 local ref_cardarea_draw = CardArea.draw
 function CardArea:draw()
     if self.config.type ~= 'soundpack' then

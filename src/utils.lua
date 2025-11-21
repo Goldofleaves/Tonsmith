@@ -90,6 +90,8 @@ function TNSMI.save_soundpacks()
         end
     end
 
+    -- in descending priority order, fill in any replace sounds
+    -- not already replaced at higher priority
     replace_map = {}
     if #TNSMI.config.loaded_packs > 0 then
         for i, v in ipairs(TNSMI.config.loaded_packs) do
