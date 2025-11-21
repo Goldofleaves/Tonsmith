@@ -2,7 +2,7 @@ return{
     descriptions = {
         SoundPack = {
             sp_balatro = {
-                name = "Banda sonora de Balatro",
+                name = "Balatro OST",
                 text = {
                     "{C:blue,E:1}Luis Clemente{}",
                     "{C:blue,E:1}(LouisF){}"
@@ -17,21 +17,23 @@ return{
         }
     },
     misc = {
-        v_dictionary = {
-            tnsmi_search_text = "#1#-#2# de #3# resultados"
-        },
         dictionary = {
             -- config
-            k_soundpack = 'Paquete de sonido',
-            b_remove = 'Eliminas',
-            tnsmi_cfg_rows = "Filas a mostrar",
-            tnsmi_cfg_cols = "Paquetes por fila",
+            k_soundpack = 'Sound Pack',
+            b_remove = 'Remove',
+            tnsmi_cfg_rows = "Rows to display",
+            tnsmi_cfg_cols = "Packs per row",
 
             -- manager
-            tnsmi_manager_pause = "Paquetes de sonido",
-            tnsmi_manager_loaded = "ARRASTRA PARA PRIORIZAR",
+            tnsmi_manager_pause = "Soundpacks",
+            tnsmi_manager_loaded = "DRAG FOR PRIORITY",
 
-            tnsmi_filter_label = "FILTRAR",
+            -- misc
+            tnsmi_filter_label = "FILTER",
+
         },
+        v_dictionary = {
+            tnsmi_search_text = "#1#-#2# of #3# results"
+        }
     },
 }
