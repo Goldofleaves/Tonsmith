@@ -92,8 +92,6 @@ function create_UIBox_soundpacks()
         }}
     end
 
-    G.FUNCS.reload_soundpack_cards()
-
     -- Cycle config is stored in this global variable in order to change the state of the
     -- option cycle on the fly when filtering search results. Vanilla balatro expects
     -- they're only changed upon complete menu reload
@@ -110,6 +108,8 @@ function create_UIBox_soundpacks()
     local opt_cycle = create_option_cycle(TNSMI.cycle_config)
     opt_cycle.nodes[2].nodes[1].nodes[1].config.func = 'tnsmi_shoulder_buttons'
     opt_cycle.nodes[2].nodes[1].nodes[3].config.func = 'tnsmi_shoulder_buttons'
+
+    G.FUNCS.reload_soundpack_cards()
 
     local t = {
         {n = G.UIT.R, config = {align = "cm", colour = G.C.BLACK, r = 0.2, minh = 0.8, padding = 0.1}, nodes = {
