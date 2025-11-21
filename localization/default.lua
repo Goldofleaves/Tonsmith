@@ -1,32 +1,32 @@
 return{
     descriptions = {
-        dictionary = {
-            tnsmi_config_tab_name = {
+        SoundPack = {
+            sp_balatro = {
+                name = "Balatro OST",
                 text = {
-                    "Soundpack manager"
+                    "{C:blue,E:1}Luis Clemente{}",
+                    "{C:blue,E:1}(LouisF){}"
                 }
             },
-            tnsmi_config_tab_desc = {
+            sp_tnsmi_fools_gambit = {
+                name = "Fool's Gambit",
                 text = {
-                    "Left less priority, right more priority",
-                },
+                    "{C:attention,E:1}GoldenLeaf{}"
+                }
             },
         }
     },
     misc = {
         dictionary = {
             -- config
-            tnsmi_cfg_soundpack_manager = "Open soundpack manager",
+            k_soundpack = 'Sound Pack',
+            b_remove = 'Remove',
             tnsmi_cfg_rows = "Rows to display",
-            tnsmi_cfg_c_rows = "Packs per row",
+            tnsmi_cfg_cols = "Packs per row",
 
             -- manager
             tnsmi_manager_pause = "Soundpacks",
-            tnsmi_manager_display_in_pause = "Display in pause menu",
-            tnsmi_manager_selected = "SELECTED",
-            tnsmi_manager_click_select = "CLICK TO SELECT",
-            tnsmi_manager_active = "Soundpacks active",
-            tnsmi_manager_installed = "Soundpacks installed",
+            tnsmi_manager_loaded = "DRAG FOR PRIORITY",
 
             -- misc
             tnsmi_filter_label = "FILTER",
@@ -42,5 +42,8 @@ return{
             tnsmi_tltp_and = "...And ",
             tnsmi_tltp_more = " more.",
         },
+        v_dictionary = {
+            tnsmi_search_text = "#1#-#2# of #3# results"
+        }
     },
 }

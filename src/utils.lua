@@ -1,34 +1,31 @@
-TNSMI.packs = {}
-TNSMI.reference = {}
+SMODS.Atlas({key = 'default_soundpack', path = 'default_soundpack.png', px = 71, py = 71, prefix_config = false})
+SMODS.Atlas({key = 'sp_balatro', path = 'sp_balatro.png', px = 71, py = 75, prefix_config = false})
+SMODS.Atlas({key = 'thumb' , path = 'thumb.png', px = 71, py = 71, prefix_config = false})
 
 ---Defines and creates a vanilla soundpack for tonsmith to load.<br>
 ---[<u>View documentation<u>](https://github.com/Goldofleaves/tonsmith/wiki#tnsmipack_vanilla)
 ---@param args {name:string,mods:string[],description:{},authors:string[],sound_table:table[],thumbnail:string,extension?:".ogg"|string}
-TNSMI.Pack = function(args)
-    local name = args.name or ""
-    local desc = args.description or {{lan = 'en-us', text = {}}}
-    local authors = args.authors or {}
-    local sound_table = args.sound_table or {}
-    local mods = args.mods or {"Vanilla"}
-    local thumb = args.thumbnail
-    local ret = {}
-    ret.sounds = {}
-    ret.mod_prefix = SMODS.current_mod.prefix
-    for i,sound in ipairs(sound_table) do
-        sound.key = sound.key or ""
-        sound.extension = sound.extention or sound.extension or "ogg"
-        sound.prefix = sound.prefix or ""
-        if sound.prefix ~= "" then sound.prefix = sound.prefix.."_" end
-        sound.file = sound.file or sound.key
-        sound.music_track = sound.select_music_track or nil
-        if string.find(sound.key,"music") then 
-            local ref = sound.music_track or true
-            sound.music_track = function ()
-                if not ref then return end -- Evaluate if the sound should play
-                for i,v in ipairs(TNSMI.mod_config.soundpack_priority) do
-                    if v == ret.mod_prefix.."_"..name then return i end
-                end
-            end
+TNSMI.SoundPacks = {}
+TNSMI.SoundPack = SMODS.GameObject:extend ({
+    obj_buffer = {},
+    set = 'SoundPack',
+    obj_table = TNSMI.SoundPacks,
+    class_prefix = "sp",
+    prefix_config = {
+        atlas = false
+    },
+    atlas = 'default_soundpack',
+    required_params = {
+        'key',
+        'sound_table'
+    },
+    process_loc_text = function(self) -- LOC_TXT structure = name = string, text = table of strings
+        SMODS.process_loc_text(G.localization.descriptions.SoundPacks, self.key, self.loc_txt)
+    end,
+    register = function(self)
+        if self.registered then
+            sendWarnMessage(('Detected duplicate register call on object %s'):format(self.key), self.set)
+            return
         end
 
         if (sound.req_mod and next(SMODS.find_mod(sound.req_mod))) or not sound.req_mod then
@@ -88,8 +85,16 @@ TNSMI.Pack = function(args)
         for _,vv in ipairs(authors) do
             table.insert(v.text[2],vv)
         end
-        for _,vv in ipairs(mods) do
-            table.insert(v.text[3],vv)
+    end,
+})
+
+function TNSMI.save_soundpacks()
+    -- resets all existing replace sounds
+    local replace_map = TNSMI.config.loaded_packs.replace_map or {}
+    for k, v in pairs (replace_map) do
+        if type(v) == 'table' then
+            SMODS.Sounds[v.key].replace = nil
+            SMODS.Sound.replace_sounds[k] = nil
         end
     end
 
@@ -136,57 +141,106 @@ TNSMI.toggle_pack = function(name)
                     SMODS.Sound.replace_sounds[sound[2]] = nil
                 end
 
-                for i,v in ipairs(TNSMI.mod_config.soundpack_priority) do
-                    if v == pack.mod_prefix.."_"..pack.name then
-                        table.remove(TNSMI.mod_config.soundpack_priority,i)
-                    end
-                end
-                -- Reset pack priority
-                pack.priority = 0
-            else -- Enable pack
-                pack.selected = true
-                -- return "i did it"
-            end
-                if next(TNSMI.CARDAREAS) then
-                TNSMI.load_cards()
-            end
-        end
-    end
-end
-
-function TNSMI.save_soundpack_order ()
-    for i,v in ipairs(TNSMI.CARDAREAS.selected.cards) do
-        -- Save the priority to the config file.
-        TNSMI.mod_config.soundpack_priority[i] = v.config.center.mod.prefix.."_"..v.config.center.original_key
-        for ii, vv in ipairs(TNSMI.packs) do
-            -- Compares the card key and the pack key.
-            if v.config.center.mod.prefix.."_"..v.config.center.original_key == vv.mod_prefix.."_"..vv.name then
-                -- Set the pack priority.
-                vv.priority = i
-                vv.selected = true
-            end
-        end
-    end
-end
-
-function G.FUNCS.TNSMI_save_soundpack ()
-    TNSMI.save_soundpack_order()
-    TNSMI.load_soundpack_order()
-end
-
-function TNSMI.load_soundpack_order ()
-    -- Load modded sounds, in order of priority
-    for i,v in ipairs(TNSMI.mod_config.soundpack_priority) do
-        for ii, vv in ipairs(TNSMI.packs) do
-            -- Compares the card key and the pack key.
-            if v == vv.mod_prefix.."_"..vv.name then
-                vv.selected = true
-                vv.priority = i
-                for _, sound in ipairs(vv.sounds) do
-                    sound[1].replace = sound[2]
-                    SMODS.Sound.replace_sounds[sound[2]] = {times = -1, key = sound[1].key}
+                if sound.replace_key and not replace_map[sound.replace_key] then
+                    replace_map[sound.replace_key] = { key = sound.key }
+                    local obj = SMODS.Sounds[sound.key]
+                    obj:create_replace_sound(sound.replace_key)
                 end
             end
         end
     end
+    TNSMI.config.loaded_packs.replace_map = replace_map
+
+    SMODS.save_mod_config(TNSMI)
 end
+
+function TNSMI.get_size_mod()
+    return (1 - (TNSMI.config.rows - 1) * 0.2)
+end
+
+TNSMI.SoundPacks['sp_balatro'] = {
+    key = 'sp_balatro',
+    atlas = 'sp_balatro',
+    sound_table = {
+        { key = "ambientFire1" },
+        { key = "ambientFire2"  },
+        { key = "ambientFire3"  },
+        { key = "ambientOrgan1"  },
+        { key = "button"  },
+        { key = "cancel"  },
+        { key = "card1"  },
+        { key = "card3"  },
+        { key = "cardFan2"  },
+        { key = "cardSlide1"  },
+        { key = "cardSlide2"  },
+        { key = "chips1"  },
+        { key = "chips2"  },
+        { key = "coin1"  },
+        { key = "coin2"  },
+        { key = "coin3"  },
+        { key = "coin4"  },
+        { key = "coin5"  },
+        { key = "coin6"  },
+        { key = "coin7"  },
+        { key = "crumple1"  },
+        { key = "crumple2"  },
+        { key = "crumple3"  },
+        { key = "crumple4"  },
+        { key = "crumple5"  },
+        { key = "crumpleLong1"  },
+        { key = "crumpleLong2"  },
+        { key = "explosion_buildup1"  },
+        { key = "explosion_release1"  },
+        { key = "explosion1"  },
+        { key = "foil1"  },
+        { key = "foil2"  },
+        { key = "generic1"  },
+        { key = "glass1"  },
+        { key = "glass2"  },
+        { key = "glass3"  },
+        { key = "glass4"  },
+        { key = "glass5"  },
+        { key = "glass6"  },
+        { key = "gold_seal"  },
+        { key = "gong"  },
+        { key = "highlight1"  },
+        { key = "highlight2"  },
+        { key = "holo1"  },
+        { key = "introPad1"  },
+        { key = "magic_crumple"  },
+        { key = "magic_crumple2"  },
+        { key = "magic_crumple3"  },
+        { key = "multhit1"  },
+        { key = "multhit2"  },
+        { key = "negative"  },
+        { key = "other1"  },
+        { key = "paper1"  },
+        { key = "polychrome1"  },
+        { key = "slice1"  },
+        { key = "splash_buildup"  },
+        { key = "tarot1"  },
+        { key = "tarot2"  },
+        { key = "timpani"  },
+        { key = "voice1"  },
+        { key = "voice2"  },
+        { key = "voice3"  },
+        { key = "voice4"  },
+        { key = "voice5"  },
+        { key = "voice6"  },
+        { key = "voice7" },
+        { key = "voice8" },
+        { key = "voice9" },
+        { key = "voice10" },
+        { key = "voice11" },
+        { key = "whoosh_long" },
+        { key = "whoosh" },
+        { key = "whoosh1" },
+        { key = "whoosh2" },
+        { key = "win" },
+        { key = "music1" },
+        { key = "music2" },
+        { key = "music3" },
+        { key = "music4" },
+        { key = "music5" }
+    },
+}

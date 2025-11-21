@@ -1,6 +1,5 @@
 return {
-    soundpack_priority = {},
-    display_menu_button = true,
+    loaded_packs = {'sp_balatro'},
     rows = 2,
-    c_rows = 6
+    cols = 6
 }
