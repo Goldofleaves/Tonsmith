@@ -91,12 +91,10 @@ function TNSMI.save_soundpacks()
     end
 
     replace_map = {}
-    local str = 'loaded: '
     if #TNSMI.config.loaded_packs > 0 then
         for i, v in ipairs(TNSMI.config.loaded_packs) do
             -- Save the priority to the config file.
             local pack = TNSMI.SoundPacks[v]
-            str = str..pack.key..', '
 
             for _, sound in ipairs(pack.sound_table) do
                 if pack.key == 'sp_balatro' then
@@ -112,7 +110,6 @@ function TNSMI.save_soundpacks()
             end
         end
     end
-    sendDebugMessage(str)
     TNSMI.config.loaded_packs.replace_map = replace_map
 
     SMODS.save_mod_config(TNSMI)
