@@ -145,7 +145,7 @@ G.FUNCS.reload_soundpack_cards = function()
 
     -- update the search text, a "1-10 of 50 results" type thing
     TNSMI.search_text = localize{type = 'variable', key = 'tnsmi_search_text', vars = {
-        start_index + 1,
+        #soundpack_cards > 0 and start_index + 1 or 0,
         math.min((start_index + num_per_page), #soundpack_cards),
         #soundpack_cards
     }}
