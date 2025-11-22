@@ -63,7 +63,7 @@ function tnsmi_create_UIBox_soundpacks()
     -- creates cardareas only once upon menu load to prevent any unnecessary calc
     -- updates occur within the existing cardareas
     if TNSMI.cardareas.priority then TNSMI.cardareas.priority:remove() end
-    TNSMI.cardareas.priority = CardArea(0, 0, G.CARD_W * TNSMI.config.cols * 1.025, G.CARD_H * 0.8,
+    TNSMI.cardareas.priority = CardArea(0, 0, G.CARD_W * TNSMI.config.cols * 0.965, G.CARD_H * 0.725,
         {card_limit = TNSMI.config.cols, type = 'soundpack', highlight_limit = 99}
     )
 
@@ -79,7 +79,7 @@ function tnsmi_create_UIBox_soundpacks()
 
     local area_nodes = {}
     for i=1, TNSMI.config.rows do
-        TNSMI.cardareas[i] = CardArea(0, 0, G.CARD_W * TNSMI.config.cols * 1.025, G.CARD_H * 0.8,
+        TNSMI.cardareas[i] = CardArea(0, 0, G.CARD_W * TNSMI.config.cols * 0.965, G.CARD_H * 0.725,
             {card_limit = TNSMI.config.cols, highlight_limit = 99, type = 'soundpack'}
         )
 

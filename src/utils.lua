@@ -204,3 +204,210 @@ TNSMI.SoundPack({
         { key = "music5" }
     },
 })
+
+TNSMI.SoundPack({
+
+
+
+    key = 'dummy1',
+
+
+    sound_table = {
+
+
+        { key = "ambientFire1" },
+
+
+    },
+
+
+})
+
+
+
+
+
+TNSMI.SoundPack({
+
+
+    key = 'dummy2',
+
+
+    sound_table = {
+
+
+        { key = "ambientFire1" },
+
+
+    },
+
+
+})
+
+
+
+
+
+TNSMI.SoundPack({
+
+
+    key = 'dummy3',
+
+
+    sound_table = {
+
+
+        { key = "ambientFire1" },
+
+
+    },
+
+
+})
+
+
+
+
+
+TNSMI.SoundPack({
+
+
+    key = 'dummy4',
+
+
+    sound_table = {
+
+
+        { key = "ambientFire1" },
+
+
+    },
+
+
+})
+
+
+
+
+
+
+
+
+TNSMI.SoundPack({
+
+
+    key = 'dummy5',
+
+
+    sound_table = {
+
+
+        { key = "ambientFire1" },
+
+
+    },
+
+
+})
+
+
+TNSMI.SoundPack({
+
+
+    key = 'dummy6',
+
+
+    sound_table = {
+
+
+        { key = "ambientFire1" },
+
+
+    },
+
+
+})
+
+
+
+
+
+TNSMI.SoundPack({
+
+
+    key = 'dummy7',
+
+
+    sound_table = {
+
+
+        { key = "ambientFire1" },
+
+
+    },
+
+
+})
+
+
+
+
+
+TNSMI.SoundPack({
+
+
+    key = 'dummy8',
+
+
+    sound_table = {
+
+
+        { key = "ambientFire1" },
+
+
+    },
+
+
+})
+
+
+
+
+
+TNSMI.SoundPack({
+
+
+    key = 'dummy9',
+
+
+    sound_table = {
+
+
+        { key = "ambientFire1" },
+
+
+    },
+
+
+})
+
+
+
+
+
+TNSMI.SoundPack({
+
+
+    key = 'dummy10',
+
+
+    sound_table = {
+
+
+        { key = "ambientFire1" },
+
+
+    },
+
+
+})

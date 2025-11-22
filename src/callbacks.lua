@@ -134,7 +134,7 @@ G.FUNCS.tnsmi_reload_soundpack_cards = function()
 
     -- adjusts the size of the cardareas based on the current size mod, determined by the rows/cols
     -- makes it easier to fit more into frame
-    TNSMI.cardareas[#TNSMI.cardareas].T.w = G.CARD_W * final_cols * 1.025
+    TNSMI.cardareas[#TNSMI.cardareas].T.w = G.CARD_W * final_cols * 0.965
 
     for i=(start_index+1), end_index do
         local pack = TNSMI.SoundPacks[soundpack_cards[i]]
