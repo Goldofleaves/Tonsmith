@@ -1,8 +1,8 @@
 function G.FUNCS.tnsmi_change_pack_display(e) -- e represents the node
     TNSMI.config[e.config.ref_table[1]] = TNSMI.config[e.config.ref_table[1]] + e.config.ref_table[2]
 
-    TNSMI.config.rows = math.max(1, math.min(4, TNSMI.config.rows))
-    TNSMI.config.cols =  math.max(1, math.min(16, TNSMI.config.cols))
+    TNSMI.config.rows = math.max(1, math.min(3, TNSMI.config.rows))
+    TNSMI.config.cols =  math.max(1, math.min(8, TNSMI.config.cols))
 
     SMODS.save_mod_config(TNSMI)
 end
@@ -134,7 +134,7 @@ G.FUNCS.tnsmi_reload_soundpack_cards = function()
 
     -- adjusts the size of the cardareas based on the current size mod, determined by the rows/cols
     -- makes it easier to fit more into frame
-    TNSMI.cardareas[#TNSMI.cardareas].T.w = G.CARD_W * final_cols * TNSMI.get_size_mod() * 1.1
+    TNSMI.cardareas[#TNSMI.cardareas].T.w = G.CARD_W * final_cols * 1.025
 
     for i=(start_index+1), end_index do
         local pack = TNSMI.SoundPacks[soundpack_cards[i]]

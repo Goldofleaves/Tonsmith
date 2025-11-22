@@ -117,10 +117,6 @@ function TNSMI.save_soundpacks()
     SMODS.save_mod_config(TNSMI)
 end
 
-function TNSMI.get_size_mod()
-    return (1 - (TNSMI.config.rows - 1) * 0.2)
-end
-
 TNSMI.SoundPack({
     key = 'sp_balatro',
     atlas = 'sp_balatro',

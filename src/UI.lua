@@ -1,7 +1,6 @@
 -- Creates a fake soundpack card partially based on the approach Malverk takes
 function tnsmi_create_soundpack_card(area, pack, pos)
     local atlas = G.ANIMATION_ATLAS[pack.atlas] or G.ASSET_ATLAS[pack.atlas]
-    local size_mod = TNSMI.get_size_mod()
 
     -- this card is provided a "fake" SoundPack center
     -- rather than registering an unused item, it fills in the
@@ -10,8 +9,8 @@ function tnsmi_create_soundpack_card(area, pack, pos)
     local card = Card(
         area.T.x,
         area.T.y,
-        G.CARD_W * size_mod,
-        G.CARD_W * size_mod,
+        G.CARD_W * 0.8,
+        G.CARD_W * 0.8,
         nil,
         {key = pack.key, name = "Sound Pack", atlas = pack.atlas, pos={x=0,y=0}, set = "SoundPack", label = 'Sound Pack', config = {}, generate_ui = SMODS.Center.generate_ui},
         {tnsmi_soundpack = pack.key}
@@ -63,9 +62,8 @@ function tnsmi_create_UIBox_soundpacks()
 
     -- creates cardareas only once upon menu load to prevent any unnecessary calc
     -- updates occur within the existing cardareas
-    local size_mod = TNSMI.get_size_mod()
     if TNSMI.cardareas.priority then TNSMI.cardareas.priority:remove() end
-    TNSMI.cardareas.priority = CardArea(0, 0, G.CARD_W * TNSMI.config.cols * size_mod * 1.1, G.CARD_H * size_mod,
+    TNSMI.cardareas.priority = CardArea(0, 0, G.CARD_W * TNSMI.config.cols * 1.025, G.CARD_H * 0.8,
         {card_limit = TNSMI.config.cols, type = 'soundpack', highlight_limit = 99}
     )
 
@@ -81,7 +79,7 @@ function tnsmi_create_UIBox_soundpacks()
 
     local area_nodes = {}
     for i=1, TNSMI.config.rows do
-        TNSMI.cardareas[i] = CardArea(0, 0, G.CARD_W * TNSMI.config.cols * size_mod * 1.1, G.CARD_H * size_mod,
+        TNSMI.cardareas[i] = CardArea(0, 0, G.CARD_W * TNSMI.config.cols * 1.025, G.CARD_H * 0.8,
             {card_limit = TNSMI.config.cols, highlight_limit = 99, type = 'soundpack'}
         )
 
