@@ -129,8 +129,9 @@ G.FUNCS.tnsmi_reload_soundpack_cards = function()
 
     local end_index = math.min(start_index + num_per_page, #soundpack_cards)
     local page_total = math.min(start_index + num_per_page, #soundpack_cards) - start_index
-    local final_cols = page_total % TNSMI.config.cols
-    final_cols = final_cols ~= 0 and final_cols or TNSMI.config.cols
+    local final_cols = page_total > TNSMI.config.cols and page_total % TNSMI.config.cols or page_total
+    if final_cols == 0 then final_cols = TNSMI.config.cols end
+    sendDebugMessage('final cols: '..final_cols)
 
     -- adjusts the size of the cardareas based on the current size mod, determined by the rows/cols
     -- makes it easier to fit more into frame
