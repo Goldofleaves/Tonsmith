@@ -166,11 +166,18 @@ function create_tabs(args)
     if args.tabs then
         local reset_chosen = false
         for i = #args.tabs, 1, -1 do
-            if reset_chosen then
-                args.tabs[i].chosen = nil
-            elseif args.tabs[i].tab_definition_function_args == 'Audio' and G.OVERLAY_MENU.config.id == 'tnsmi_soundpack_menu' then
+            if args.tabs[i].tab_definition_function_args == 'Audio' and G.OVERLAY_MENU.config.id == 'tnsmi_soundpack_menu' then
                 args.tabs[i].chosen = true
-                reset_chosen = false
+                reset_chosen = true
+                break
+            end
+        end
+
+        if reset_chosen then
+           for i = #args.tabs, 1, -1 do
+                if args.tabs[i].tab_definition_function_args ~= 'Audio' then
+                    args.tabs[i].chosen = false
+                end
             end
         end
     end
