@@ -4,6 +4,16 @@ function Game:prep_stage(new_stage, new_state, new_game_obj)
 
     if not TNSMI.initial_load then
         TNSMI.initial_load = true
+
+        -- prune the config of any packs that don't correspond to an object
+        -- meaning that a mod was unloaded
+        for i = #TNSMI.config.loaded_packs, 1, -1 do
+            -- Save the priority to the config file.
+            if not TNSMI.SoundPacks[TNSMI.config.loaded_packs[i]] then
+                table.remove(TNSMI.config.loaded_packs, i)
+            end
+        end
+
         TNSMI.save_soundpacks()
     end
 end
