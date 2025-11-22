@@ -1,3 +1,13 @@
+local ps_ref = Game.prep_stage
+function Game:prep_stage(new_stage, new_state, new_game_obj)
+    ps_ref(self, new_stage, new_state, new_game_obj)
+
+    if not TNSMI.initial_load then
+        TNSMI.initial_load = true
+        TNSMI.save_soundpacks()
+    end
+end
+
 local ref_card_highlight = Card.highlight
 function Card:highlight(is_higlighted)
     if not self.params or not self.params.tnsmi_soundpack then
@@ -17,7 +27,7 @@ function Card:highlight(is_higlighted)
         end
 
         self.children.use_button = UIBox{
-            definition = G.UIDEF.soundpack_button(self),
+            definition = G.UIDEF.tnsmi_soundpack_button(self),
             config = {align = "bmi", offset = {x=0,y=0.5}, parent = self}
         }
     elseif self.children.use_button then
