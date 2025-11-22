@@ -9,7 +9,9 @@ end
 
 function G.FUNCS.tnsmi_change_priority(e)
     -- check if anything has been moved from expected positions and then save
-    if TNSMI.dissolve_flag then return end
+    if TNSMI.dissolve_flag then
+        return
+    end
 
     local priority_changed = false
     for i, v in ipairs(TNSMI.cardareas.priority.cards) do
@@ -22,12 +24,11 @@ function G.FUNCS.tnsmi_change_priority(e)
 
     if not priority_changed then return end
 
-    TNSMI.config.loaded_packs = {}
+    TNSMI.config.loaded_packs = {replace_map = copy_table(TNSMI.config.loaded_packs.replace_map)}
     for i, v in ipairs(TNSMI.cardareas.priority.cards) do
         local priority = #TNSMI.cardareas.priority.cards - i + 1
         TNSMI.config.loaded_packs[priority] = v.params.tnsmi_soundpack
     end
-
 
     TNSMI.save_soundpacks()
 end

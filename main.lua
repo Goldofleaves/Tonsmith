@@ -107,10 +107,3 @@ TNSMI.SoundPack({
         { key = "music5", path = 'boss.ogg', pitch = 1}
     },
 })
-
-local ref_post_splash = G.FUNCS.initPostSplash or function() end
-G.FUNCS.initPostSplash = function()
-	local ret = ref_post_splash()
-	TNSMI.save_soundpacks()
-    return ret
-end

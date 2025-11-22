@@ -88,8 +88,8 @@ function TNSMI.save_soundpacks()
     for k, v in pairs (replace_map) do
         if type(v) == 'table' then
             SMODS.Sounds[v.key].replace = nil
-            SMODS.Sound.replace_sounds[k] = nil
         end
+        SMODS.Sound.replace_sounds[k] = nil
     end
 
     -- in descending priority order, fill in any replace sounds

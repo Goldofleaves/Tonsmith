@@ -1,3 +1,13 @@
+local ps_ref = Game.prep_stage
+function Game:prep_stage(new_stage, new_state, new_game_obj)
+    ps_ref(self, new_stage, new_state, new_game_obj)
+
+    if not TNSMI.initial_load then
+        TNSMI.initial_load = true
+        TNSMI.save_soundpacks()
+    end
+end
+
 local ref_card_highlight = Card.highlight
 function Card:highlight(is_higlighted)
     if not self.params or not self.params.tnsmi_soundpack then
