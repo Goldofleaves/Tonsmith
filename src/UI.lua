@@ -79,8 +79,6 @@ function tnsmi_create_UIBox_soundpacks()
         TNSMI.cardareas[i] = nil
     end
 
-    if #TNSMI.SoundPack.obj_buffer < 1 then return end
-
     local area_nodes = {}
     for i=1, TNSMI.config.rows do
         TNSMI.cardareas[i] = CardArea(0, 0, G.CARD_W * TNSMI.config.cols * size_mod * 1.1, G.CARD_H * size_mod,
