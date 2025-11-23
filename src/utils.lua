@@ -28,62 +28,56 @@ TNSMI.SoundPack = SMODS.GameObject:extend ({
             return
         end
 
-        if (sound.req_mod and next(SMODS.find_mod(sound.req_mod))) or not sound.req_mod then
-            ret.sounds[i] = {SMODS.Sound {
-                key = sound.key,
-                path = sound.file.."."..sound.extension,
-                pitch = sound.pitch,
-                volume = sound.volume,
-                sync = sound.sync,
-                select_music_track = sound.music_track
-            },
-            sound.prefix..sound.key }
-        end
-    end
+        TNSMI.SoundPack.super.register(self)
+    end,
+    inject = function(self)
+        if self.key == 'sp_balatro' then return end
 
-    local loc_txt = {}
-    local reference = G.localization.descriptions.Other
-    init_localization()
-    local jank = false
-    local threshold = 5
-    local tooltip_table = {}
-    tooltip_table[1] = "This sound pack"
-    tooltip_table[2] = "replaces the"
-    tooltip_table[3] = "following sounds:"
-    tooltip_table[4] = "{} {}"
-    local amount = #sound_table
-    local remainder = 0
-    if amount > threshold then remainder = amount - threshold amount = threshold jank = true end
-    for i = 1, amount do
-        table.insert(tooltip_table, sound_table[i].key..((i == amount and not jank) and "." or ","))
-    end
-    if jank then
-        table.insert(tooltip_table, "...")
-        table.insert(tooltip_table, "{} {}")
-        table.insert(tooltip_table, "...And "..remainder.." more.")
-    end
+        for _, v in ipairs(self.sound_table) do
+            if v.key and not v.replace_key and not v.select_music_track then
+                v.replace_key = v.key
+            end
 
-    reference["tnsmi_"..string.lower(name).."_desc"] = {
-        name = "Soundpack Info",
-        text = tooltip_table
-    }
-    for i,v in ipairs(desc) do
+            if not v.key and v.replace_key then v.key = v.replace_key end
 
-        loc_txt[v.lan] = {
-            name = name,
-            text = {
-                {"{X:green,C:white}"..(G.localization.misc.dictionary.k_tnsmi_descriptions or "Descriptions")},
-                {"{X:chips,C:white}"..(G.localization.misc.dictionary.k_tnsmi_authors or "Authors")},
-                {"{X:legendary,C:white}"..(G.localization.misc.dictionary.k_tnsmi_mods or "Mods")}
-            }
-        }
-        for _,vv in ipairs(v.text) do
-            table.insert(loc_txt[v.lan].text[1],vv)
-        end
-    end
-    for _,v in pairs(loc_txt) do
-        for _,vv in ipairs(authors) do
-            table.insert(v.text[2],vv)
+            local path = v.path or v.file
+            if not path then
+                path = (v.key..'.ogg')
+            elseif not string.find(path, '.ogg') and not string.find(path, '.wav') then
+                path = path..'.ogg'
+            end
+            v.key = self.key..'_'..v.key
+
+            local select_music_track = v.select_music_track
+            if string.find(v.key, "music") and not select_music_track then
+                -- simple priority selection from highest to lowest
+                select_music_track = function()
+                    for i = #TNSMI.config.loaded_packs, 1, -1 do
+                        if TNSMI.config.loaded_packs[i] == self.key then return i end
+                    end
+                end
+            end
+
+            if not v.req_mod or next(SMODS.find_mod(v.req_mod)) then
+                local new_sound = SMODS.Sound ({
+                    key = v.key,
+                    path = path,
+                    pitch = v.pitch or self.pitch,
+                    volume = v.volume or self.volume,
+                    sync = v.sync,
+                    select_music_track = v.music_track,
+                    prefix_config = {
+                        key = false
+                    }
+                })
+
+                new_sound.mod = self.mod
+                new_sound.original_mod = self.mod
+
+                -- have to do these manually I think?
+                new_sound:inject()
+                new_sound:process_loc_text()
+            end
         end
     end,
 })
@@ -94,54 +88,23 @@ function TNSMI.save_soundpacks()
     for k, v in pairs (replace_map) do
         if type(v) == 'table' then
             SMODS.Sounds[v.key].replace = nil
-            SMODS.Sound.replace_sounds[k] = nil
         end
+        SMODS.Sound.replace_sounds[k] = nil
     end
 
-    if thumb then SMODS.Atlas { key = thumb , path = thumb..".png", px = 71, py = 95} end
-    
-    ret.joker = SMODS.Joker {
-        no_collection = true,
-        unlocked = true,
-        discovered = true,
-        loc_vars = function (self, info_queue, card)
-            info_queue[#info_queue + 1] = { set = "Other", key = "tnsmi_"..string.lower(name).."_desc" } 
-        end,
-        key = name,
-        set_card_type_badge = function (self, card, badges)badges[1] = nil end,
-        in_pool = function(self, args) return false end,
-        atlas = thumb or nil,
-        pos = { x = 0, y = 0 },
-        config = {extra = {TNSMI = true}},
-        loc_txt = loc_txt
-    }
+    -- in descending priority order, fill in any replace sounds
+    -- not already replaced at higher priority
+    replace_map = {}
+    if #TNSMI.config.loaded_packs > 0 then
+        for i, v in ipairs(TNSMI.config.loaded_packs) do
+            -- Save the priority to the config file.
+            local pack = TNSMI.SoundPacks[v]
 
-
-
-    ret.name = name
-    ret.selected = false
-    ret.priority = 0
-
-    for i,v in ipairs(TNSMI.mod_config.soundpack_priority) do
-        if v == ret.mod_prefix.."_"..ret.name then ret.priority = i end
-    end
-    table.insert(TNSMI.packs,ret)
-    table.insert(TNSMI.reference,ret)
-end
-
-
----@param name string The sound pack to load.
-TNSMI.toggle_pack = function(name)
-    for _, pack in ipairs(TNSMI.packs) do
-        if pack.name == name then
-            if pack.selected then -- Disable pack
-                pack.selected = false
-                for _, sound in ipairs(pack.sounds) do
-                    sound[1].replace = nil
-                    SMODS.Sound.replace_sounds[sound[2]] = nil
-                end
-
-                if sound.replace_key and not replace_map[sound.replace_key] then
+            for _, sound in ipairs(pack.sound_table) do
+                if pack.key == 'sp_balatro' then
+                    -- fill the replace map slot to prevent overriding of vanilla sounds at priority
+                    replace_map[sound.key] = true
+                elseif sound.replace_key and not replace_map[sound.replace_key] then
                     replace_map[sound.replace_key] = { key = sound.key }
                     local obj = SMODS.Sounds[sound.key]
                     obj:create_replace_sound(sound.replace_key)
@@ -154,13 +117,10 @@ TNSMI.toggle_pack = function(name)
     SMODS.save_mod_config(TNSMI)
 end
 
-function TNSMI.get_size_mod()
-    return (1 - (TNSMI.config.rows - 1) * 0.2)
-end
-
-TNSMI.SoundPacks['sp_balatro'] = {
+TNSMI.SoundPack({
     key = 'sp_balatro',
     atlas = 'sp_balatro',
+    prefix_config = false,
     sound_table = {
         { key = "ambientFire1" },
         { key = "ambientFire2"  },
@@ -243,4 +203,211 @@ TNSMI.SoundPacks['sp_balatro'] = {
         { key = "music4" },
         { key = "music5" }
     },
-}
+})
+
+TNSMI.SoundPack({
+
+
+
+    key = 'dummy1',
+
+
+    sound_table = {
+
+
+        { key = "ambientFire1" },
+
+
+    },
+
+
+})
+
+
+
+
+
+TNSMI.SoundPack({
+
+
+    key = 'dummy2',
+
+
+    sound_table = {
+
+
+        { key = "ambientFire1" },
+
+
+    },
+
+
+})
+
+
+
+
+
+TNSMI.SoundPack({
+
+
+    key = 'dummy3',
+
+
+    sound_table = {
+
+
+        { key = "ambientFire1" },
+
+
+    },
+
+
+})
+
+
+
+
+
+TNSMI.SoundPack({
+
+
+    key = 'dummy4',
+
+
+    sound_table = {
+
+
+        { key = "ambientFire1" },
+
+
+    },
+
+
+})
+
+
+
+
+
+
+
+
+TNSMI.SoundPack({
+
+
+    key = 'dummy5',
+
+
+    sound_table = {
+
+
+        { key = "ambientFire1" },
+
+
+    },
+
+
+})
+
+
+TNSMI.SoundPack({
+
+
+    key = 'dummy6',
+
+
+    sound_table = {
+
+
+        { key = "ambientFire1" },
+
+
+    },
+
+
+})
+
+
+
+
+
+TNSMI.SoundPack({
+
+
+    key = 'dummy7',
+
+
+    sound_table = {
+
+
+        { key = "ambientFire1" },
+
+
+    },
+
+
+})
+
+
+
+
+
+TNSMI.SoundPack({
+
+
+    key = 'dummy8',
+
+
+    sound_table = {
+
+
+        { key = "ambientFire1" },
+
+
+    },
+
+
+})
+
+
+
+
+
+TNSMI.SoundPack({
+
+
+    key = 'dummy9',
+
+
+    sound_table = {
+
+
+        { key = "ambientFire1" },
+
+
+    },
+
+
+})
+
+
+
+
+
+TNSMI.SoundPack({
+
+
+    key = 'dummy10',
+
+
+    sound_table = {
+
+
+        { key = "ambientFire1" },
+
+
+    },
+
+
+})
