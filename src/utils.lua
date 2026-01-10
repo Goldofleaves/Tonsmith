@@ -101,7 +101,7 @@ function TNSMI.save_soundpacks()
             local pack = TNSMI.SoundPacks[v]
 
             for _, sound in ipairs(pack.sound_table) do
-                if pack.key == 'sp_balatro' then
+                if pack.key == 'sp_balatro' and not replace_map[sound.key] then
                     -- fill the replace map slot to prevent overriding of vanilla sounds at priority
                     replace_map[sound.key] = true
                 elseif sound.replace_key and not replace_map[sound.replace_key] then
